@@ -2,12 +2,11 @@
 
 client_id = "93e014b2e43e25de3599f28a1c1f251e"
 name = "banner-slider"
-application_url = "https://example.com"
+application_url = "https://banner-slider-web.onrender.com"
 embedded = true
 
 [build]
 automatically_update_urls_on_dev = true
-include_config_on_deploy = true
 
 [webhooks]
 api_version = "2026-04"
@@ -25,4 +24,8 @@ api_version = "2026-04"
 scopes = "write_products"
 
 [auth]
-redirect_urls = [ "https://example.com/api/auth" ]
+redirect_urls = [
+    "https://banner-slider-web.onrender.com/auth/callback",
+    "https://banner-slider-web.onrender.com/auth/shopify/callback",
+    "https://banner-slider-web.onrender.com/api/auth/callback"
+]
