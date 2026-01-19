@@ -13,11 +13,7 @@ api_version = "2026-04"
 
   [[webhooks.subscriptions]]
   topics = [ "app/uninstalled" ]
-  uri = "/webhooks/app/uninstalled"
-
-  [[webhooks.subscriptions]]
-  topics = [ "app/scopes_update" ]
-  uri = "/webhooks/app/scopes_update"
+  uri = "https://banner-slider-backend.onrender.com/api/shopify/webhook"
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
@@ -25,7 +21,7 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-    "https://banner-slider-web.onrender.com/auth/callback",
-    "https://banner-slider-web.onrender.com/auth/shopify/callback",
-    "https://banner-slider-web.onrender.com/api/auth/callback"
+  "https://banner-slider-web.onrender.com/auth/callback",
+  "https://banner-slider-web.onrender.com/auth/shopify/callback",
+  "https://banner-slider-web.onrender.com/api/auth/callback"
 ]
