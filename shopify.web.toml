@@ -5,4 +5,3 @@ webhooks_path = "/webhooks/app/uninstalled"
 [commands]
 predev = "echo 'No Prisma needed'"
 dev = "npm exec react-router dev"
-
