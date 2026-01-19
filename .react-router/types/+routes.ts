@@ -34,12 +34,15 @@ type Pages = {
   "/app/additional": {
     params: {};
   };
+  "/app/banner": {
+    params: {};
+  };
 };
 
 type RouteFiles = {
   "root.jsx": {
     id: "root";
-    page: "/" | "/webhooks/app/scopes_update" | "/webhooks/app/uninstalled" | "/auth/login" | "/auth/*" | "/app" | "/app/additional";
+    page: "/" | "/webhooks/app/scopes_update" | "/webhooks/app/uninstalled" | "/auth/login" | "/auth/*" | "/app" | "/app/additional" | "/app/banner";
   };
   "routes/webhooks.app.scopes_update.jsx": {
     id: "routes/webhooks.app.scopes_update";
@@ -53,21 +56,25 @@ type RouteFiles = {
     id: "routes/auth.login";
     page: "/auth/login";
   };
-  "routes/_index/route.jsx": {
-    id: "routes/_index";
-    page: "/";
-  };
   "routes/auth.$.jsx": {
     id: "routes/auth.$";
     page: "/auth/*";
   };
+  "routes/_index/route.jsx": {
+    id: "routes/_index";
+    page: "/";
+  };
   "routes/app.jsx": {
     id: "routes/app";
-    page: "/app" | "/app/additional";
+    page: "/app" | "/app/additional" | "/app/banner";
   };
   "routes/app.additional.jsx": {
     id: "routes/app.additional";
     page: "/app/additional";
+  };
+  "routes/app.banner.jsx": {
+    id: "routes/app.banner";
+    page: "/app/banner";
   };
   "routes/app._index.jsx": {
     id: "routes/app._index";
@@ -80,9 +87,10 @@ type RouteModules = {
   "routes/webhooks.app.scopes_update": typeof import("./app/routes/webhooks.app.scopes_update.jsx");
   "routes/webhooks.app.uninstalled": typeof import("./app/routes/webhooks.app.uninstalled.jsx");
   "routes/auth.login": typeof import("./app/routes/auth.login/route.jsx");
-  "routes/_index": typeof import("./app/routes/_index/route.jsx");
   "routes/auth.$": typeof import("./app/routes/auth.$.jsx");
+  "routes/_index": typeof import("./app/routes/_index/route.jsx");
   "routes/app": typeof import("./app/routes/app.jsx");
   "routes/app.additional": typeof import("./app/routes/app.additional.jsx");
+  "routes/app.banner": typeof import("./app/routes/app.banner.jsx");
   "routes/app._index": typeof import("./app/routes/app._index.jsx");
 };
