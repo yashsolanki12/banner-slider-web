@@ -1,0 +1,14 @@
+name = "custom-script"
+type = "theme"
+uid = "3e6b5859-58a8-5ca1-3e06-b1f1bcfd6eaa02406d74"
+handle = "custom-script"
+
+[blocks]
+	[blocks.app-embed]
+	name = "App Embed Block"
+	target = "head"
+	file = "blocks/custom-embed.liquid"
+
+# [[extensions.metafields]]
+# namespace = "custom"
+# key = "scripts"

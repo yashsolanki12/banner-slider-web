@@ -1,18 +1,11 @@
-import { getAllBanner } from "../api/banner";
-import { useQuery } from "@tanstack/react-query";
-export default function Banner() {
-  const {
-    error: getAllBannerError,
-    data: getAllBannerData,
-    isLoading: getAllBannerLoading,
-  } = useQuery({
-    queryKey: ["banner"],
-    queryFn: () => getAllBanner(),
-  });
-  console.log("Data:", getAllBannerData);
+import { Outlet } from "react-router";
+import { authenticate } from "../shopify.server";
 
-  if (getAllBannerLoading) {
-    return <div>Loading...</div>;
-  }
-  return <div>Banner</div>;
+export const loader = async ({ request }) => {
+  await authenticate.admin(request);
+  return null;
+};
+
+export default function BannerLayout() {
+  return <Outlet />;
 }

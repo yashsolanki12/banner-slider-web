@@ -1,0 +1,94 @@
+{% comment %}
+  Custom UX Scripts and Styles
+  This app embed loads global customizations without editing theme files
+{% endcomment %}
+
+{% if block.settings.enabled %}
+  {% comment %} Load custom CSS {% endcomment %}
+  {% if block.settings.custom_css != blank %}
+    <style>
+      {{ block.settings.custom_css }}
+    </style>
+  {% endif %}
+
+  {% comment %} Load CSS from external file {% endcomment %}
+  {% if block.settings.load_css_file %}
+    {{ 'custom-styles.css' | asset_url | stylesheet_tag }}
+  {% endif %}
+
+  {% comment %} Load custom JavaScript {% endcomment %}
+  {% if block.settings.custom_js != blank %}
+    <script>
+      {{ block.settings.custom_js }}
+    </script>
+  {% endif %}
+
+  {% comment %} Load JS from external file {% endcomment %}
+  {% if block.settings.load_js_file %}
+    <script src="{{ 'custom-scripts.js' | asset_url }}" defer></script>
+  {% endif %}
+
+  {% comment %} Optional: Add custom HTML {% endcomment %}
+  {% if block.settings.custom_html != blank %}
+    {{ block.settings.custom_html }}
+  {% endif %}
+{% endif %}
+
+{% schema %}
+{
+  "name": "Custom Scripts",
+  "target": "head",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Enable custom scripts",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "CSS Options"
+    },
+    {
+      "type": "checkbox",
+      "id": "load_css_file",
+      "label": "Load custom CSS file",
+      "info": "Loads custom-styles.css from app assets",
+      "default": false
+    },
+    {
+      "type": "textarea",
+      "id": "custom_css",
+      "label": "Inline CSS",
+      "info": "Add custom CSS that loads inline"
+    },
+    {
+      "type": "header",
+      "content": "JavaScript Options"
+    },
+    {
+      "type": "checkbox",
+      "id": "load_js_file",
+      "label": "Load custom JS file",
+      "info": "Loads custom-scripts.js from app assets",
+      "default": false
+    },
+    {
+      "type": "textarea",
+      "id": "custom_js",
+      "label": "Inline JavaScript",
+      "info": "Add custom JavaScript that loads inline"
+    },
+    {
+      "type": "header",
+      "content": "Advanced"
+    },
+    {
+      "type": "html",
+      "id": "custom_html",
+      "label": "Custom HTML",
+      "info": "Add any custom HTML (meta tags, pixels, etc.)"
+    }
+  ]
+}
+{% endschema %}

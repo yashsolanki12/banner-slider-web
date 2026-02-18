@@ -37,12 +37,15 @@ type Pages = {
   "/app/banner": {
     params: {};
   };
+  "/app/banner/new": {
+    params: {};
+  };
 };
 
 type RouteFiles = {
   "root.jsx": {
     id: "root";
-    page: "/" | "/webhooks/app/scopes_update" | "/webhooks/app/uninstalled" | "/auth/login" | "/auth/*" | "/app" | "/app/additional" | "/app/banner";
+    page: "/" | "/webhooks/app/scopes_update" | "/webhooks/app/uninstalled" | "/auth/login" | "/auth/*" | "/app" | "/app/additional" | "/app/banner" | "/app/banner/new";
   };
   "routes/webhooks.app.scopes_update.jsx": {
     id: "routes/webhooks.app.scopes_update";
@@ -66,7 +69,7 @@ type RouteFiles = {
   };
   "routes/app.jsx": {
     id: "routes/app";
-    page: "/app" | "/app/additional" | "/app/banner";
+    page: "/app" | "/app/additional" | "/app/banner" | "/app/banner/new";
   };
   "routes/app.additional.jsx": {
     id: "routes/app.additional";
@@ -74,7 +77,15 @@ type RouteFiles = {
   };
   "routes/app.banner.jsx": {
     id: "routes/app.banner";
+    page: "/app/banner" | "/app/banner/new";
+  };
+  "routes/app.banner._index.jsx": {
+    id: "routes/app.banner._index";
     page: "/app/banner";
+  };
+  "routes/app.banner.new.jsx": {
+    id: "routes/app.banner.new";
+    page: "/app/banner/new";
   };
   "routes/app._index.jsx": {
     id: "routes/app._index";
@@ -92,5 +103,7 @@ type RouteModules = {
   "routes/app": typeof import("./app/routes/app.jsx");
   "routes/app.additional": typeof import("./app/routes/app.additional.jsx");
   "routes/app.banner": typeof import("./app/routes/app.banner.jsx");
+  "routes/app.banner._index": typeof import("./app/routes/app.banner._index.jsx");
+  "routes/app.banner.new": typeof import("./app/routes/app.banner.new.jsx");
   "routes/app._index": typeof import("./app/routes/app._index.jsx");
 };
