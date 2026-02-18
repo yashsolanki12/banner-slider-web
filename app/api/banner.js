@@ -1,15 +1,7 @@
 // import axiosInstance from "./axios-instance";
-import { useCurrentShopDomain } from "../utils/helper";
 import axiosInstance from "./axios-instance";
 
-const GetShopDomain = () => {
-  const app = useCurrentShopDomain();
-  return app;
-};
-
-export const getAllBanner = async () => {
-  const shopDomain = GetShopDomain();
-
+export const getAllBanner = async (shopDomain) => {
   if (!shopDomain) {
     console.error("No shop domain found in URL parameters.");
     throw new Error("Shop domain is required.");
@@ -28,9 +20,7 @@ export const getAllBanner = async () => {
 };
 
 
-export const getCurrentSession = async () => {
-  const shopDomain = GetShopDomain();
-
+export const getCurrentSession = async (shopDomain) => {
   if (!shopDomain) {
     console.error("No shop domain found for session request");
     throw new Error("Shop domain is required for session");
