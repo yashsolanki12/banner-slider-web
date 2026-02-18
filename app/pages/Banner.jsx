@@ -91,9 +91,9 @@ export default function BannerPage() {
             tabIndex={tabIndex}
           />
         </Grid>
-        <Grid item size={{ xs: 12, md: 8 }}>
+        {/* <Grid item size={{ xs: 12, md: 8 }}>
           <BannerPreview formData={formData} />
-        </Grid>
+        </Grid> */}
       </Grid>
     </Box>
   );

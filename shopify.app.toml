@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "93e014b2e43e25de3599f28a1c1f251e"
-name = "banner-slider"
+name = "ECS Banner app"
 application_url = "https://banner-slider-web.onrender.com"
 embedded = true
 
@@ -17,7 +17,7 @@ api_version = "2026-04"
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "write_products"
+scopes = "write_products,read_themes"
 
 [auth]
 redirect_urls = [
