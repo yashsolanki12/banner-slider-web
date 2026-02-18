@@ -91,11 +91,11 @@ export default function NewBanner() {
               tabIndex={tabIndex}
             />
           </Grid>
-          <Grid item size={{ xs: 12, md: 4 }}>
+          {/* <Grid item size={{ xs: 12, md: 4 }}>
             <Box sx={{ position: "sticky", top: "20px" }}>
               <BannerPreview formData={formData} />
             </Box>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Box>
     </Box>
