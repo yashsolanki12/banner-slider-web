@@ -84,14 +84,14 @@ export default function BannerPage() {
       </Box>
 
       <Grid container spacing={4}>
-        <Grid item xs={12} md={4}>
+        <Grid item size={{ xs: 12, md: 4 }}>
           <BannerForm
             formData={formData}
             setFormData={setFormData}
             tabIndex={tabIndex}
           />
         </Grid>
-        <Grid item xs={12} md={8}>
+        <Grid item size={{ xs: 12, md: 8 }}>
           <BannerPreview formData={formData} />
         </Grid>
       </Grid>

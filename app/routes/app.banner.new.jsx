@@ -24,7 +24,7 @@ export default function NewBanner() {
   const tabIndex = Number(searchParams.get("tab")) || 0;
 
   const [formData, setFormData] = useState({
-    name: "Announcement name",
+    name: "Banner name",
     type: "Simple announcement",
     title: "Enjoy a 20% discount on all our products!",
     description: "Hurray!",
@@ -84,14 +84,14 @@ export default function NewBanner() {
 
       <Box sx={{ mt: 2 }}>
         <Grid container spacing={4}>
-          <Grid item xs={12} md={4}>
+          <Grid item size={{ xs: 12, md: 4 }}>
             <BannerForm
               formData={formData}
               setFormData={setFormData}
               tabIndex={tabIndex}
             />
           </Grid>
-          <Grid item xs={12} md={8}>
+          <Grid item size={{ xs: 12, md: 4 }}>
             <Box sx={{ position: "sticky", top: "20px" }}>
               <BannerPreview formData={formData} />
             </Box>
