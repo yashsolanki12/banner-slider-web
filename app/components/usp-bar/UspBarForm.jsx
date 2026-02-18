@@ -31,7 +31,7 @@ function a11yProps(index) {
   };
 }
 
-const BannerForm = ({ formData, setFormData, tabIndex }) => {
+const UspBarForm = ({ formData, setFormData, tabIndex }) => {
   const { pathname } = useLocation();
 
   const handleChange = (e) => {
@@ -167,4 +167,4 @@ const BannerForm = ({ formData, setFormData, tabIndex }) => {
   );
 };
 
-export default BannerForm;
+export default UspBarForm;

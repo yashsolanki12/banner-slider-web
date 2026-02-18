@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "93e014b2e43e25de3599f28a1c1f251e"
-name = "ECS Banner app"
+name = "USP Bar"
 application_url = "https://banner-slider-web.onrender.com"
 embedded = true
 

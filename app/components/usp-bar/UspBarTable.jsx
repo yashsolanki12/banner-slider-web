@@ -6,7 +6,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Box from "@mui/material/Box";
 
-const BannerTable = ({ data }) => {
+const UspBarTable = ({ data }) => {
   return (
     <TableContainer
       component={Box}
@@ -41,4 +41,4 @@ const BannerTable = ({ data }) => {
   );
 };
 
-export default BannerTable;
+export default UspBarTable;
