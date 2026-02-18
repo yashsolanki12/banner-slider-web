@@ -8,23 +8,22 @@ import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import Grid from "@mui/material/Grid";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import BannerForm from "../components/banner/BannerForm";
-import BannerPreview from "../components/banner/BannerPreview";
 import SafeLink from "../components/ui/SafeLink";
+import UspBarForm from "../components/usp-bar/UspBarForm";
 
 export const loader = async ({ request }) => {
   await authenticate.admin(request);
   return null;
 };
 
-export default function NewBanner() {
+export default function NewUspBar() {
   const navigate = useNavigate();
   const { search } = useLocation();
   const searchParams = new URLSearchParams(search);
   const tabIndex = Number(searchParams.get("tab")) || 0;
 
   const [formData, setFormData] = useState({
-    name: "Banner name",
+    name: "Usp bar name",
     type: "Simple announcement",
     title: "Enjoy a 20% discount on all our products!",
     description: "Hurray!",
@@ -85,7 +84,7 @@ export default function NewBanner() {
       <Box sx={{ mt: 2 }}>
         <Grid container spacing={4}>
           <Grid item size={{ xs: 12, md: 4 }}>
-            <BannerForm
+            <UspBarForm
               formData={formData}
               setFormData={setFormData}
               tabIndex={tabIndex}
@@ -93,7 +92,7 @@ export default function NewBanner() {
           </Grid>
           {/* <Grid item size={{ xs: 12, md: 4 }}>
             <Box sx={{ position: "sticky", top: "20px" }}>
-              <BannerPreview formData={formData} />
+              <UspBarPreview formData={formData} />
             </Box>
           </Grid> */}
         </Grid>

@@ -9,9 +9,8 @@ import {
   Grid,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import BannerForm from "../components/banner/BannerForm";
-import BannerPreview from "../components/banner/BannerPreview";
 import StatusChip from "../components/ui/StatusChip";
+import UspBarForm from "../components/usp-bar/UspBarForm";
 
 export default function BannerPage() {
   const navigate = useNavigate();
@@ -36,9 +35,9 @@ export default function BannerPage() {
   }, [tabIndex]);
 
   const handleSave = () => {
-    console.log("Saving banner:", formData);
+    console.log("Saving:", formData);
     // Add save logic here
-    navigate("/app/banner");
+    navigate("/app/usp-bar");
   };
 
   return (
@@ -53,7 +52,7 @@ export default function BannerPage() {
       >
         <Stack direction="row" alignItems="center" spacing={2}>
           <IconButton
-            onClick={() => navigate("/app/banner")}
+            onClick={() => navigate("/app/usp-bar")}
             size="small"
             sx={{ color: "#202223" }}
           >
@@ -85,14 +84,14 @@ export default function BannerPage() {
 
       <Grid container spacing={4}>
         <Grid item size={{ xs: 12, md: 4 }}>
-          <BannerForm
+          <UspBarForm
             formData={formData}
             setFormData={setFormData}
             tabIndex={tabIndex}
           />
         </Grid>
         {/* <Grid item size={{ xs: 12, md: 8 }}>
-          <BannerPreview formData={formData} />
+          <UspBarPreview formData={formData} />
         </Grid> */}
       </Grid>
     </Box>

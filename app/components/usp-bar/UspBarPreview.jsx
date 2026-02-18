@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 
-const BannerPreview = ({ formData }) => {
+const UspBarPreview = ({ formData }) => {
   const {
     title = "Free shipping for orders over $50!",
     description = "",
@@ -65,7 +65,8 @@ const BannerPreview = ({ formData }) => {
           variant="caption"
           sx={{ display: "block", mb: 2, color: "#6b7280" }}
         >
-          {description || "Build trust and boost AOV. Both apps work better together."}
+          {description ||
+            "Build trust and boost AOV. Both apps work better together."}
         </Typography>
 
         <Box sx={{ textAlign: "right", mb: 2 }}>
@@ -144,7 +145,8 @@ const BannerPreview = ({ formData }) => {
                   sx={{
                     display: "block",
                     fontWeight: 600,
-                    color: backgroundColor === "#ffffff" ? "#202223" : "inherit",
+                    color:
+                      backgroundColor === "#ffffff" ? "#202223" : "inherit",
                   }}
                 >
                   Daily Specials - Moisturizing cream
@@ -173,4 +175,4 @@ const BannerPreview = ({ formData }) => {
   );
 };
 
-export default BannerPreview;
+export default UspBarPreview;

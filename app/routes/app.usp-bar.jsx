@@ -6,6 +6,6 @@ export const loader = async ({ request }) => {
   return null;
 };
 
-export default function BannerLayout() {
+export default function UspBarLayout() {
   return <Outlet />;
 }

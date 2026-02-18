@@ -7,7 +7,7 @@ const GetShopDomain = () => {
   return app;
 };
 
-export const getAllBanner = async () => {
+export const getAllUspBar = async () => {
   const shopDomain = GetShopDomain();
 
   if (!shopDomain) {
@@ -15,7 +15,7 @@ export const getAllBanner = async () => {
     throw new Error("Shop domain is required.");
   }
   return axiosInstance
-    .get("banner-slider", {
+    .get("usp-slider", {
       headers: {
         "x-shopify-shop-domain": shopDomain,
       },
@@ -37,7 +37,7 @@ export const getCurrentSession = async () => {
   }
 
   return axiosInstance
-    .get("/phone/session/current", {
+    .get("usp-slider/session/current", {
       headers: {
         "x-shopify-shop-domain": shopDomain,
       },
