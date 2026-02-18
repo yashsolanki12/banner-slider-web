@@ -34,10 +34,10 @@ type Pages = {
   "/app/additional": {
     params: {};
   };
-  "/app/banner": {
+  "/app/usp-bar": {
     params: {};
   };
-  "/app/banner/new": {
+  "/app/usp-bar/new": {
     params: {};
   };
 };
@@ -45,7 +45,7 @@ type Pages = {
 type RouteFiles = {
   "root.jsx": {
     id: "root";
-    page: "/" | "/webhooks/app/scopes_update" | "/webhooks/app/uninstalled" | "/auth/login" | "/auth/*" | "/app" | "/app/additional" | "/app/banner" | "/app/banner/new";
+    page: "/" | "/webhooks/app/scopes_update" | "/webhooks/app/uninstalled" | "/auth/login" | "/auth/*" | "/app" | "/app/additional" | "/app/usp-bar" | "/app/usp-bar/new";
   };
   "routes/webhooks.app.scopes_update.jsx": {
     id: "routes/webhooks.app.scopes_update";
@@ -69,23 +69,23 @@ type RouteFiles = {
   };
   "routes/app.jsx": {
     id: "routes/app";
-    page: "/app" | "/app/additional" | "/app/banner" | "/app/banner/new";
+    page: "/app" | "/app/additional" | "/app/usp-bar" | "/app/usp-bar/new";
   };
   "routes/app.additional.jsx": {
     id: "routes/app.additional";
     page: "/app/additional";
   };
-  "routes/app.banner.jsx": {
-    id: "routes/app.banner";
-    page: "/app/banner" | "/app/banner/new";
+  "routes/app.usp-bar.jsx": {
+    id: "routes/app.usp-bar";
+    page: "/app/usp-bar" | "/app/usp-bar/new";
   };
-  "routes/app.banner._index.jsx": {
-    id: "routes/app.banner._index";
-    page: "/app/banner";
+  "routes/app.usp-bar._index.jsx": {
+    id: "routes/app.usp-bar._index";
+    page: "/app/usp-bar";
   };
-  "routes/app.banner.new.jsx": {
-    id: "routes/app.banner.new";
-    page: "/app/banner/new";
+  "routes/app.usp-bar.new.jsx": {
+    id: "routes/app.usp-bar.new";
+    page: "/app/usp-bar/new";
   };
   "routes/app._index.jsx": {
     id: "routes/app._index";
@@ -102,8 +102,8 @@ type RouteModules = {
   "routes/_index": typeof import("./app/routes/_index/route.jsx");
   "routes/app": typeof import("./app/routes/app.jsx");
   "routes/app.additional": typeof import("./app/routes/app.additional.jsx");
-  "routes/app.banner": typeof import("./app/routes/app.banner.jsx");
-  "routes/app.banner._index": typeof import("./app/routes/app.banner._index.jsx");
-  "routes/app.banner.new": typeof import("./app/routes/app.banner.new.jsx");
+  "routes/app.usp-bar": typeof import("./app/routes/app.usp-bar.jsx");
+  "routes/app.usp-bar._index": typeof import("./app/routes/app.usp-bar._index.jsx");
+  "routes/app.usp-bar.new": typeof import("./app/routes/app.usp-bar.new.jsx");
   "routes/app._index": typeof import("./app/routes/app._index.jsx");
-};
+};./app/routes/app.usp-bar.jsx

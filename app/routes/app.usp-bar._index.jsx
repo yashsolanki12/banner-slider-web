@@ -3,15 +3,15 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import BannerTable from "../components/banner/BannerTable";
 import SafeLink from "../components/ui/SafeLink";
+import UspBarTable from "../components/usp-bar/UspBarTable";
 
 export const loader = async ({ request }) => {
   await authenticate.admin(request);
   return null;
 };
 
-const dummyBanners = [
+const dummyUspBarData = [
   {
     id: 1,
     title: "Second Announcement name",
@@ -24,7 +24,7 @@ const dummyBanners = [
   },
 ];
 
-export default function BannerList() {
+export default function UspBarList() {
   return (
     <Box sx={{ p: 4 }}>
       <Stack
@@ -34,12 +34,12 @@ export default function BannerList() {
         sx={{ mb: 4 }}
       >
         <Typography variant="h5" sx={{ fontWeight: 700, color: "#202223" }}>
-          Banner List
+          Usp Bar List
         </Typography>
         <Button
           variant="contained"
           component={SafeLink}
-          to="/app/banner/new"
+          to="/app/usp-bar/new"
           sx={{
             backgroundColor: "#202223",
             color: "white",
@@ -53,13 +53,13 @@ export default function BannerList() {
             },
           }}
         >
-          New banner
+          New usp bar
         </Button>
       </Stack>
 
       <Box>
-        {/* Banner Table */}
-        <BannerTable data={dummyBanners} />
+        {/* Usp Bar Table */}
+        <UspBarTable data={dummyUspBarData} />
       </Box>
     </Box>
   );
