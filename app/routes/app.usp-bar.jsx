@@ -1,11 +1,8 @@
-import { Outlet } from "react-router";
-import { authenticate } from "../shopify.server";
-
-export const loader = async ({ request }) => {
-  await authenticate.admin(request);
-  return null;
-};
-
-export default function UspBarLayout() {
-  return <Outlet />;
+export default function UspBarPage() {
+  console.log("PRINT");
+  return (
+    <div>
+      <h1>Usp Bar pages</h1>
+    </div>
+  );
 }

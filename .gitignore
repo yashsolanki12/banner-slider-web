@@ -1,5 +1,8 @@
 node_modules
 
+# macOS
+.DS_Store
+
 /.cache
 /build
 /app/build
@@ -12,6 +15,10 @@ database.sqlite
 
 .env
 .env.*
+
+
+
+
 
 /extensions/*/dist
 

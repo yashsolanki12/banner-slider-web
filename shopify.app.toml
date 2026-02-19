@@ -1,27 +1,28 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "93e014b2e43e25de3599f28a1c1f251e"
-name = "USP Bar"
-application_url = "https://banner-slider-web.onrender.com"
+client_id = "50460f67910f9fc279dd73d3bf38ceb3"
+name = "USP Bar test"
+application_url = "https://example.com"
 embedded = true
 
 [build]
 automatically_update_urls_on_dev = true
+include_config_on_deploy = true
 
 [webhooks]
 api_version = "2026-04"
 
   [[webhooks.subscriptions]]
   topics = [ "app/uninstalled" ]
-  uri = "https://banner-slider-backend.onrender.com/api/shopify/webhook"
+  uri = "/webhooks/app/uninstalled"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/scopes_update" ]
+  uri = "/webhooks/app/scopes_update"
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "write_products,read_themes"
+scopes = "write_products"
 
 [auth]
-redirect_urls = [
-  "https://banner-slider-web.onrender.com/auth/callback",
-  "https://banner-slider-web.onrender.com/auth/shopify/callback",
-  "https://banner-slider-web.onrender.com/api/auth/callback"
-]
+redirect_urls = [ "https://example.com/api/auth" ]
