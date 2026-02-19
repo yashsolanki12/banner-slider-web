@@ -1,0 +1,24 @@
+import { Box, CircularProgress } from "@mui/material";
+
+const ContentLoader = () => {
+  return (
+    <Box
+      sx={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        overflow: "hidden",
+        zIndex: 9999,
+      }}
+    >
+      <CircularProgress />
+    </Box>
+  );
+};
+
+export default ContentLoader;
