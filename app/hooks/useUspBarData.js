@@ -3,25 +3,28 @@ import { useQuery } from "@tanstack/react-query";
 
 export const useUspBarData = (queryKey, queryFn, setSnackBar) => {
   // Call useQuery at the top level
-  const query = useQuery({
+  const { error, data, isLoading } = useQuery({
     queryKey: queryKey,
     queryFn: queryFn,
-    // use useEffect to watch the error state.
+    // Optional: Prevent retries to stop repeated error cycles during debugging
+    retry: false,
   });
-  const { error, data, isLoading } = query;
 
-  // Handle Side effect (like snack)
+  const errorMessage = error?.message;
   React.useEffect(() => {
-    if (error && setSnackBar) {
-      console.error(`${queryKey} data fetching error:`, error);
-      setSnackBar({
-        open: true,
-        message: error.message || "Failed to load data",
-        severity: "error",
+    if (errorMessage && setSnackBar) {
+      setSnackBar((prev) => {
+        if (prev.message === errorMessage && prev.open) return prev;
+
+        return {
+          open: true,
+          message: errorMessage,
+          severity: "error",
+        };
       });
     }
-  }, [error, queryKey, setSnackBar]);
+  }, [errorMessage, setSnackBar]); // queryKey removed as it's implied by errorMessage
+
   return { error, data, isLoading };
 };
-
 export default useUspBarData;
