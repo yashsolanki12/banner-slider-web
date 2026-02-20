@@ -7,6 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Box from "@mui/material/Box";
 import MuiAlert from "@mui/material/Alert";
+import CircularProgress from "@mui/material/CircularProgress";
 
 // Icons
 import EditIcon from "@mui/icons-material/Edit";
@@ -20,7 +21,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 
 const UspBarTablePage = (props) => {
-  const { data, onDelete, onEdit } = props;
+  const { data, deleteMutation, onEdit } = props;
   const [uspBarMessage, setUspBarMessage] = React.useState({
     open: false,
     apiMessage: "",
@@ -31,15 +32,23 @@ const UspBarTablePage = (props) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [selectedId, setSelectedId] = React.useState(null);
 
+  // Check if delete is in progress
+  const isDeleting = deleteMutation?.isPending;
+
   const handleDeleteClick = (id) => {
     setSelectedId(id);
     setDeleteDialogOpen(true);
   };
 
   const handleConfirmDelete = () => {
-    onDelete(selectedId);
-    setDeleteDialogOpen(false);
-    setSelectedId(null);
+    if (selectedId) {
+      deleteMutation.mutate(selectedId, {
+        onSettled: () => {
+          setDeleteDialogOpen(false);
+          setSelectedId(null);
+        },
+      });
+    }
   };
 
   const handleCloseSnackbar = () => {
@@ -282,6 +291,7 @@ const UspBarTablePage = (props) => {
         message="This action cannot be undone. This will permanently delete the USP Bar entry."
         onClose={() => setDeleteDialogOpen(false)}
         onConfirm={handleConfirmDelete}
+        loading={isDeleting}
       />
     </>
   );

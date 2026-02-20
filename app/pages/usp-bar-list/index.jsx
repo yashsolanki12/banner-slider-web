@@ -8,8 +8,13 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import useUspBarData from "../../hooks/useUspBarData";
+import useUspBarSubmit from "../../hooks/useUspBarSubmit";
 import Loader from "../../ui/loader";
-import { getAllUspBar } from "../../api/usp-bar";
+import {
+  getAllUspBar,
+  getCurrentSession,
+  deleteUspBar,
+} from "../../api/usp-bar";
 
 const UspBarList = () => {
   const [snackbar, setSnackbar] = React.useState({
@@ -23,6 +28,23 @@ const UspBarList = () => {
     ["usp-bar"],
     getAllUspBar,
     setSnackbar,
+  );
+
+  // Current Session
+  const {
+    data: UspBarCurrentSessionData,
+    isLoading: UspBarCurrentSessionLoading,
+  } = useUspBarData(
+    ["usp-bar-current-session"],
+    getCurrentSession,
+    setSnackbar,
+  );
+
+  // Delete Mutation
+  const deleteMutation = useUspBarSubmit(
+    (id) => deleteUspBar(id),
+    setSnackbar,
+    { invalidateKeys: [["usp-bar"]] },
   );
 
   if (UspBarListLoading) {
@@ -61,7 +83,11 @@ const UspBarList = () => {
       </Stack>
 
       {/* Table which manage all list data */}
-      <UspBarTablePage data={UspBarListData || []} />
+      <UspBarTablePage
+        data={UspBarListData || []}
+        deleteMutation={deleteMutation}
+        onEdit={(row) => console.log("Edit:", row)}
+      />
 
       {/* Use to show the toast with desired position */}
       <Snackbar
