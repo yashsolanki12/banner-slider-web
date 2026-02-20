@@ -1,4 +1,6 @@
-import { Paper, Typography, Box } from "@mui/material";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 import PhoneDisabled from "@mui/icons-material/PhoneDisabled";
 
 function NoUspBarFound() {
@@ -34,7 +36,7 @@ function NoUspBarFound() {
             color: "#757575",
           }}
         >
-          No usp bar found.
+          No USP bar found.
         </Typography>
       </Paper>
     </Box>
