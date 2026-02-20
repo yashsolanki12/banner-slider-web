@@ -17,6 +17,7 @@ import Snackbar from "@mui/material/Snackbar";
 import ConfirmDialog from "../../ui/confirmation-dialog";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
 
 const UspBarTablePage = (props) => {
   const { data, onDelete, onEdit } = props;
@@ -63,7 +64,7 @@ const UspBarTablePage = (props) => {
           backgroundColor: "white",
           borderRadius: "8px",
           boxShadow: 1,
-          maxHeight: 440,
+          maxHeight: 650,
           overflowY: "auto",
           "&::-webkit-scrollbar": { width: "8px" },
           "&::-webkit-scrollbar-thumb": {
@@ -91,6 +92,7 @@ const UspBarTablePage = (props) => {
                 Title
               </TableCell>
               <TableCell
+                align="center"
                 sx={{
                   color: "#6b7280",
                   fontWeight: 600,
@@ -128,23 +130,113 @@ const UspBarTablePage = (props) => {
                     "&:last-child td, &:last-child th": { border: 0 },
                   }}
                 >
+                  {/* Title Table Cell */}
                   <TableCell
                     component="th"
                     scope="row"
                     sx={{ fontSize: "14px" }}
                   >
-                    {row.title}
+                    <Tooltip
+                      placement="top-start"
+                      title={row?.title}
+                      arrow
+                      slotProps={{
+                        tooltip: {
+                          sx: {
+                            fontSize: "1rem",
+                            padding: "8px 12px",
+                            maxWidth: "300px",
+                          },
+                        },
+                      }}
+                    >
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontSize: "14px",
+                          maxWidth: 200,
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                          // These 3 lines ensure centering within the cell
+
+                          marginRight: "auto",
+                          display: "block",
+                        }}
+                      >
+                        {row?.title}
+                      </Typography>
+                    </Tooltip>
                   </TableCell>
-                  <TableCell sx={{ fontSize: "14px" }}>
-                    {row.description}
+
+                  {/* Description Table Cell */}
+                  <TableCell align="center">
+                    <Tooltip
+                      placement="top-start"
+                      title={row?.description}
+                      arrow
+                      slotProps={{
+                        tooltip: {
+                          sx: {
+                            fontSize: "1rem",
+                            padding: "8px 12px",
+                            maxWidth: "300px",
+                          },
+                        },
+                      }}
+                    >
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontSize: "14px",
+                          maxWidth: 500,
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                          // These 3 lines ensure centering within the cell
+                          marginLeft: "auto",
+                          marginRight: "auto",
+                          display: "block",
+                          textAlign: "left",
+                        }}
+                      >
+                        {row?.description}
+                      </Typography>
+                    </Tooltip>
                   </TableCell>
+
+                  {/* Actions Table Cell */}
                   <TableCell align="right">
-                    <Tooltip title="Edit">
+                    <Tooltip
+                      title="Edit"
+                      placement="top"
+                      slotProps={{
+                        tooltip: {
+                          sx: {
+                            fontSize: "0.87rem",
+                            padding: "5px 8px",
+                            maxWidth: "50px",
+                          },
+                        },
+                      }}
+                    >
                       <IconButton onClick={() => onEdit(row)} color="primary">
                         <EditIcon fontSize="medium" />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title="Delete">
+                    <Tooltip
+                      title="Delete"
+                      placement="top"
+                      slotProps={{
+                        tooltip: {
+                          sx: {
+                            fontSize: "0.87rem",
+                            padding: "5px 8px",
+                            maxWidth: "50px",
+                          },
+                        },
+                      }}
+                    >
                       <IconButton
                         onClick={() => handleDeleteClick(row._id)}
                         color="error"
@@ -186,8 +278,8 @@ const UspBarTablePage = (props) => {
       {/* Reusable confirm dialog */}
       <ConfirmDialog
         open={deleteDialogOpen}
-        title="Confirm delete USP bar?"
-        message="This action cannot be undone. This will permanently delete the USP bar entry."
+        title="Confirm Delete USP Bar?"
+        message="This action cannot be undone. This will permanently delete the USP Bar entry."
         onClose={() => setDeleteDialogOpen(false)}
         onConfirm={handleConfirmDelete}
       />

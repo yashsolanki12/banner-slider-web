@@ -22,8 +22,9 @@ export const getAllUspBar = async () => {
     })
     .then((res) => res.data)
     .catch((error) => {
-      console.error("API Error in get all banner:", error);
-      throw error;
+      const errorMessage = error.response?.data?.message || error.message;
+      console.error("API Error in get all usp bar:", errorMessage);
+      throw new Error(errorMessage);
     });
 };
 
