@@ -4,6 +4,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const ConfirmationDialog = (props) => {
   const {
@@ -14,6 +15,7 @@ const ConfirmationDialog = (props) => {
     onConfirm,
     confirmText = "Confirm",
     cancelText = "Cancel",
+    loading = false,
   } = props;
   return (
     <Dialog
@@ -36,11 +38,21 @@ const ConfirmationDialog = (props) => {
         <DialogContentText>{message}</DialogContentText>
       </DialogContent>
       <DialogActions sx={{ pb: 2, px: 3 }}>
-        <Button onClick={onClose} color="inherit">
+        <Button onClick={onClose} color="inherit" disabled={loading}>
           {cancelText}
         </Button>
-        <Button onClick={onConfirm} color="error" variant="contained" autoFocus>
-          {confirmText}
+        <Button
+          onClick={onConfirm}
+          color="error"
+          variant="contained"
+          autoFocus
+          disabled={loading}
+        >
+          {loading ? (
+            <CircularProgress size={24} color="inherit" />
+          ) : (
+            confirmText
+          )}
         </Button>
       </DialogActions>
     </Dialog>
