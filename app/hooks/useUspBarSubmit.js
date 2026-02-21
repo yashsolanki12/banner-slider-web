@@ -23,17 +23,19 @@ export const useUspBarSubmit = (mutationFn, setSnackBar, options = {}) => {
         severity: "success",
       });
 
-      // Call custom onSuccess if provided
-      if (onSuccess) {
-        onSuccess(data);
-      }
-
       // Invalidate queries AFTER snackbar is shown (with delay)
       if (invalidateKeys.length > 0) {
         setTimeout(() => {
           invalidateKeys.forEach((key) => {
             queryClient.invalidateQueries({ queryKey: key });
           });
+        }, 1000); // Delay to let snackbar show first
+      }
+
+      // Call custom onSuccess AFTER delay (navigation)
+      if (onSuccess) {
+        setTimeout(() => {
+          onSuccess(data);
         }, 1000); // Delay to let snackbar show first
       }
     },

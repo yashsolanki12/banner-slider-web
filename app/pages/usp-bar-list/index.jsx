@@ -10,11 +10,7 @@ import Typography from "@mui/material/Typography";
 import useUspBarData from "../../hooks/useUspBarData";
 import useUspBarSubmit from "../../hooks/useUspBarSubmit";
 import Loader from "../../ui/loader";
-import {
-  getAllUspBar,
-  getCurrentSession,
-  deleteUspBar,
-} from "../../api/usp-bar";
+import { getAllUspBar, deleteUspBar } from "../../api/usp-bar";
 
 const UspBarList = () => {
   const [snackbar, setSnackbar] = React.useState({
@@ -27,16 +23,6 @@ const UspBarList = () => {
   const { data: UspBarListData, isLoading: UspBarListLoading } = useUspBarData(
     ["usp-bar"],
     getAllUspBar,
-    setSnackbar,
-  );
-
-  // Current Session
-  const {
-    data: UspBarCurrentSessionData,
-    isLoading: UspBarCurrentSessionLoading,
-  } = useUspBarData(
-    ["usp-bar-current-session"],
-    getCurrentSession,
     setSnackbar,
   );
 
@@ -59,12 +45,12 @@ const UspBarList = () => {
         sx={{ mb: 4 }}
       >
         <Typography variant="h5" sx={{ fontWeight: 700, color: "#202223" }}>
-          Usp Bar List
+          USP Bar List
         </Typography>
         <Button
           variant="contained"
           component={SafeLink}
-          to="/app/usp-bar/new"
+          to="/app/usp-bar/create"
           sx={{
             backgroundColor: "#202223",
             color: "white",
@@ -78,7 +64,7 @@ const UspBarList = () => {
             },
           }}
         >
-          New usp bar
+          Create
         </Button>
       </Stack>
 
@@ -86,7 +72,7 @@ const UspBarList = () => {
       <UspBarTablePage
         data={UspBarListData || []}
         deleteMutation={deleteMutation}
-        onEdit={(row) => console.log("Edit:", row)}
+        // onEdit={(row) => console.log("Edit:", row)}
       />
 
       {/* Use to show the toast with desired position */}

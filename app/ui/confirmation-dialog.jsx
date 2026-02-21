@@ -5,6 +5,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
+import Typography from "@mui/material/Typography";
 
 const ConfirmationDialog = (props) => {
   const {
@@ -28,17 +29,21 @@ const ConfirmationDialog = (props) => {
       }}
       aria-labelledby="confirm-dialog-title"
     >
-      <DialogTitle
-        id="confirm-dialog-title"
-        sx={{ fontWeight: 500, fontSize: 20 }}
-      >
-        {title}
+      <DialogTitle id="confirm-dialog-title">
+        <Typography variant="h6">{title}</Typography>
       </DialogTitle>
       <DialogContent>
-        <DialogContentText>{message}</DialogContentText>
+        <DialogContentText>
+          <Typography variant="inherit">{message}</Typography>
+        </DialogContentText>
       </DialogContent>
       <DialogActions sx={{ pb: 2, px: 3 }}>
-        <Button onClick={onClose} color="inherit" disabled={loading}>
+        <Button
+          onClick={onClose}
+          color="inherit"
+          sx={{ backgroundColor: "#e0e0e0", borderRadius: "6px" }}
+          disabled={loading}
+        >
           {cancelText}
         </Button>
         <Button
@@ -47,9 +52,10 @@ const ConfirmationDialog = (props) => {
           variant="contained"
           autoFocus
           disabled={loading}
+          sx={{ borderRadius: "6px" }}
         >
           {loading ? (
-            <CircularProgress size={24} color="inherit" />
+            <CircularProgress size={24} color="success" />
           ) : (
             confirmText
           )}
