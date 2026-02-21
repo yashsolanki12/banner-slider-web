@@ -1,7 +1,7 @@
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import PhoneDisabled from "@mui/icons-material/PhoneDisabled";
+import NotificationsOff from "@mui/icons-material/NotificationsOff";
 
 function NoUspBarFound() {
   return (
@@ -26,7 +26,9 @@ function NoUspBarFound() {
           },
         }}
       >
-        <PhoneDisabled sx={{ fontSize: 50, color: "text.secondary", mb: 2 }} />{" "}
+        <NotificationsOff
+          sx={{ fontSize: 50, color: "text.secondary", mb: 2 }}
+        />{" "}
         <Typography
           variant="h5"
           color="text.secondary"
@@ -36,7 +38,7 @@ function NoUspBarFound() {
             color: "#757575",
           }}
         >
-          No USP bar found.
+          No USP Bar found.
         </Typography>
       </Paper>
     </Box>

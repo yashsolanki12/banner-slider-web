@@ -19,6 +19,7 @@ import ConfirmDialog from "../../ui/confirmation-dialog";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import SafeLink from "../../helper/safe-link";
 
 const UspBarTablePage = (props) => {
   const { data, deleteMutation, onEdit } = props;
@@ -63,6 +64,14 @@ const UspBarTablePage = (props) => {
         severity: "success",
       });
     }
+
+    if (data?.data.length === 0) {
+      setUspBarMessage({
+        open: true,
+        apiMessage: data.message || "No usp bar data found.",
+        severity: "success",
+      });
+    }
   }, [data]);
 
   return (
@@ -94,7 +103,7 @@ const UspBarTablePage = (props) => {
                 sx={{
                   color: "#6b7280",
                   fontWeight: 600,
-                  fontSize: 16,
+                  fontSize: 18,
                   backgroundColor: "white",
                 }}
               >
@@ -105,7 +114,7 @@ const UspBarTablePage = (props) => {
                 sx={{
                   color: "#6b7280",
                   fontWeight: 600,
-                  fontSize: 16,
+                  fontSize: 18,
                   backgroundColor: "white",
                 }}
               >
@@ -116,7 +125,7 @@ const UspBarTablePage = (props) => {
                 sx={{
                   color: "#6b7280",
                   fontWeight: 600,
-                  fontSize: 16,
+                  fontSize: 18,
                   backgroundColor: "white",
                 }}
               >
@@ -146,7 +155,7 @@ const UspBarTablePage = (props) => {
                     sx={{ fontSize: "14px" }}
                   >
                     <Tooltip
-                      placement="top-start"
+                      placement="top"
                       title={row?.title}
                       arrow
                       slotProps={{
@@ -171,6 +180,7 @@ const UspBarTablePage = (props) => {
 
                           marginRight: "auto",
                           display: "block",
+                          width: "fit-content",
                         }}
                       >
                         {row?.title}
@@ -181,7 +191,7 @@ const UspBarTablePage = (props) => {
                   {/* Description Table Cell */}
                   <TableCell align="center">
                     <Tooltip
-                      placement="top-start"
+                      placement="top"
                       title={row?.description}
                       arrow
                       slotProps={{
@@ -206,7 +216,8 @@ const UspBarTablePage = (props) => {
                           marginLeft: "auto",
                           marginRight: "auto",
                           display: "block",
-                          textAlign: "left",
+                          width: "fit-content",
+                          // textAlign: "left",
                         }}
                       >
                         {row?.description}
@@ -229,7 +240,12 @@ const UspBarTablePage = (props) => {
                         },
                       }}
                     >
-                      <IconButton onClick={() => onEdit(row)} color="primary">
+                      <IconButton
+                        component={SafeLink}
+                        to={`/app/usp-bar/${row?._id}`}
+                        // onClick={() => onEdit(row)}
+                        color="primary"
+                      >
                         <EditIcon fontSize="medium" />
                       </IconButton>
                     </Tooltip>

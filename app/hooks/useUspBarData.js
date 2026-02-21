@@ -1,11 +1,17 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 
-export const useUspBarData = (queryKey, queryFn, setSnackBar) => {
+export const useUspBarData = (queryKey, queryFn, setSnackBar, options = {}) => {
+  const { enabled = true, staleTime = 0 } = options;
+
   // Call useQuery at the top level
-  const { error, data, isLoading } = useQuery({
-    queryKey: queryKey,
+  const { error, data, isLoading, refetch } = useQuery({
+    queryKey: Array.isArray(queryKey) ? queryKey : [queryKey],
     queryFn: queryFn,
+    enabled: enabled,
+    staleTime: staleTime,
+    // Refetch every time component mounts
+    refetchOnMount: true,
     // Optional: Prevent retries to stop repeated error cycles during debugging
     retry: false,
   });
@@ -23,8 +29,8 @@ export const useUspBarData = (queryKey, queryFn, setSnackBar) => {
         };
       });
     }
-  }, [errorMessage, setSnackBar]); // queryKey removed as it's implied by errorMessage
+  }, [errorMessage, setSnackBar]);
 
-  return { error, data, isLoading };
+  return { error, data, isLoading, refetch };
 };
 export default useUspBarData;
