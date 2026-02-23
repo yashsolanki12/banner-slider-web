@@ -10,7 +10,11 @@ import Typography from "@mui/material/Typography";
 import useUspBarData from "../../hooks/useUspBarData";
 import useUspBarSubmit from "../../hooks/useUspBarSubmit";
 import Loader from "../../ui/loader";
-import { getAllUspBar, deleteUspBar } from "../../api/usp-bar";
+import {
+  getAllUspBar,
+  deleteUspBar,
+  toggleUspBarEnabled,
+} from "../../api/usp-bar";
 
 const UspBarList = () => {
   const [snackbar, setSnackbar] = React.useState({
@@ -29,6 +33,13 @@ const UspBarList = () => {
   // Delete Mutation
   const deleteMutation = useUspBarSubmit(
     (id) => deleteUspBar(id),
+    setSnackbar,
+    { invalidateKeys: [["usp-bar"]] },
+  );
+
+  // Toggle Enabled Mutation
+  const toggleMutation = useUspBarSubmit(
+    (id) => toggleUspBarEnabled(id),
     setSnackbar,
     { invalidateKeys: [["usp-bar"]] },
   );
@@ -72,6 +83,7 @@ const UspBarList = () => {
       <UspBarTablePage
         data={UspBarListData || []}
         deleteMutation={deleteMutation}
+        toggleMutation={toggleMutation}
         // onEdit={(row) => console.log("Edit:", row)}
       />
 

@@ -2,6 +2,7 @@ import axios from "axios";
 
 const getBaseURL = () => {
   const backendDomain = "https://banner-slider-backend.onrender.com";
+  // const backendDomain = "http://localhost:4000";
 
   return `${backendDomain}/api/`;
 };

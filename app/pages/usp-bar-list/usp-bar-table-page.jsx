@@ -12,6 +12,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 // Icons
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 import NoUspBarFound from "../no-usp-bar-found";
 import Snackbar from "@mui/material/Snackbar";
@@ -22,7 +24,7 @@ import Typography from "@mui/material/Typography";
 import SafeLink from "../../helper/safe-link";
 
 const UspBarTablePage = (props) => {
-  const { data, deleteMutation, onEdit } = props;
+  const { data, deleteMutation, onEdit, toggleMutation } = props;
   const [uspBarMessage, setUspBarMessage] = React.useState({
     open: false,
     apiMessage: "",
@@ -35,6 +37,7 @@ const UspBarTablePage = (props) => {
 
   // Check if delete is in progress
   const isDeleting = deleteMutation?.isPending;
+  const isToggling = toggleMutation?.isPending;
 
   const handleDeleteClick = (id) => {
     setSelectedId(id);
@@ -50,6 +53,10 @@ const UspBarTablePage = (props) => {
         },
       });
     }
+  };
+
+  const handleToggleEnabled = (id) => {
+    toggleMutation.mutate(id);
   };
 
   const handleCloseSnackbar = () => {
@@ -121,6 +128,17 @@ const UspBarTablePage = (props) => {
                 Description
               </TableCell>
               <TableCell
+                align="center"
+                sx={{
+                  color: "#6b7280",
+                  fontWeight: 600,
+                  fontSize: 18,
+                  backgroundColor: "white",
+                }}
+              >
+                Status
+              </TableCell>
+              <TableCell
                 align="right"
                 sx={{
                   color: "#6b7280",
@@ -146,6 +164,7 @@ const UspBarTablePage = (props) => {
                       backgroundColor: "#f3f4f6",
                     },
                     "&:last-child td, &:last-child th": { border: 0 },
+                    opacity: row.enabled ? 1 : 0.6,
                   }}
                 >
                   {/* Title Table Cell */}
@@ -225,8 +244,59 @@ const UspBarTablePage = (props) => {
                     </Tooltip>
                   </TableCell>
 
+                  {/* Status Table Cell */}
+                  <TableCell align="center">
+                    <Box
+                      sx={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 0.5,
+                        px: 1.5,
+                        py: 0.5,
+                        borderRadius: 2,
+                        backgroundColor: row.enabled ? "#dcfce7" : "#fee2e2",
+                        color: row.enabled ? "#166534" : "#991b1b",
+                        fontSize: "12px",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {row.enabled ? "Enabled" : "Disabled"}
+                    </Box>
+                  </TableCell>
+
                   {/* Actions Table Cell */}
                   <TableCell align="right">
+                    {/* Preview/Toggle Button */}
+                    <Tooltip
+                      title={
+                        row.enabled
+                          ? "Disable (Hide from store)"
+                          : "Enable (Show in store)"
+                      }
+                      placement="top"
+                      slotProps={{
+                        tooltip: {
+                          sx: {
+                            fontSize: "0.87rem",
+                            padding: "5px 8px",
+                            maxWidth: "150px",
+                          },
+                        },
+                      }}
+                    >
+                      <IconButton
+                        onClick={() => handleToggleEnabled(row._id)}
+                        color={row.enabled ? "success" : "default"}
+                        disabled={isToggling}
+                      >
+                        {row.enabled ? (
+                          <VisibilityIcon fontSize="medium" />
+                        ) : (
+                          <VisibilityOffIcon fontSize="medium" />
+                        )}
+                      </IconButton>
+                    </Tooltip>
+
                     <Tooltip
                       title="Edit"
                       placement="top"
@@ -274,7 +344,7 @@ const UspBarTablePage = (props) => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={3} align="center">
+                <TableCell colSpan={4} align="center">
                   <NoUspBarFound />
                 </TableCell>
               </TableRow>
