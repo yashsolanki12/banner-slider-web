@@ -1,0 +1,557 @@
+{% if block.settings.enabled %}
+  <div id="usp-bar-container" class="usp-bar-wrapper" data-shop="{{ shop.domain }}" style="display: none;">
+    <button class="usp-nav-btn prev" id="usp-prev-btn">‹</button>
+    <div class="usp-bar-content">
+      <div class="usp-bar-slider" id="usp-slider">
+        <div class="usp-loading">Loading USP Bar...</div>
+      </div>
+    </div>
+    <button class="usp-nav-btn next" id="usp-next-btn">›</button>
+  </div>
+
+  <style>
+    .usp-bar-wrapper {
+      width: 100%;
+      background: #f8f9fa;
+      padding: 15px 20px;
+      box-sizing: border-box;
+      position: relative;
+      overflow: hidden;
+      z-index: 1000;
+    }
+
+    .usp-bar-content {
+      width: 100%;
+      position: relative;
+    }
+
+    {% comment %}
+       .usp-bar-slider {
+          display: flex;
+      align-items: center;
+      width: 100%;
+      min-height: 50px;
+      box-sizing: border-box;
+      } 
+   {% endcomment %}
+    .usp-bar-slider {
+      padding: 0 45px;
+      box-sizing: border-box;
+    }
+
+    @media (max-width: 768px) {
+      .usp-bar-slider {
+        padding: 0 35px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .usp-bar-slider {
+        padding: 0 25px;
+      }
+    }
+
+    .usp-items-wrapper {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      width: 100%;
+    }
+
+    .usp-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 15px;
+      background: #ffffff;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      box-sizing: border-box;
+      width: 100%;
+    }
+
+    .usp-item-icon {
+      width: 20px;
+      height: 20px;
+      min-width: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #4CAF50;
+      border-radius: 50%;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .usp-item-content {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .usp-item-title {
+      font-weight: 600;
+      font-size: 13px;
+      color: #333333;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .usp-item-description {
+      font-size: 11px;
+      color: #666666;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .usp-loading {
+      text-align: center;
+      color: #333333;
+      padding: 10px;
+      width: 100%;
+    }
+
+    .usp-error {
+      text-align: center;
+      color: #e74c3c;
+      padding: 10px;
+      width: 100%;
+    }
+
+    .usp-empty {
+      text-align: center;
+      color: #333333;
+      padding: 10px;
+      width: 100%;
+    }
+
+    /* Slider navigation */
+    .usp-nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #ffffff;
+      border: 1px solid #ddd;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #333333;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      z-index: 10;
+      transition: all 0.2s ease;
+    }
+
+    .usp-nav-btn:hover {
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .usp-nav-btn.prev {
+      left: 5px;
+    }
+
+    .usp-nav-btn.next {
+      right: 5px;
+    }
+
+    .usp-bar-wrapper.has-slider .usp-nav-btn {
+      display: flex;
+    }
+
+    /* Dots indicator */
+    .usp-dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    .usp-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ccc;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .usp-dot.active {
+      background: #4CAF50;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .usp-bar-wrapper {
+        padding: 10px 40px;
+      }
+      
+      .usp-item {
+        padding: 8px 12px;
+      }
+      
+      .usp-item-title {
+        font-size: 12px;
+      }
+      
+      .usp-item-description {
+        font-size: 10px;
+      }
+
+      .usp-item-icon {
+        width: 18px;
+        height: 18px;
+        min-width: 18px;
+        font-size: 10px;
+      }
+
+      .usp-nav-btn {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        font-size: 16px;
+      }
+    }
+  </style>
+
+  <script>
+    (function() {
+      const shop = '{{ shop.domain }}';
+      const apiUrl = 'https://banner-slider-backend.onrender.com';
+      
+      let allItems = [];
+      let currentIndex = 0;
+      let itemsPerView = 3;
+      let autoSlideInterval = null;
+      let designSettings = null;
+
+      // Default design settings
+      const defaultDesignSettings = {
+        backgroundColor: '#f8f9fa',
+        itemBackgroundColor: '#ffffff',
+        titleColor: '#333333',
+        descriptionColor: '#666666',
+        iconBackgroundColor: '#4CAF50',
+        iconColor: '#ffffff',
+        slideSpeed: 4
+      };
+
+      // Fetch USP Bar data
+      async function fetchUspBarData() {
+        const slider = document.getElementById('usp-slider');
+        const container = document.getElementById('usp-bar-container');
+        
+        try {
+          const response = await fetch(`${apiUrl}/api/usp-slider/public/${shop}`);
+          const result = await response.json();
+          
+          
+          if (result.success && result.data && result.data.length > 0) {
+            allItems = result.data;
+            // Get design settings from the first item (all items share the same design settings)
+            designSettings = allItems[0].designSettings || defaultDesignSettings;
+            applyDesignSettings(container);
+            renderUspBar();
+            container.style.display = 'block';
+          } else {
+            slider.innerHTML = '<div class="usp-empty">No USP items to display</div>';
+            container.style.display = 'block';
+          }
+        } catch (error) {
+          console.error('Error fetching USP Bar data:', error);
+          slider.innerHTML = '<div class="usp-error">Failed to load USP Bar</div>';
+          container.style.display = 'block';
+        }
+      }
+
+      // Render USP Bar items
+      function renderUspBar() {
+        const container = document.getElementById('usp-bar-container');
+        const hasSlider = allItems.length > 3;
+        
+        if (hasSlider) {
+          container.classList.add('has-slider');
+          renderSliderView();
+          startAutoSlide();
+        } else {
+          container.classList.remove('has-slider');
+          renderStaticView();
+        }
+      }
+
+      // Apply design settings (only container background - items use inline styles)
+      function applyDesignSettings(container) {
+        const settings = designSettings || defaultDesignSettings;
+        
+        // Apply container background color directly
+        container.style.backgroundColor = settings.backgroundColor;
+        
+        // Create dynamic styles for navigation and dots (these don't have inline styles)
+        const styleEl = document.createElement('style');
+        styleEl.id = 'usp-bar-dynamic-styles';
+        styleEl.textContent = `
+          .usp-bar-wrapper {
+            background: ${settings.backgroundColor} !important;
+          }
+          .usp-dot.active {
+            background: ${settings.iconBackgroundColor} !important;
+          }
+          .usp-nav-btn {
+            background: ${settings.itemBackgroundColor} !important;
+            color: ${settings.titleColor} !important;
+          }
+        `;
+        
+        // Remove existing dynamic styles if any
+        const existingStyles = document.getElementById('usp-bar-dynamic-styles');
+        if (existingStyles) {
+          existingStyles.remove();
+        }
+        
+        document.head.appendChild(styleEl);
+      }
+
+      // Render static view (3 or fewer items)
+      function renderStaticView() {
+        const slider = document.getElementById('usp-slider');
+        let html = '<div class="usp-items-wrapper">';
+        
+        // Global settings from first item (for bar background, icon background, icon color)
+        const globalSettings = designSettings || defaultDesignSettings;
+        
+        allItems.forEach(item => {
+          // Per-item settings (item background, title color, description color)
+          const itemSettings = item.designSettings || defaultDesignSettings;
+          html += `
+            <div class="usp-item" style="background: ${itemSettings.itemBackgroundColor};">
+              <div class="usp-item-icon" style="background: ${globalSettings.iconBackgroundColor}; color: ${globalSettings.iconColor};">✓</div>
+              <div class="usp-item-content">
+                <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
+                <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
+              </div>
+            </div>
+          `;
+        });
+
+        html += '</div>';
+        slider.innerHTML = html;
+      }
+
+      // Render slider view (more than 3 items)
+      function renderSliderView() {
+        const slider = document.getElementById('usp-slider');
+        const container = document.getElementById('usp-bar-container');
+        let html = '<div class="usp-items-wrapper">';
+        
+        // Global settings from first item (for bar background, icon background, icon color)
+        const globalSettings = designSettings || defaultDesignSettings;
+        
+        // Show only 3 items at a time
+        const visibleItems = getVisibleItems();
+        visibleItems.forEach(item => {
+          // Per-item settings (item background, title color, description color)
+          const itemSettings = item.designSettings || defaultDesignSettings;
+          html += `
+            <div class="usp-item" style="background: ${itemSettings.itemBackgroundColor};">
+              <div class="usp-item-icon" style="background: ${globalSettings.iconBackgroundColor}; color: ${globalSettings.iconColor};">✓</div>
+              <div class="usp-item-content">
+                <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
+                <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
+              </div>
+            </div>
+          `;
+        });
+
+        html += '</div>';
+
+        // Add dots indicator
+        const totalSlides = Math.ceil(allItems.length / itemsPerView);
+        html += '<div class="usp-dots">';
+        for (let i = 0; i < totalSlides; i++) {
+          html += `<div class="usp-dot ${i === 0 ? 'active' : ''}" data-index="${i}"></div>`;
+        }
+        html += '</div>';
+
+        slider.innerHTML = html;
+
+        // Setup navigation button handlers
+        setupNavigation(container);
+
+        // Add dot click handlers
+        const dots = slider.querySelectorAll('.usp-dot');
+        dots.forEach(dot => {
+          dot.addEventListener('click', () => {
+            goToSlide(parseInt(dot.dataset.index));
+          });
+        });
+      }
+
+      // Get visible items for current slide
+      function getVisibleItems() {
+        const start = currentIndex * itemsPerView;
+        const end = Math.min(start + itemsPerView, allItems.length);
+        return allItems.slice(start, end);
+      }
+
+      // Setup navigation
+      function setupNavigation(container) {
+        const prevBtn = document.getElementById('usp-prev-btn');
+        const nextBtn = document.getElementById('usp-next-btn');
+        
+        prevBtn.onclick = () => slideDirection(-1);
+        nextBtn.onclick = () => slideDirection(1);
+      }
+
+      // Slide navigation
+      function slideDirection(direction) {
+        const totalSlides = Math.ceil(allItems.length / itemsPerView);
+        currentIndex += direction;
+        
+        if (currentIndex < 0) currentIndex = totalSlides - 1;
+        if (currentIndex >= totalSlides) currentIndex = 0;
+        
+        updateSlider();
+      }
+
+      // Go to specific slide
+      function goToSlide(index) {
+        currentIndex = index;
+        updateSlider();
+      }
+
+      // Update slider view
+      function updateSlider() {
+        const slider = document.getElementById('usp-slider');
+        const visibleItems = getVisibleItems();
+        const wrapper = slider.querySelector('.usp-items-wrapper');
+        
+        // Global settings from first item (for bar background, icon background, icon color)
+        const globalSettings = designSettings || defaultDesignSettings;
+        
+        let html = '';
+        visibleItems.forEach(item => {
+          // Per-item settings (item background, title color, description color)
+          const itemSettings = item.designSettings || defaultDesignSettings;
+          html += `
+            <div class="usp-item" style="background: ${itemSettings.itemBackgroundColor};">
+              <div class="usp-item-icon" style="background: ${globalSettings.iconBackgroundColor}; color: ${globalSettings.iconColor};">✓</div>
+              <div class="usp-item-content">
+                <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
+                <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
+              </div>
+            </div>
+          `;
+        });
+        
+        wrapper.innerHTML = html;
+
+        // Update dots
+        const dots = slider.querySelectorAll('.usp-dot');
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('active', i === currentIndex);
+        });
+
+        // Reset auto slide
+        resetAutoSlide();
+      }
+
+      // Auto slide functionality
+      function startAutoSlide() {
+        const settings = designSettings || defaultDesignSettings;
+        const slideSpeed = (settings.slideSpeed || 4) * 1000;
+        autoSlideInterval = setInterval(() => {
+          slideDirection(1);
+        }, slideSpeed);
+      }
+
+      // Reset auto slide
+      function resetAutoSlide() {
+        if (autoSlideInterval) {
+          clearInterval(autoSlideInterval);
+          startAutoSlide();
+        }
+      }
+
+      // Escape HTML to prevent XSS
+      function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      // Initialize when DOM is ready
+      function init() {
+        // Find the header and insert USP bar after it
+        const container = document.getElementById('usp-bar-container');
+        
+        // Try to find common header selectors
+        const header = document.querySelector('header') || 
+                       document.querySelector('.header') || 
+                       document.querySelector('#header') ||
+                       document.querySelector('.shopify-section-header') ||
+                       document.querySelector('[role="banner"]');
+        
+        if (header && header.nextSibling) {
+          header.parentNode.insertBefore(container, header.nextSibling);
+        } else if (header) {
+          header.parentNode.appendChild(container);
+        }
+        
+        fetchUspBarData();
+      }
+
+      // Wait for DOM to be ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+
+      // Pause on hover
+      document.addEventListener('mouseenter', function(e) {
+        const container = document.getElementById('usp-bar-container');
+        if (container && container.contains(e.target)) {
+          if (autoSlideInterval) {
+            clearInterval(autoSlideInterval);
+            autoSlideInterval = null;
+          }
+        }
+      }, true);
+
+      document.addEventListener('mouseleave', function(e) {
+        const container = document.getElementById('usp-bar-container');
+        if (container && container.contains(e.target)) {
+          if (allItems.length > 3 && !autoSlideInterval) {
+            startAutoSlide();
+          }
+        }
+      }, true);
+    })();
+  </script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "USP Bar",
+  "target": "body",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Enable USP Bar",
+      "default": true,
+      "info": "Toggle to show or hide the USP Bar"
+    }
+  ]
+}
+{% endschema %}
