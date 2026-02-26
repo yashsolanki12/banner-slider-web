@@ -1,9 +1,11 @@
 import UspBarList from "./index";
 
-const UspBarListPage = () => {
+const UspBarListPage = (props) => {
+  const { appEmbedEnabled, session } = props;
+
   return (
     <>
-      <UspBarList />
+      <UspBarList appEmbedEnabled={appEmbedEnabled} session={session} />
     </>
   );
 };
