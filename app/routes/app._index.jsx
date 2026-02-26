@@ -1,20 +1,11 @@
 import React from "react";
 import { boundary } from "@shopify/shopify-app-react-router/server";
-import { authenticate } from "../shopify.server";
-import UspBarPage from "./app.usp-bar._index";
-// const UspBarPage = React.lazy(() => import("./app.usp-bar._index"));
+import Usp , { loader as uspLoader } from "./app.usp";
 
-export const loader = async ({ request }) => {
-  await authenticate.admin(request);
-  return null;
-};
+export const loader = uspLoader;
 
 export default function Index() {
-  return (
-    // <React.Suspense fallback="">
-      <UspBarPage />
-    // </React.Suspense>
-  );
+  return <Usp />;
 }
 
 export const headers = (headersArgs) => {

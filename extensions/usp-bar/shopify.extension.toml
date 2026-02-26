@@ -2,14 +2,11 @@ name = "usp-bar"
 type = "theme"
 uid = "644eb298-031e-d2ec-f3e0-4bf571ac3f68a7d1f8c5"
 
-
 [blocks]
 	[blocks.app-embed]
 	name = "App Embed Block"
 	target = "body"
-	file = "blocks/star_rating.liquid"
-
-
+	file = "blocks/usp_bar.liquid"
 
 # Optional: Add metafields if needed
 # [[extensions.metafields]]

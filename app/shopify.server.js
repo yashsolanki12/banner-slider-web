@@ -32,7 +32,7 @@ export async function registerAppUninstalledWebhook(session) {
   const response = await shopify.webhook.register({
     session,
     topic: "APP_UNINSTALLED",
-    address: "hhttps://banner-slider-backend.onrender.com/api/shopify/webhook",
+    address: "https://banner-slider-backend.onrender.com/api/shopify/webhook",
     format: "json",
   });
   if (response.success) {
