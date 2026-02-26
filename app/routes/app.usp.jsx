@@ -1,13 +1,11 @@
 import React from "react";
-import { useLoaderData } from "react-router";
 import { authenticate } from "../shopify.server";
-
-const UspBarListPage = React.lazy(
-  () => import("../pages/usp-bar-list/usp-bar-list-page"),
-);
+import { useLoaderData } from "react-router";
+const UspBarList = React.lazy(() => import("../pages/usp-bar-list/index"));
 
 export const loader = async ({ request }) => {
   const { admin, session } = await authenticate.admin(request);
+
   try {
     // Fetch main theme using raw fetch
     const themesResponse = await fetch(
@@ -93,8 +91,7 @@ export const loader = async ({ request }) => {
       const uspBarBlocks = Object.keys(rawBlocks)
         .filter((key) => {
           const block = rawBlocks[key];
-          const isMatch =
-            block.type && block.type.includes("dummy-store-whatsapp-mern");
+          const isMatch = block.type && block.type.includes("usp_bar");
           if (isMatch)
             simulation.logs.push(
               `Found matching block: ${key} (${block.type})`,
@@ -116,9 +113,7 @@ export const loader = async ({ request }) => {
         });
         simulation.finalDecision = isAnyEnabled;
       } else {
-        simulation.logs.push(
-          "No blocks matching 'dummy-store-whatsapp-mern-mern' found.",
-        );
+        simulation.logs.push("No blocks matching 'usp_bar' found.");
       }
     }
 
@@ -148,17 +143,12 @@ export const loader = async ({ request }) => {
   }
 };
 
-export default function UspBarPage() {
+export default function Usp() {
   const data = useLoaderData();
   const appEmbedEnabled = data?.appEmbedEnabled ?? false;
-
   return (
     <React.Suspense fallback="">
-      {/* Usp bar list */}
-      <UspBarListPage
-        appEmbedEnabled={appEmbedEnabled}
-        session={data?.session}
-      />
+      <UspBarList appEmbedEnabled={appEmbedEnabled} session={data?.session} />
     </React.Suspense>
   );
 }

@@ -7,7 +7,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Box from "@mui/material/Box";
 import MuiAlert from "@mui/material/Alert";
-import CircularProgress from "@mui/material/CircularProgress";
 
 // Icons
 import EditIcon from "@mui/icons-material/Edit";
@@ -15,7 +14,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
-import NoUspBarFound from "../no-usp-bar-found";
+import NoUspBarFound from "../../components/no-usp-bar-found";
 import Snackbar from "@mui/material/Snackbar";
 import ConfirmDialog from "../../ui/confirmation-dialog";
 import IconButton from "@mui/material/IconButton";
@@ -35,9 +34,11 @@ const UspBarTablePage = (props) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [selectedId, setSelectedId] = React.useState(null);
 
+  // Track which specific item is being toggled
+  const [togglingId, setTogglingId] = React.useState(null);
+
   // Check if delete is in progress
   const isDeleting = deleteMutation?.isPending;
-  const isToggling = toggleMutation?.isPending;
 
   const handleDeleteClick = (id) => {
     setSelectedId(id);
@@ -56,7 +57,12 @@ const UspBarTablePage = (props) => {
   };
 
   const handleToggleEnabled = (id) => {
-    toggleMutation.mutate(id);
+    setTogglingId(id);
+    toggleMutation.mutate(id, {
+      onSettled: () => {
+        setTogglingId(null);
+      },
+    });
   };
 
   const handleCloseSnackbar = () => {
@@ -279,7 +285,7 @@ const UspBarTablePage = (props) => {
                           sx: {
                             fontSize: "0.87rem",
                             padding: "5px 8px",
-                            maxWidth: "150px",
+                            maxWidth: "200px",
                           },
                         },
                       }}
@@ -287,7 +293,7 @@ const UspBarTablePage = (props) => {
                       <IconButton
                         onClick={() => handleToggleEnabled(row._id)}
                         color={row.enabled ? "success" : "default"}
-                        disabled={isToggling}
+                        disabled={togglingId === row._id}
                       >
                         {row.enabled ? (
                           <VisibilityIcon fontSize="medium" />
