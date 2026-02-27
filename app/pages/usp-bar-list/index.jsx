@@ -69,7 +69,6 @@ const UspBarList = (props) => {
             display: "flex",
             justifyContent: "center", // Horizontal centering
             alignItems: "center", // Vertical centering
-
             width: "100%", // Takes full width
           }}
         >
@@ -104,7 +103,11 @@ const UspBarList = (props) => {
                 variant="body2"
                 color="text.secondary"
                 textAlign="center"
-                sx={{color: "black"}}
+                sx={{
+                  color: "black",
+                  letterSpacing: "0.30px",
+                  textJustify: "inter-character",
+                }}
               >
                 To display your USP Bar, please complete the configuration below
                 by defining your custom titles, descriptions, and brand styling.

@@ -29,14 +29,14 @@ export const useUspBarSubmit = (mutationFn, setSnackBar, options = {}) => {
           invalidateKeys.forEach((key) => {
             queryClient.invalidateQueries({ queryKey: key });
           });
-        }, 1000); // Delay to let snackbar show first
+        }, 3000); // Delay to let snackbar show first
       }
 
       // Call custom onSuccess AFTER delay (navigation)
       if (onSuccess) {
         setTimeout(() => {
           onSuccess(data);
-        }, 1000); // Delay to let snackbar show first
+        }, 4000); // Delay to let snackbar show first
       }
     },
   });
