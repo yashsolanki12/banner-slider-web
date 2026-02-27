@@ -39,6 +39,8 @@
     .usp-bar-slider {
       padding: 0 45px;
       box-sizing: border-box;
+      display: flex;
+      justify-content: center;
     }
 
     @media (max-width: 768px) {
@@ -57,7 +59,7 @@
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         gap: 15px;
-        width: 100%;
+        {% comment %} width: 100%; {% endcomment %}
       }
 
       .usp-item {
@@ -70,7 +72,9 @@
         {% comment %} border-radius: 6px; {% endcomment %}
         {% comment %} box-shadow: 0 1px 3px rgba(0,0,0,0.1); {% endcomment %}
         box-sizing: border-box;
-        width: 100%;
+        {% comment %} width: 100%; {% endcomment %}
+        width: 300px;
+        padding: 0px 10px;
         position: relative;
       }
 
@@ -195,7 +199,7 @@
     }
 
     /* Dots indicator */
-    .usp-dots {
+    {% comment %} .usp-dots {
       display: flex;
       justify-content: center;
       gap: 6px;
@@ -214,7 +218,7 @@
 
     .usp-dot.active {
       background: #4CAF50;
-    }
+    } {% endcomment %}
 
     /* Responsive */
     @media (max-width: 768px) {
@@ -424,10 +428,10 @@
 
         // Add dots indicator
         const totalSlides = Math.ceil(allItems.length / itemsPerView);
-        html += '<div class="usp-dots">';
+        {% comment %} html += '<div class="usp-dots">';
         for (let i = 0; i < totalSlides; i++) {
           html += `<div class="usp-dot ${i === 0 ? 'active' : ''}" data-index="${i}"></div>`;
-        }
+        } {% endcomment %}
         html += '</div>';
 
         slider.innerHTML = html;
@@ -492,7 +496,7 @@
            const itemSettings = item.designSettings || defaultDesignSettings;
            html += `
              <div class="usp-item">
-                <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor} color: ${itemSettings.iconColor};">${item.icon ? `<img src="${item.icon}" alt="Icon" style="width: 16px; height: 16px; object-fit: contain; filter: ${hexToRgb(itemSettings.iconColor) ? `brightness(0) saturate(100%) invert(${hexToRgb(itemSettings.iconColor).r}%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)` : 'brightness(0) invert(1)'};">` : '✓'}</div>
+                <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">${item.icon ? `<img src="${item.icon}" alt="Icon" style="width: 16px; height: 16px; object-fit: contain; filter: ${hexToRgb(itemSettings.iconColor) ? `brightness(0) saturate(100%) invert(${hexToRgb(itemSettings.iconColor).r}%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)` : 'brightness(0) invert(1)'};">` : '✓'}</div>
                <div class="usp-item-content">
                  <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
                  <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
