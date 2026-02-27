@@ -1,0 +1,610 @@
+<div id="usp-bar-container" class="usp-bar-wrapper" data-shop="{{ shop.domain }}" style="display: none;">
+  <button class="usp-nav-btn prev" id="usp-prev-btn">
+    <img src="{{ 'chevron-left.svg' | asset_url }}" alt="left-arrow" width="20px" height="20px">
+  </button>
+  <div class="usp-bar-content">
+    <div class="usp-bar-slider" id="usp-slider">
+      <div class="usp-loading">Loading USP Bar...</div>
+    </div>
+  </div>
+  <button class="usp-nav-btn next" id="usp-next-btn">
+    <img src="{{ 'chevron-right.svg' | asset_url }}" alt="right-arrow" width="20px" height="20px">
+  </button>
+</div>
+
+<style>
+  .usp-bar-wrapper {
+    width: 100%;
+    background: #f8f9fa;
+    padding: 15px 20px;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    z-index: 1000;
+  }
+
+  .usp-bar-content {
+    width: 100%;
+    position: relative;
+  }
+
+  .usp-bar-slider {
+    padding: 0 45px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    min-height: 80px;
+  }
+
+  @media (max-width: 768px) {
+    .usp-bar-slider {
+      padding: 0 35px;
+      min-height: 70px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .usp-bar-slider {
+      padding: 0 25px;
+      min-height: 60px;
+    }
+  }
+
+  @media (max-width: 320px) {
+    .usp-bar-slider {
+      padding: 0 25px;
+      min-height: 60px;
+    }
+  }
+
+  .usp-items-wrapper {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    width: 100%;
+  }
+
+  .usp-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 300px;
+    min-width: 250px;
+    padding: 0px 10px;
+    position: relative;
+    min-height: 60px;
+  }
+
+  .usp-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 30px;
+    background-color: #000000;
+  }
+
+  .usp-item-inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 15px;
+  }
+
+  .usp-item-icon {
+    width: 35px;
+    height: 35px;
+    min-width: 35px;
+    min-height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #4CAF50;
+    border-radius: 50%;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+  
+  .usp-item-icon img {
+    filter: brightness(0) invert(1);
+  }
+
+  .usp-item-content {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .usp-item-title {
+    font-weight: 600;
+    font-size: 16px;
+    color: #333333;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+    flex-shrink: 1;
+  }
+
+  .usp-item-description {
+    font-size: 14px;
+    color: #666666;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+    flex-shrink: 1;
+  }
+
+  .usp-loading {
+    text-align: center;
+    color: #333333;
+    padding: 10px;
+    width: 100%;
+  }
+
+  .usp-error {
+    text-align: center;
+    color: #e74c3c;
+    padding: 10px;
+    width: 100%;
+  }
+
+  .usp-empty {
+    text-align: center;
+    color: #333333;
+    padding: 10px;
+    width: 100%;
+  }
+
+  /* Slider navigation */
+  .usp-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 1px solid #ddd;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #333333;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    z-index: 10;
+    transition: all 0.2s ease;
+  }
+
+  .usp-nav-btn:hover {
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  }
+
+  .usp-nav-btn.prev {
+    left: 5px;
+  }
+
+  .usp-nav-btn.next {
+    right: 5px;
+  }
+
+  .usp-bar-wrapper.has-slider .usp-nav-btn {
+    display: flex;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .usp-bar-wrapper {
+      padding: 10px 40px;
+    }
+    
+    .usp-items-wrapper {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    
+    .usp-item {
+      padding: 8px 12px;
+      min-width: 200px;
+      max-width: 250px;
+      min-height: 50px;
+    }
+    
+    .usp-item-title {
+      font-size: 12px;
+      max-width: 140px;
+      line-height: 1.3;
+    }
+    
+    .usp-item-description {
+      font-size: 10px;
+      max-width: 140px;
+      line-height: 1.2;
+    }
+
+    .usp-item-icon {
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      min-height: 28px;
+      font-size: 10px;
+    }
+
+    .usp-nav-btn {
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      font-size: 16px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .usp-bar-slider {
+      padding: 0 30px;
+      min-height: 60px;
+    }
+    
+    .usp-items-wrapper {
+      grid-template-columns: 1fr;
+      gap: 10px;
+      width: 100%;
+    }
+    
+    .usp-item {
+      min-width: 100%;
+      max-width: 100%;
+      min-height: 45px;
+      width: 100%;
+      padding: 8px 10px;
+    }
+    
+    .usp-item-title {
+      font-size: 11px;
+      max-width: 160px;
+      line-height: 1.3;
+    }
+    
+    .usp-item-description {
+      font-size: 9px;
+      max-width: 160px;
+      line-height: 1.2;
+    }
+
+    .usp-item-icon {
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+      min-height: 24px;
+      font-size: 9px;
+    }
+
+    .usp-nav-btn {
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+      font-size: 14px;
+    }
+    
+    .usp-nav-btn.prev {
+      left: 5px;
+    }
+    
+    .usp-nav-btn.next {
+      right: 5px;
+    }
+  }
+
+  @media (max-width: 320px) {
+    .usp-bar-wrapper {
+      padding: 10px 30px;
+    }
+    
+    .usp-bar-slider {
+      padding: 0 25px;
+      min-height: 60px;
+    }
+    
+    .usp-item {
+      padding: 8px 10px;
+      min-height: 45px;
+    }
+    
+    .usp-item-title {
+      font-size: 12px;
+      max-width: 140px;
+      line-height: 1.3;
+    }
+    
+    .usp-item-description {
+      font-size: 10px;
+      max-width: 140px;
+      line-height: 1.2;
+    }
+
+    .usp-item-icon {
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      min-height: 28px;
+      font-size: 12px;
+    }
+
+    .usp-nav-btn {
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      font-size: 16px;
+    }
+    
+    .usp-nav-btn.prev {
+      left: 5px;
+    }
+    
+    .usp-nav-btn.next {
+      right: 5px;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    const shop = '{{ shop.domain }}';
+    const apiUrl = 'https://banner-slider-backend.onrender.com';
+    
+    let allItems = [];
+    let currentIndex = 0;
+    let itemsPerView = calculateItemsPerView();
+    let autoSlideInterval = null;
+    let designSettings = null;
+
+    const defaultDesignSettings = {
+      backgroundColor: '#f8f9fa',
+      titleColor: '#333333',
+      descriptionColor: '#666666',
+      iconBackgroundColor: '#4CAF50',
+      iconColor: '#ffffff',
+      slideSpeed: 4,
+      itemBorderRightColor: "#000000"
+    };
+
+    function calculateItemsPerView() {
+      if (window.innerWidth <= 320) {
+        return 1;
+      } else if (window.innerWidth <= 480) {
+        return 1;
+      } else if (window.innerWidth <= 768) {
+        return 3;
+      } else {
+        return 4;
+      }
+    }
+
+    function handleResize() {
+      const newItemsPerView = calculateItemsPerView();
+      if (newItemsPerView !== itemsPerView) {
+        itemsPerView = newItemsPerView;
+        currentIndex = 0;
+        renderUspBar();
+      }
+    }
+
+    window.addEventListener('resize', handleResize);
+
+    async function fetchUspBarData() {
+      const slider = document.getElementById('usp-slider');
+      const container = document.getElementById('usp-bar-container');
+      
+      try {
+        const response = await fetch(`${apiUrl}/api/usp-slider/public/${shop}`);
+        const result = await response.json();
+        
+        if (result.success && result.data && result.data.length > 0) {
+          allItems = result.data;
+          designSettings = allItems[0].designSettings || defaultDesignSettings;
+          applyDesignSettings(container);
+          itemsPerView = calculateItemsPerView();
+          renderUspBar();
+          container.style.display = 'block';
+        } else {
+          slider.innerHTML = '<div class="usp-empty">No USP items to display</div>';
+          container.style.display = 'block';
+        }
+      } catch (error) {
+        console.error('Error fetching USP Bar data:', error);
+        slider.innerHTML = '<div class="usp-error">Failed to load USP Bar</div>';
+        container.style.display = 'block';
+      }
+    }
+
+    function renderUspBar() {
+      const container = document.getElementById('usp-bar-container');
+      itemsPerView = calculateItemsPerView();
+      const hasSlider = allItems.length > itemsPerView;
+      
+      if (hasSlider) {
+        container.classList.add('has-slider');
+        renderSliderView();
+        startAutoSlide();
+      } else {
+        container.classList.remove('has-slider');
+        renderStaticView();
+      }
+    }
+
+    function applyDesignSettings(container) {
+      const settings = designSettings || defaultDesignSettings;
+      
+      container.style.backgroundColor = settings.backgroundColor;
+      
+      const styleEl = document.createElement('style');
+      styleEl.id = 'usp-bar-dynamic-styles';
+      styleEl.textContent = `
+        .usp-dot.active {
+          background: ${settings.iconBackgroundColor} !important;
+        }
+        .usp-nav-btn {
+          color: ${settings.titleColor} !important;
+        } 
+        .usp-item:not(:last-child)::after {
+          background-color: ${settings.itemBorderRightColor} !important;
+        }
+      `;
+     
+      const existingStyles = document.getElementById('usp-bar-dynamic-styles');
+      if (existingStyles) {
+        existingStyles.remove();
+      }
+      
+      document.head.appendChild(styleEl);
+    }
+
+    function renderStaticView() {
+      const slider = document.getElementById('usp-slider');
+      let html = '<div class="usp-items-wrapper">';
+      
+      const globalSettings = designSettings || defaultDesignSettings;
+      
+      allItems.forEach((item, index) => {
+        const itemSettings = item.designSettings || defaultDesignSettings;
+        html += `
+          <div class="usp-item">
+             <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">${item.icon ? `<img src="${item.icon}" alt="Icon" style="width: 22px !important; height: 22px !important; object-fit: contain; filter: ${hexToRgb(itemSettings.iconColor) ? `brightness(0) saturate(100%) invert(${hexToRgb(itemSettings.iconColor).r}%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)` : 'brightness(0) invert(1)'};">` : '✓'}</div>
+            <div class="usp-item-content">
+              <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
+              <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
+            </div>
+          </div>
+        `;
+      });
+
+      html += '</div>';
+      slider.innerHTML = html;
+    }
+
+    function renderSliderView() {
+      const slider = document.getElementById('usp-slider');
+      const container = document.getElementById('usp-bar-container');
+      let html = '<div class="usp-items-wrapper">';
+      
+      const globalSettings = designSettings || defaultDesignSettings;
+      
+      const visibleItems = getVisibleItems();
+      visibleItems.forEach((item, index) => {
+        const itemSettings = item.designSettings || defaultDesignSettings;
+        html += `
+          <div class="usp-item">
+             <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">${item.icon ? `<img src="${item.icon}" alt="Icon" style="width: 16px; height: 16px; object-fit: contain; filter: ${hexToRgb(itemSettings.iconColor) ? `brightness(0) saturate(100%) invert(${hexToRgb(itemSettings.iconColor).r}%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)` : 'brightness(0) invert(1)'};">` : '✓'}</div>
+            <div class="usp-item-content">
+              <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
+              <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
+            </div>
+          </div>
+        `;
+      });
+
+      html += '</div>';
+
+      slider.innerHTML = html;
+
+      setupNavigation(container);
+    }
+
+    function getVisibleItems() {
+      const start = currentIndex * itemsPerView;
+      const end = Math.min(start + itemsPerView, allItems.length);
+      return allItems.slice(start, end);
+    }
+
+    function setupNavigation(container) {
+      const prevBtn = document.getElementById('usp-prev-btn');
+      const nextBtn = document.getElementById('usp-next-btn');
+      
+      prevBtn.onclick = () => slideDirection(-1);
+      nextBtn.onclick = () => slideDirection(1);
+    }
+
+    function slideDirection(direction) {
+      const totalSlides = Math.ceil(allItems.length / itemsPerView);
+      currentIndex += direction;
+      
+      if (currentIndex < 0) currentIndex = totalSlides - 1;
+      if (currentIndex >= totalSlides) currentIndex = 0;
+      
+      updateSlider();
+    }
+
+    function goToSlide(index) {
+      currentIndex = index;
+      updateSlider();
+    }
+
+    function updateSlider() {
+      const slider = document.getElementById('usp-slider');
+      const visibleItems = getVisibleItems();
+      const wrapper = slider.querySelector('.usp-items-wrapper');
+      
+      const globalSettings = designSettings || defaultDesignSettings;
+      
+      let html = '';
+      visibleItems.forEach((item, index) => {
+        const itemSettings = item.designSettings || defaultDesignSettings;
+        html += `
+          <div class="usp-item">
+             <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">${item.icon ? `<img src="${item.icon}" alt="Icon" style="width: 16px; height: 16px; object-fit: contain; filter: ${hexToRgb(itemSettings.iconColor) ? `brightness(0) saturate(100%) invert(${hexToRgb(itemSettings.iconColor).r}%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)` : 'brightness(0) invert(1)'};">` : '✓'}</div>
+            <div class="usp-item-content">
+              <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
+              <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
+            </div>
+          </div>
+        `;
+      });
+      
+      wrapper.innerHTML = html;
+    }
+
+    function startAutoSlide() {
+      const settings = designSettings || defaultDesignSettings;
+      const slideSpeed = (settings.slideSpeed || 4) * 1000;
+      autoSlideInterval = setInterval(() => {
+        slideDirection(1);
+      }, slideSpeed);
+    }
+
+    function hexToRgb(hex) {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+      } : null;
+    }
+
+    function escapeHtml(text) {
+      const map = {
+        '&': '&',
+        '<': '<',
+        '>': '>',
+        '"': '"',
+        "'": '&#039;'
+      };
+
+      return text.replace(/[&<>"]/g, function(m) { return map[m]; });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      fetchUspBarData();
+    });
+  })();
+</script>
