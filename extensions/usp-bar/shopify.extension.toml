@@ -7,6 +7,16 @@ uid = "644eb298-031e-d2ec-f3e0-4bf571ac3f68a7d1f8c5"
 	name = "App Embed Block"
 	target = "body"
 	file = "blocks/usp_bar.liquid"
+	
+	[blocks.usp-bar]
+	name = "USP Bar"
+	target = "section"
+	file = "blocks/usp-bar.liquid"
+
+[snippets]
+	[snippets.usp-bar]
+	name = "USP Bar"
+	file = "snippets/usp-bar.liquid"
 
 # Optional: Add metafields if needed
 # [[extensions.metafields]]
