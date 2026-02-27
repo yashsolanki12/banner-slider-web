@@ -1,12 +1,14 @@
 {% if block.settings.enabled %}
   <div id="usp-bar-container" class="usp-bar-wrapper" data-shop="{{ shop.domain }}" style="display: none;">
-    <button class="usp-nav-btn prev" id="usp-prev-btn">‹</button>
+    <button class="usp-nav-btn prev" id="usp-prev-btn">
+      <img src="{{ 'chevron-left.svg' | asset_url }}" alt="left-arrow" width="20px" height="20px">
+    </button>
     <div class="usp-bar-content">
       <div class="usp-bar-slider" id="usp-slider">
         <div class="usp-loading">Loading USP Bar...</div>
       </div>
     </div>
-    <button class="usp-nav-btn next" id="usp-next-btn">›</button>
+    <button class="usp-nav-btn next" id="usp-next-btn"> <img src="{{ 'chevron-right.svg' | asset_url }}" alt="right-arrow" width="20px" height="20px"></button>
   </div>
 
   <style>
@@ -51,28 +53,48 @@
       }
     }
 
-    .usp-items-wrapper {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-      width: 100%;
-    }
+     .usp-items-wrapper {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        width: 100%;
+      }
 
-    .usp-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 15px;
-      background: #ffffff;
-      border-radius: 6px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      box-sizing: border-box;
-      width: 100%;
-    }
+      .usp-item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        {% comment %} padding: 10px 15px; {% endcomment %}
+        {% comment %} background: #ffffff; {% endcomment %}
+        {% comment %} border-radius: 6px; {% endcomment %}
+        {% comment %} box-shadow: 0 1px 3px rgba(0,0,0,0.1); {% endcomment %}
+        box-sizing: border-box;
+        width: 100%;
+        position: relative;
+      }
+
+      .usp-item:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        right: -10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 3px;
+        height: 30px;
+        background-color: #000000;
+      }
+
+      .usp-item-inner {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 15px; /* this creates space before border */
+      }
 
     .usp-item-icon {
-      width: 20px;
-      height: 20px;
+      width: 35px;
+      height: 35px;
       min-width: 20px;
       display: flex;
       align-items: center;
@@ -83,6 +105,10 @@
       font-size: 12px;
       font-weight: bold;
     }
+    
+    .usp-item-icon img {
+      filter: brightness(0) invert(1);
+    }
 
     .usp-item-content {
       display: flex;
@@ -92,7 +118,7 @@
 
     .usp-item-title {
       font-weight: 600;
-      font-size: 13px;
+      font-size: 16px;
       color: #333333;
       margin: 0;
       white-space: nowrap;
@@ -101,7 +127,7 @@
     }
 
     .usp-item-description {
-      font-size: 11px;
+      font-size: 14px;
       color: #666666;
       margin: 0;
       white-space: nowrap;
@@ -135,7 +161,7 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: #ffffff;
+      {% comment %} background: #ffffff !important; {% endcomment %}
       border: 1px solid #ddd;
       width: 32px;
       height: 32px;
@@ -152,7 +178,7 @@
     }
 
     .usp-nav-btn:hover {
-      background: #fff;
+      {% comment %} background: #fff; {% endcomment %}
       box-shadow: 0 2px 6px rgba(0,0,0,0.3);
     }
 
@@ -231,19 +257,20 @@
       
       let allItems = [];
       let currentIndex = 0;
-      let itemsPerView = 3;
+      let itemsPerView = 4;
       let autoSlideInterval = null;
       let designSettings = null;
 
       // Default design settings
       const defaultDesignSettings = {
-        backgroundColor: '#f8f9fa',
-        itemBackgroundColor: '#ffffff',
+        {% comment %} backgroundColor: '#f8f9fa',
+        itemBackgroundColor: '#ffffff', {% endcomment %}
         titleColor: '#333333',
         descriptionColor: '#666666',
         iconBackgroundColor: '#4CAF50',
         iconColor: '#ffffff',
-        slideSpeed: 4
+        slideSpeed: 4,
+        itemBorderRightColor: "#000000"
       };
 
       // Fetch USP Bar data
@@ -277,7 +304,7 @@
       // Render USP Bar items
       function renderUspBar() {
         const container = document.getElementById('usp-bar-container');
-        const hasSlider = allItems.length > 3;
+        const hasSlider = allItems.length > 4;
         
         if (hasSlider) {
           container.classList.add('has-slider');
@@ -289,28 +316,31 @@
         }
       }
 
-      // Apply design settings (only container background - items use inline styles)
-      function applyDesignSettings(container) {
-        const settings = designSettings || defaultDesignSettings;
-        
-        // Apply container background color directly
-        container.style.backgroundColor = settings.backgroundColor;
-        
-        // Create dynamic styles for navigation and dots (these don't have inline styles)
-        const styleEl = document.createElement('style');
-        styleEl.id = 'usp-bar-dynamic-styles';
-        styleEl.textContent = `
-          .usp-bar-wrapper {
-            background: ${settings.backgroundColor} !important;
-          }
-          .usp-dot.active {
-            background: ${settings.iconBackgroundColor} !important;
-          }
-          .usp-nav-btn {
-            background: ${settings.itemBackgroundColor} !important;
-            color: ${settings.titleColor} !important;
-          }
-        `;
+       // Apply design settings (only container background - items use inline styles)
+       function applyDesignSettings(container) {
+         const settings = designSettings || defaultDesignSettings;
+         
+         // Apply container background color directly
+         container.style.backgroundColor = settings.backgroundColor;
+         
+         // Create dynamic styles for navigation and dots (these don't have inline styles)
+         const styleEl = document.createElement('style');
+         styleEl.id = 'usp-bar-dynamic-styles';
+         styleEl.textContent = `
+           {% comment %} .usp-bar-wrapper {
+             background: ${settings.backgroundColor} !important;
+           } {% endcomment %}
+           .usp-dot.active {
+             background: ${settings.iconBackgroundColor} !important;
+           }
+           .usp-nav-btn {
+             {% comment %} background: ${settings.itemBackgroundColor} !important; {% endcomment %}
+             color: ${settings.titleColor} !important;
+           } 
+           .usp-item:not(:last-child)::after {
+             background-color: ${settings.itemBorderRightColor} !important;
+           }
+         `;
         
         // Remove existing dynamic styles if any
         const existingStyles = document.getElementById('usp-bar-dynamic-styles');
@@ -321,58 +351,76 @@
         document.head.appendChild(styleEl);
       }
 
-      // Render static view (3 or fewer items)
-      function renderStaticView() {
-        const slider = document.getElementById('usp-slider');
-        let html = '<div class="usp-items-wrapper">';
-        
-        // Global settings from first item (for bar background, icon background, icon color)
-        const globalSettings = designSettings || defaultDesignSettings;
-        
-        allItems.forEach(item => {
-          // Per-item settings (item background, title color, description color)
-          const itemSettings = item.designSettings || defaultDesignSettings;
-          html += `
-            <div class="usp-item" style="background: ${itemSettings.itemBackgroundColor};">
-              <div class="usp-item-icon" style="background: ${globalSettings.iconBackgroundColor}; color: ${globalSettings.iconColor};">✓</div>
-              <div class="usp-item-content">
-                <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
-                <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
-              </div>
-            </div>
-          `;
-        });
+       // Render static view (3 or fewer items)
+       function renderStaticView() {
+         const slider = document.getElementById('usp-slider');
+         let html = '<div class="usp-items-wrapper">';
+         
+         // Global settings from first item (for bar background, icon background, icon color)
+         const globalSettings = designSettings || defaultDesignSettings;
+         
+         allItems.forEach((item, index) => {
+           // Per-item settings (item background, title color, description color)
+           const itemSettings = item.designSettings || defaultDesignSettings;
+           html += `
+             <div class="usp-item">
+                <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">${item.icon ? `<img src="${item.icon}" alt="Icon" style="width: 20px !important; height: 20px !important; object-fit: contain; filter: ${hexToRgb(itemSettings.iconColor) ? `brightness(0) saturate(100%) invert(${hexToRgb(itemSettings.iconColor).r}%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)` : 'brightness(0) invert(1)'};">` : '✓'}</div>
+               <div class="usp-item-content">
+                 <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
+                 <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
+               </div>
+             </div>
+           `;
+           {% comment %} html += `
+             <div class="usp-item" style="background: ${itemSettings.itemBackgroundColor};">
+                <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">${item.icon ? `<img src="${item.icon}" alt="Icon" style="width: 20px !important; height: 20px !important; object-fit: contain; filter: ${hexToRgb(itemSettings.iconColor) ? `brightness(0) saturate(100%) invert(${hexToRgb(itemSettings.iconColor).r}%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)` : 'brightness(0) invert(1)'};">` : '✓'}</div>
+               <div class="usp-item-content">
+                 <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
+                 <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
+               </div>
+             </div>
+           `; {% endcomment %}
+         });
 
-        html += '</div>';
-        slider.innerHTML = html;
-      }
+         html += '</div>';
+         slider.innerHTML = html;
+       }
 
-      // Render slider view (more than 3 items)
-      function renderSliderView() {
-        const slider = document.getElementById('usp-slider');
-        const container = document.getElementById('usp-bar-container');
-        let html = '<div class="usp-items-wrapper">';
-        
-        // Global settings from first item (for bar background, icon background, icon color)
-        const globalSettings = designSettings || defaultDesignSettings;
-        
-        // Show only 3 items at a time
-        const visibleItems = getVisibleItems();
-        visibleItems.forEach(item => {
-          // Per-item settings (item background, title color, description color)
-          const itemSettings = item.designSettings || defaultDesignSettings;
-          html += `
-            <div class="usp-item" style="background: ${itemSettings.itemBackgroundColor};">
-              <div class="usp-item-icon" style="background: ${globalSettings.iconBackgroundColor}; color: ${globalSettings.iconColor};">✓</div>
-              <div class="usp-item-content">
-                <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
-                <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
-              </div>
-            </div>
-          `;
-        });
+       // Render slider view (more than 3 items)
+       function renderSliderView() {
+         const slider = document.getElementById('usp-slider');
+         const container = document.getElementById('usp-bar-container');
+         let html = '<div class="usp-items-wrapper">';
+         
+         // Global settings from first item (for bar background, icon background, icon color)
+         const globalSettings = designSettings || defaultDesignSettings;
+         
+         // Show only 3 items at a time
+         const visibleItems = getVisibleItems();
+         visibleItems.forEach((item, index) => {
+           // Per-item settings (item background, title color, description color)
+           const itemSettings = item.designSettings || defaultDesignSettings;
+           html += `
+             <div class="usp-item">
+                <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">${item.icon ? `<img src="${item.icon}" alt="Icon" style="width: 16px; height: 16px; object-fit: contain; filter: ${hexToRgb(itemSettings.iconColor) ? `brightness(0) saturate(100%) invert(${hexToRgb(itemSettings.iconColor).r}%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)` : 'brightness(0) invert(1)'};">` : '✓'}</div>
+               <div class="usp-item-content">
+                 <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
+                 <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
+               </div>
+             </div>
+           `;
+            {% comment %} html += `
+             <div class="usp-item" style="background: ${itemSettings.itemBackgroundColor};">
+                <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">${item.icon ? `<img src="${item.icon}" alt="Icon" style="width: 16px; height: 16px; object-fit: contain; filter: ${hexToRgb(itemSettings.iconColor) ? `brightness(0) saturate(100%) invert(${hexToRgb(itemSettings.iconColor).r}%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)` : 'brightness(0) invert(1)'};">` : '✓'}</div>
+               <div class="usp-item-content">
+                 <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
+                 <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
+               </div>
+             </div>
+           `; {% endcomment %}
+         });
 
-        html += '</div>';
+         html += '</div>';
 
         // Add dots indicator
         const totalSlides = Math.ceil(allItems.length / itemsPerView);
@@ -429,29 +477,38 @@
         updateSlider();
       }
 
-      // Update slider view
-      function updateSlider() {
-        const slider = document.getElementById('usp-slider');
-        const visibleItems = getVisibleItems();
-        const wrapper = slider.querySelector('.usp-items-wrapper');
-        
-        // Global settings from first item (for bar background, icon background, icon color)
-        const globalSettings = designSettings || defaultDesignSettings;
-        
-        let html = '';
-        visibleItems.forEach(item => {
-          // Per-item settings (item background, title color, description color)
-          const itemSettings = item.designSettings || defaultDesignSettings;
-          html += `
-            <div class="usp-item" style="background: ${itemSettings.itemBackgroundColor};">
-              <div class="usp-item-icon" style="background: ${globalSettings.iconBackgroundColor}; color: ${globalSettings.iconColor};">✓</div>
-              <div class="usp-item-content">
-                <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
-                <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
-              </div>
-            </div>
-          `;
-        });
+       // Update slider view
+       function updateSlider() {
+         const slider = document.getElementById('usp-slider');
+         const visibleItems = getVisibleItems();
+         const wrapper = slider.querySelector('.usp-items-wrapper');
+         
+         // Global settings from first item (for bar background, icon background, icon color)
+         const globalSettings = designSettings || defaultDesignSettings;
+         
+         let html = '';
+         visibleItems.forEach((item, index) => {
+           // Per-item settings (item background, title color, description color)
+           const itemSettings = item.designSettings || defaultDesignSettings;
+           html += `
+             <div class="usp-item">
+                <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor} color: ${itemSettings.iconColor};">${item.icon ? `<img src="${item.icon}" alt="Icon" style="width: 16px; height: 16px; object-fit: contain; filter: ${hexToRgb(itemSettings.iconColor) ? `brightness(0) saturate(100%) invert(${hexToRgb(itemSettings.iconColor).r}%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)` : 'brightness(0) invert(1)'};">` : '✓'}</div>
+               <div class="usp-item-content">
+                 <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
+                 <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
+               </div>
+             </div>
+           `;
+            {% comment %} html += `
+             <div class="usp-item" style="background: ${itemSettings.itemBackgroundColor};">
+                <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">${item.icon ? `<img src="${item.icon}" alt="Icon" style="width: 16px; height: 16px; object-fit: contain; filter: ${hexToRgb(itemSettings.iconColor) ? `brightness(0) saturate(100%) invert(${hexToRgb(itemSettings.iconColor).r}%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)` : 'brightness(0) invert(1)'};">` : '✓'}</div>
+               <div class="usp-item-content">
+                 <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
+                 <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
+               </div>
+             </div>
+           `; {% endcomment %}
+         });
         
         wrapper.innerHTML = html;
 
@@ -480,6 +537,16 @@
           clearInterval(autoSlideInterval);
           startAutoSlide();
         }
+      }
+
+      // Convert hex color to RGB
+      function hexToRgb(hex) {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16)
+        } : null;
       }
 
       // Escape HTML to prevent XSS
@@ -531,7 +598,7 @@
       document.addEventListener('mouseleave', function(e) {
         const container = document.getElementById('usp-bar-container');
         if (container && container.contains(e.target)) {
-          if (allItems.length > 3 && !autoSlideInterval) {
+          if (allItems.length > 4 && !autoSlideInterval) {
             startAutoSlide();
           }
         }
