@@ -103,6 +103,7 @@ const UspBarForm = ({ id, heading }) => {
   const [formData, setFormData] = React.useState({
     title: "",
     description: "",
+    icon: null,
     designSettings: {
       backgroundColor: "#f8f9fa",
       itemBackgroundColor: "#ffffff",
@@ -111,6 +112,7 @@ const UspBarForm = ({ id, heading }) => {
       iconBackgroundColor: "#4CAF50",
       iconColor: "#ffffff",
       slideSpeed: 4,
+      itemBorderRightColor: "#000000", // Default vertical border color (black)
     },
   });
 
@@ -178,6 +180,7 @@ const UspBarForm = ({ id, heading }) => {
         setFormData({
           title: UspBarDetailData?.data?.title || "",
           description: UspBarDetailData?.data?.description || "",
+          icon: UspBarDetailData?.data?.icon || null,
           designSettings: {
             backgroundColor:
               UspBarDetailData?.data?.designSettings?.backgroundColor ||
@@ -196,6 +199,9 @@ const UspBarForm = ({ id, heading }) => {
             iconColor:
               UspBarDetailData?.data?.designSettings?.iconColor || "#ffffff",
             slideSpeed: UspBarDetailData?.data?.designSettings?.slideSpeed || 4,
+            itemBorderRightColor:
+              UspBarDetailData?.data?.designSettings?.itemBorderRightColor ||
+              "#000000",
           },
         });
       }
@@ -254,6 +260,54 @@ const UspBarForm = ({ id, heading }) => {
 
   const handleTabChange = (_event, newValue) => {
     setTabIndex(newValue);
+  };
+
+  // Handle icon upload
+  const handleIconUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Validate file format (only JPG, PNG, SVG)
+      const validFormats = ["image/jpeg", "image/png", "image/svg+xml"];
+      if (!validFormats.includes(file.type)) {
+        setSnackbar({
+          open: true,
+          message: "Only JPG, PNG, and SVG formats are allowed.",
+          severity: "error",
+        });
+        event.target.value = "";
+        return;
+      }
+
+      // Validate file size (max 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        setSnackbar({
+          open: true,
+          message: "Image size must be less than 2MB.",
+          severity: "error",
+        });
+        event.target.value = "";
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const base64Image = e.target.result;
+        setFormData((prev) => ({
+          ...prev,
+          icon: base64Image,
+        }));
+        event.target.value = "";
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Remove icon
+  const handleRemoveIcon = () => {
+    setFormData((prev) => ({
+      ...prev,
+      icon: null,
+    }));
   };
 
   const handleCloseSnackbar = () => {
@@ -324,6 +378,7 @@ const UspBarForm = ({ id, heading }) => {
         title: formData.title,
         description: formData.description,
         designSettings: formData.designSettings,
+        icon: formData.icon,
       };
       updateMutation.mutate(payload, {
         onError: handleApiError,
@@ -334,6 +389,7 @@ const UspBarForm = ({ id, heading }) => {
         description: formData.description,
         shopify_session_id: UspBarCurrentSessionData?.data?._id || null,
         designSettings: formData.designSettings,
+        icon: formData.icon,
       };
       createMutation.mutate(payload, {
         onError: handleApiError,
@@ -490,6 +546,96 @@ const UspBarForm = ({ id, heading }) => {
                   }}
                 />
               </Box>
+
+              {/* Icon Upload */}
+              <Box>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: "#6b7280",
+                    mb: 0.5,
+                    display: "block",
+                    fontSize: "16px",
+                  }}
+                >
+                  Icon (Optional)
+                </Typography>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                  {/* Icon Preview */}
+                  {formData.icon && (
+                    <Box sx={{ position: "relative" }}>
+                      <img
+                        src={formData.icon}
+                        alt="Icon Preview"
+                        style={{
+                          width: 60,
+                          height: 60,
+                          objectFit: "contain",
+                          border: "1px solid #e1e1e1",
+                          borderRadius: "8px",
+                          padding: "8px",
+                          backgroundColor: "white",
+                        }}
+                      />
+                      <IconButton
+                        size="small"
+                        onClick={handleRemoveIcon}
+                        sx={{
+                          position: "absolute",
+                          top: -8,
+                          right: -8,
+                          backgroundColor: "white",
+                          "&:hover": {
+                            backgroundColor: "#f0f0f0",
+                          },
+                          borderRadius: "50%",
+                          width: 24,
+                          height: 24,
+                          minWidth: 24,
+                          boxShadow: 1,
+                        }}
+                      >
+                        ✕
+                      </IconButton>
+                    </Box>
+                  )}
+
+                  {/* File Input */}
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/svg+xml"
+                    onChange={handleIconUpload}
+                    style={{
+                      display: "none",
+                    }}
+                    id="icon-upload"
+                  />
+                  <label htmlFor="icon-upload">
+                    <Button
+                      variant="outlined"
+                      component="span"
+                      sx={{
+                        textTransform: "none",
+                        borderRadius: "6px",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {formData.icon ? "Change Icon" : "Upload Icon"}
+                    </Button>
+                  </label>
+
+                  {!formData.icon && (
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        color: "#6b7280",
+                      }}
+                    >
+                      Supported formats: JPG, PNG, SVG (max 2MB)
+                    </Typography>
+                  )}
+                </Box>
+              </Box>
             </Stack>
           </Box>
           {/* Action Buttons */}
@@ -559,22 +705,22 @@ const UspBarForm = ({ id, heading }) => {
               }}
             >
               {/* Background Color */}
-              <ColorPicker
+              {/* <ColorPicker
                 label="Bar Background Color"
                 name="designSettings.backgroundColor"
                 value={formData.designSettings?.backgroundColor || "#f8f9fa"}
                 onChange={handleChange}
-              />
+              /> */}
 
               {/* Item Background Color */}
-              <ColorPicker
+              {/* <ColorPicker
                 label="Item Background Color"
                 name="designSettings.itemBackgroundColor"
                 value={
                   formData.designSettings?.itemBackgroundColor || "#ffffff"
                 }
                 onChange={handleChange}
-              />
+              /> */}
 
               {/* Title Color */}
               <ColorPicker
@@ -607,6 +753,16 @@ const UspBarForm = ({ id, heading }) => {
                 label="Icon Color"
                 name="designSettings.iconColor"
                 value={formData.designSettings?.iconColor || "#ffffff"}
+                onChange={handleChange}
+              />
+
+              {/* Item Border Right Color */}
+              <ColorPicker
+                label="Item Border Right Color"
+                name="designSettings.itemBorderRightColor"
+                value={
+                  formData.designSettings?.itemBorderRightColor || "#000000"
+                }
                 onChange={handleChange}
               />
             </Box>
