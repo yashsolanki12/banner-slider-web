@@ -109,13 +109,13 @@ const UspBarList = (props) => {
                   textJustify: "inter-character",
                 }}
               >
-                To display your USP Bar, please complete the configuration below
-                by defining your custom titles, descriptions, and brand styling.
-                Once configured, you must enable the App Embed within your
-                Shopify Theme Editor to activate the bar and integrate it into
-                your live storefront. This ensures your unique selling
-                propositions are professionally showcased with your personalized
-                design and are fully functional across your store.
+                To activate your USP Bar, please first define your custom
+                titles, descriptions, and brand styling using the configuration
+                settings below. Once your design is finalized, you must navigate
+                to the Shopify Theme Editor to enable the App Embed for this
+                application. This step is required to integrate the bar into
+                your live storefront and ensure your unique selling propositions
+                are professionally displayed to your customers.
               </Typography>
               <Button
                 variant="contained"
