@@ -560,7 +560,13 @@ const UspBarForm = ({ id, heading }) => {
                 >
                   Icon (Optional)
                 </Typography>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 1,
+                  }}
+                >
                   {/* Icon Preview */}
                   {formData.icon && (
                     <Box sx={{ position: "relative" }}>
@@ -618,6 +624,7 @@ const UspBarForm = ({ id, heading }) => {
                         textTransform: "none",
                         borderRadius: "6px",
                         fontWeight: 500,
+                        width: "fit-content",
                       }}
                     >
                       {formData.icon ? "Change Icon" : "Upload Icon"}
@@ -629,9 +636,11 @@ const UspBarForm = ({ id, heading }) => {
                       variant="caption"
                       sx={{
                         color: "#6b7280",
+                        fontSize: 13,
+                        width: "fit-content",
                       }}
                     >
-                      Supported formats: JPG, PNG, SVG (max 2MB)
+                      Supported formats: JPG, PNG, SVG (max: 2MB)
                     </Typography>
                   )}
                 </Box>
