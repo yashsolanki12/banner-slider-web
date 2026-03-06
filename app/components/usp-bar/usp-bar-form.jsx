@@ -2,8 +2,8 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
+// import Tabs from "@mui/material/Tabs";
+// import Tab from "@mui/material/Tab";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -11,10 +11,12 @@ import IconButton from "@mui/material/IconButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 // import Slider from "@mui/material/Slider";
 
 import { useLocation, useNavigate } from "react-router";
-import SafeLink from "../../helper/safe-link";
+// import SafeLink from "../../helper/safe-link";
 import {
   getUspBarById,
   createUspBar,
@@ -99,6 +101,8 @@ const UspBarForm = ({ id, heading }) => {
 
   const [loading, setLoading] = React.useState(isEditMode);
   const [tabIndex, setTabIndex] = React.useState(0);
+  const [useCustomColorSettings, setUseCustomColorSettings] =
+    React.useState(false);
 
   const [formData, setFormData] = React.useState({
     title: "",
@@ -248,15 +252,15 @@ const UspBarForm = ({ id, heading }) => {
   };
 
   // Handle slider change
-  const handleSliderChange = (name, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      designSettings: {
-        ...prev.designSettings,
-        [name]: value,
-      },
-    }));
-  };
+  // const handleSliderChange = (name, value) => {
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     designSettings: {
+  //       ...prev.designSettings,
+  //       [name]: value,
+  //     },
+  //   }));
+  // };
 
   const handleTabChange = (_event, newValue) => {
     setTabIndex(newValue);
@@ -441,10 +445,10 @@ const UspBarForm = ({ id, heading }) => {
       </Box>
 
       {/* Tabs */}
-      <Tabs
+      {/* <Tabs
         value={tabIndex}
         onChange={handleTabChange}
-        variant="fullWidth"
+        // variant="fullWidth"
         sx={{
           mb: 3,
           "& .MuiTab-root": {
@@ -478,7 +482,7 @@ const UspBarForm = ({ id, heading }) => {
           to={`${pathname}?tab=1`}
           {...a11yProps(1)}
         />
-      </Tabs>
+      </Tabs> */}
 
       {/* Content Tab */}
       <TabPanel value={tabIndex} index={0}>
@@ -506,7 +510,7 @@ const UspBarForm = ({ id, heading }) => {
                   Title *
                 </Typography>
                 <TextField
-                  fullWidth
+                  sx={{ width: 500 }}
                   name="title"
                   value={formData.title || ""}
                   onChange={handleChange}
@@ -534,7 +538,7 @@ const UspBarForm = ({ id, heading }) => {
                   Description *
                 </Typography>
                 <TextField
-                  fullWidth
+                  sx={{ width: 500 }}
                   multiline
                   rows={2}
                   name="description"
@@ -568,11 +572,12 @@ const UspBarForm = ({ id, heading }) => {
                     display: "flex",
                     flexDirection: "column",
                     gap: 1,
+                    width: "fit-content",
                   }}
                 >
                   {/* Icon Preview */}
                   {formData.icon && (
-                    <Box sx={{ position: "relative" }}>
+                    <Box sx={{ position: "relative", marginTop: "0.20rem" }}>
                       <img
                         src={formData.icon}
                         alt="Icon Preview"
@@ -592,7 +597,8 @@ const UspBarForm = ({ id, heading }) => {
                         sx={{
                           position: "absolute",
                           top: -8,
-                          right: -8,
+                          left: "64px",
+                          // right: -8,
                           backgroundColor: "white",
                           "&:hover": {
                             backgroundColor: "#f0f0f0",
@@ -647,13 +653,150 @@ const UspBarForm = ({ id, heading }) => {
                     </Typography>
                   )}
                 </Box>
+
+                {/* Color Settings Checkbox */}
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={useCustomColorSettings}
+                      onChange={(e) =>
+                        setUseCustomColorSettings(e.target.checked)
+                      }
+                      sx={{
+                        color: "#6b7280",
+                        "&.Mui-checked": {
+                          color: "#202223",
+                        },
+                      }}
+                    />
+                  }
+                  label={
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        color: "#6b7280",
+                        fontSize: "14px",
+                      }}
+                    >
+                      Color Settings
+                    </Typography>
+                  }
+                  sx={{ mt: 1 }}
+                />
+
+                {/* Color Settings Grid - Show when checkbox is checked */}
+                {useCustomColorSettings && (
+                  <Box
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                      gap: 2,
+                      mt: 2,
+                      p: 2,
+                      border: "1px solid #e1e1e1",
+                      borderRadius: "8px",
+                      backgroundColor: "#f9fafb",
+                    }}
+                  >
+                    {/* Bar Background Color */}
+                    <ColorPicker
+                      label="Bar Background Color"
+                      name="designSettings.backgroundColor"
+                      value={
+                        formData.designSettings?.backgroundColor || "#f8f9fa"
+                      }
+                      onChange={handleChange}
+                    />
+
+                    {/* Icon Color */}
+                    <ColorPicker
+                      label="Icon Color"
+                      name="designSettings.iconColor"
+                      value={formData.designSettings?.iconColor || "#ffffff"}
+                      onChange={handleChange}
+                    />
+
+                    {/* Title Color */}
+                    <ColorPicker
+                      label="Title Color"
+                      name="designSettings.titleColor"
+                      value={formData.designSettings?.titleColor || "#333333"}
+                      onChange={handleChange}
+                    />
+
+                    {/* Description Color */}
+                    <ColorPicker
+                      label="Description Color"
+                      name="designSettings.descriptionColor"
+                      value={
+                        formData.designSettings?.descriptionColor || "#666666"
+                      }
+                      onChange={handleChange}
+                    />
+
+                    {/* Icon Background Color */}
+                    <ColorPicker
+                      label="Icon Background Color"
+                      name="designSettings.iconBackgroundColor"
+                      value={
+                        formData.designSettings?.iconBackgroundColor ||
+                        "#4CAF50"
+                      }
+                      onChange={handleChange}
+                    />
+
+                    {/* Border Color */}
+                    <ColorPicker
+                      label="Border Color"
+                      name="designSettings.itemBorderRightColor"
+                      value={
+                        formData.designSettings?.itemBorderRightColor ||
+                        "#000000"
+                      }
+                      onChange={handleChange}
+                    />
+
+                    {/* Slider Speed */}
+                    {/* <Box>
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          color: "#6b7280",
+                          mb: 1,
+                          display: "block",
+                          fontSize: "14px",
+                        }}
+                      >
+                        Slider Speed (seconds):{" "}
+                        {formData.designSettings?.slideSpeed || 4}
+                      </Typography>
+                      <Slider
+                        value={formData.designSettings?.slideSpeed || 4}
+                        onChange={(_, value) =>
+                          handleSliderChange("slideSpeed", value)
+                        }
+                        min={2}
+                        max={10}
+                        step={1}
+                        marks
+                        valueLabelDisplay="auto"
+                        sx={{ maxWidth: 300 }}
+                      />
+                      <Typography
+                        variant="caption"
+                        sx={{ color: "#9ca3af", display: "block" }}
+                      >
+                        Speed of automatic slider animation (only applies when
+                        more than 4 items)
+                      </Typography>
+                    </Box> */}
+                  </Box>
+                )}
               </Box>
             </Stack>
           </Box>
           {/* Action Buttons */}
-          <Box
-            sx={{ display: "flex", justifyContent: "flex-end", gap: "16px" }}
-          >
+          <Box sx={{ display: "flex", gap: "16px" }}>
             <Button
               variant="contained"
               onClick={handleNavigateBack}
@@ -778,45 +921,10 @@ const UspBarForm = ({ id, heading }) => {
                 onChange={handleChange}
               />
             </Box>
-
-            {/* Slider Speed */}
-            {/* <Box sx={{ mt: 3 }}>
-              <Typography
-                variant="caption"
-                sx={{
-                  color: "#6b7280",
-                  mb: 1,
-                  display: "block",
-                  fontSize: "14px",
-                }}
-              >
-                Slider Speed (seconds):{" "}
-                {formData.designSettings?.slideSpeed || 4}
-              </Typography>
-              <Slider
-                value={formData.designSettings?.slideSpeed || 4}
-                onChange={(_, value) => handleSliderChange("slideSpeed", value)}
-                min={2}
-                max={10}
-                step={1}
-                marks
-                valueLabelDisplay="auto"
-                sx={{ maxWidth: 300 }}
-              />
-              <Typography
-                variant="caption"
-                sx={{ color: "#9ca3af", display: "block" }}
-              >
-                Speed of automatic slider animation (only applies when more than
-                3 items)
-              </Typography>
-            </Box> */}
           </Box>
 
           {/* Action Buttons */}
-          <Box
-            sx={{ display: "flex", justifyContent: "flex-end", gap: "16px" }}
-          >
+          <Box sx={{ display: "flex", gap: "16px" }}>
             <Button
               variant="contained"
               onClick={handleNavigateBack}

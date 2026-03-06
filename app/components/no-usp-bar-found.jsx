@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import NotificationsOff from "@mui/icons-material/NotificationsOff";
 
-function NoUspBarFound() {
+function NoUspBarFound({ message }) {
   return (
     <Box
       display="flex"
@@ -38,7 +38,7 @@ function NoUspBarFound() {
             color: "#757575",
           }}
         >
-          No USP Bar found.
+          {message || "Not found"}
         </Typography>
       </Paper>
     </Box>
