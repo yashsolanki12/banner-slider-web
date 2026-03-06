@@ -1,7 +1,7 @@
 import React from "react";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import UspBarTablePage from "./usp-bar-table-page";
+import ReusableTable from "../../components/reusable-table";
 import SafeLink from "../../helper/safe-link";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -16,6 +16,7 @@ import {
   toggleUspBarEnabled,
   getCurrentSession,
 } from "../../api/usp-bar";
+import { uspBarColumns, uspBarActions } from "./columns-config";
 
 const UspBarList = (props) => {
   const { appEmbedEnabled, session } = props;
@@ -30,17 +31,13 @@ const UspBarList = (props) => {
   const {
     data: UspBarCurrentSessionData,
     isLoading: UspBarCurrentSessionLoading,
-  } = useUspBarData(
-    ["usp-bar-current-session"],
-    getCurrentSession,
-    setSnackbar,
-  );
+  } = useUspBarData(["usp-bar-current-session"], getCurrentSession, null);
 
-  // Usp Bar List
+  // Usp Bar List - Show toast for list API messages
   const { data: UspBarListData, isLoading: UspBarListLoading } = useUspBarData(
     ["usp-bar"],
     getAllUspBar,
-    setSnackbar,
+    setSnackbar, // Show toast for list fetch
   );
 
   // Delete Mutation
@@ -107,7 +104,7 @@ const UspBarList = (props) => {
                   color: "black",
                   letterSpacing: "0.30px",
                   textJustify: "inter-character",
-                  fontSize: 13
+                  fontSize: 13,
                 }}
               >
                 To activate your USP Bar, please first define your custom
@@ -149,7 +146,10 @@ const UspBarList = (props) => {
           alignItems="center"
           sx={{ mb: 4 }}
         >
-          <Typography variant="h5" sx={{ fontWeight: 700, color: "#202223", fontSize: 20 }}>
+          <Typography
+            variant="h5"
+            sx={{ fontWeight: 700, color: "#202223", fontSize: 20 }}
+          >
             USP Bar List
           </Typography>
           <Button
@@ -174,24 +174,19 @@ const UspBarList = (props) => {
         </Stack>
 
         {/* Table which manage all list data */}
-        <UspBarTablePage
-          data={UspBarListData || []}
-          deleteMutation={deleteMutation}
-          toggleMutation={toggleMutation}
-          // onEdit={(row) => console.log("Edit:", row)}
+        <ReusableTable
+          data={UspBarListData?.data || []}
+          columns={uspBarColumns}
+          actions={uspBarActions}
+          mutations={{
+            deleteMutation,
+            toggleMutation,
+          }}
+          showStatus={true}
+          snackbarState={snackbar}
+          setSnackbar={setSnackbar}
+          emptyMessage="No USP Bar found."
         />
-
-        {/* Use to show the toast with desired position */}
-        <Snackbar
-          open={snackbar.open}
-          autoHideDuration={snackbar.severity === "error" ? 5000 : 3000}
-          onClose={() => setSnackbar({ ...snackbar, open: false })}
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        >
-          <Alert severity={snackbar.severity} sx={{ width: "100%" }}>
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
       </Box>
     </>
   );

@@ -16,27 +16,25 @@ export const useUspBarSubmit = (mutationFn, setSnackBar, options = {}) => {
       });
     },
     onSuccess: (data) => {
-      // Show success snackbar FIRST
+      // Show success snackbar immediately
       setSnackBar({
         open: true,
         message: data?.message || "Operation successful",
         severity: "success",
       });
 
-      // Invalidate queries AFTER snackbar is shown (with delay)
+      // Call custom onSuccess callback to redirect in /app route
+      if (onSuccess) {
+        onSuccess(data);
+      }
+
+      // Invalidate queries after snackbar is shown
       if (invalidateKeys.length > 0) {
         setTimeout(() => {
           invalidateKeys.forEach((key) => {
             queryClient.invalidateQueries({ queryKey: key });
           });
-        }, 3000); // Delay to let snackbar show first
-      }
-
-      // Call custom onSuccess AFTER delay (navigation)
-      if (onSuccess) {
-        setTimeout(() => {
-          onSuccess(data);
-        }, 4000); // Delay to let snackbar show first
+        }, 2000); // Delay to let snackbar show first
       }
     },
   });
