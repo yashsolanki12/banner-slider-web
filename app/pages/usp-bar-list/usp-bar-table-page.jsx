@@ -351,7 +351,7 @@ const UspBarTablePage = (props) => {
             ) : (
               <TableRow>
                 <TableCell colSpan={4} align="center">
-                  <NoUspBarFound />
+                  <NoUspBarFound message="No USP Bar found." />
                 </TableCell>
               </TableRow>
             )}
