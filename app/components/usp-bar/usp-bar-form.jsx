@@ -431,7 +431,10 @@ const UspBarForm = ({ id, heading }) => {
           >
             <ArrowBackIcon fontSize="small" />
           </IconButton>
-          <Typography variant="h5" sx={{ fontWeight: 700, color: "#202223" }}>
+          <Typography
+            variant="h5"
+            sx={{ fontWeight: 700, color: "#202223", fontSize: 20 }}
+          >
             {heading || (isEditMode ? "Edit USP Bar" : "Create USP Bar")}
           </Typography>
         </Box>
@@ -660,7 +663,7 @@ const UspBarForm = ({ id, heading }) => {
                 textTransform: "none",
                 borderRadius: "6px",
                 fontWeight: 600,
-                padding: "8px 24px",
+                padding: "7px 18px",
               }}
               disabled={isSubmitting}
             >
@@ -676,7 +679,7 @@ const UspBarForm = ({ id, heading }) => {
                 textTransform: "none",
                 borderRadius: "6px",
                 fontWeight: 600,
-                padding: "8px 24px",
+                padding: "7px 18px",
               }}
             >
               {isSubmitting ? (
@@ -714,12 +717,12 @@ const UspBarForm = ({ id, heading }) => {
               }}
             >
               {/* Background Color */}
-              {/* <ColorPicker
+              <ColorPicker
                 label="Bar Background Color"
                 name="designSettings.backgroundColor"
                 value={formData.designSettings?.backgroundColor || "#f8f9fa"}
                 onChange={handleChange}
-              /> */}
+              />
 
               {/* Item Background Color */}
               {/* <ColorPicker
@@ -823,7 +826,7 @@ const UspBarForm = ({ id, heading }) => {
                 textTransform: "none",
                 borderRadius: "6px",
                 fontWeight: 600,
-                padding: "8px 24px",
+                padding: "7px 18px",
               }}
               disabled={isSubmitting}
             >
@@ -839,7 +842,7 @@ const UspBarForm = ({ id, heading }) => {
                 textTransform: "none",
                 borderRadius: "6px",
                 fontWeight: 600,
-                padding: "8px 24px",
+                padding: "7px 18px",
               }}
             >
               {isSubmitting ? (
