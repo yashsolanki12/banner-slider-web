@@ -116,8 +116,8 @@ const UspBarTablePage = (props) => {
                 sx={{
                   color: "#6b7280",
                   fontWeight: 600,
-                  fontSize: 18,
-                  backgroundColor: "white",
+                  fontSize: 13,
+                  backgroundColor: "#f7f7f7",
                 }}
               >
                 Title
@@ -127,8 +127,8 @@ const UspBarTablePage = (props) => {
                 sx={{
                   color: "#6b7280",
                   fontWeight: 600,
-                  fontSize: 18,
-                  backgroundColor: "white",
+                  fontSize: 13,
+                  backgroundColor: "#f7f7f7",
                 }}
               >
                 Description
@@ -138,8 +138,8 @@ const UspBarTablePage = (props) => {
                 sx={{
                   color: "#6b7280",
                   fontWeight: 600,
-                  fontSize: 18,
-                  backgroundColor: "white",
+                  fontSize: 13,
+                  backgroundColor: "#f7f7f7",
                 }}
               >
                 Status
@@ -149,8 +149,8 @@ const UspBarTablePage = (props) => {
                 sx={{
                   color: "#6b7280",
                   fontWeight: 600,
-                  fontSize: 18,
-                  backgroundColor: "white",
+                  fontSize: 13,
+                  backgroundColor: "#f7f7f7",
                 }}
               >
                 Actions
@@ -164,10 +164,10 @@ const UspBarTablePage = (props) => {
                   key={row._id}
                   sx={{
                     "&:nth-of-type(odd)": {
-                      backgroundColor: "#f9fafb",
+                      backgroundColor: "#f4f4f4",
                     },
                     "&:hover": {
-                      backgroundColor: "#f3f4f6",
+                      backgroundColor: "#f7f7f7",
                     },
                     "&:last-child td, &:last-child th": { border: 0 },
                     opacity: row.enabled ? 1 : 0.6,
@@ -177,7 +177,7 @@ const UspBarTablePage = (props) => {
                   <TableCell
                     component="th"
                     scope="row"
-                    sx={{ fontSize: "14px" }}
+                    // sx={{ fontSize: "14px" }}
                   >
                     <Tooltip
                       placement="top"
@@ -186,8 +186,8 @@ const UspBarTablePage = (props) => {
                       slotProps={{
                         tooltip: {
                           sx: {
-                            fontSize: "1rem",
-                            padding: "8px 12px",
+                            fontSize: "12px",
+                            // padding: "8px 12px",
                             maxWidth: "300px",
                           },
                         },
@@ -223,7 +223,7 @@ const UspBarTablePage = (props) => {
                         tooltip: {
                           sx: {
                             fontSize: "1rem",
-                            padding: "8px 12px",
+                            // padding: "8px 12px",
                             maxWidth: "300px",
                           },
                         },
@@ -284,7 +284,7 @@ const UspBarTablePage = (props) => {
                         tooltip: {
                           sx: {
                             fontSize: "0.87rem",
-                            padding: "5px 8px",
+                            // padding: "5px 8px",
                             maxWidth: "200px",
                           },
                         },
@@ -310,7 +310,7 @@ const UspBarTablePage = (props) => {
                         tooltip: {
                           sx: {
                             fontSize: "0.87rem",
-                            padding: "5px 8px",
+                            // padding: "5px 8px",
                             maxWidth: "50px",
                           },
                         },
@@ -332,7 +332,7 @@ const UspBarTablePage = (props) => {
                         tooltip: {
                           sx: {
                             fontSize: "0.87rem",
-                            padding: "5px 8px",
+                            // padding: "5px 8px",
                             maxWidth: "50px",
                           },
                         },

@@ -107,6 +107,7 @@ const UspBarList = (props) => {
                   color: "black",
                   letterSpacing: "0.30px",
                   textJustify: "inter-character",
+                  fontSize: 13
                 }}
               >
                 To activate your USP Bar, please first define your custom
@@ -148,7 +149,7 @@ const UspBarList = (props) => {
           alignItems="center"
           sx={{ mb: 4 }}
         >
-          <Typography variant="h5" sx={{ fontWeight: 700, color: "#202223" }}>
+          <Typography variant="h5" sx={{ fontWeight: 700, color: "#202223", fontSize: 20 }}>
             USP Bar List
           </Typography>
           <Button
@@ -161,7 +162,7 @@ const UspBarList = (props) => {
               textTransform: "none",
               borderRadius: "6px",
               fontWeight: 600,
-              padding: "8px 24px",
+              padding: "7px 18px",
               textDecoration: "none",
               "&:hover": {
                 backgroundColor: "#303030",
