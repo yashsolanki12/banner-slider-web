@@ -111,9 +111,9 @@
       font-weight: bold;
     }
     
-    .usp-item-icon img {
+    {% comment %} .usp-item-icon img {
       filter: brightness(0) invert(1);
-    }
+    } {% endcomment %}
 
     .usp-item-content {
       display: flex;
@@ -506,7 +506,6 @@
          
          // Global settings from first item (for bar background, icon background, icon color)
          const globalSettings = designSettings || defaultDesignSettings;
-         
          allItems.forEach((item, index) => {
            // Per-item settings (item background, title color, description color)
            const itemSettings = item.designSettings || defaultDesignSettings;
