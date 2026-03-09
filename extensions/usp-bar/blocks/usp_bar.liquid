@@ -100,20 +100,33 @@
     .usp-item-icon {
       width: 38px;
       height: 38px;
-      min-width: 20px;
+      min-width: 38px;
       display: flex;
       align-items: center;
       justify-content: center;
       background: #4CAF50;
       border-radius: 50%;
-      color: #ffffff;
       font-size: 12px;
       font-weight: bold;
+      flex-shrink: 0;
     }
     
-    {% comment %} .usp-item-icon img {
-      filter: brightness(0) invert(1);
-    } {% endcomment %}
+    .usp-icon-svg-wrapper {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .usp-icon-svg-wrapper svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      {% comment %} fill: currentColor;
+      stroke: currentColor; {% endcomment %}
+    }
 
     .usp-item-content {
       display: flex;
@@ -390,8 +403,8 @@
 
        // Default design settings
        const defaultDesignSettings = {
-         {% comment %} backgroundColor: '#f8f9fa',
-         itemBackgroundColor: '#ffffff', {% endcomment %}
+         backgroundColor: '#f8f9fa',
+         {% comment %} itemBackgroundColor: '#ffffff',  {% endcomment %}
          titleColor: '#333333',
          descriptionColor: '#666666',
          iconBackgroundColor: '#4CAF50',
@@ -478,6 +491,7 @@
            {% comment %} .usp-bar-wrapper {
              background: ${settings.backgroundColor} !important;
            } {% endcomment %}
+              
            .usp-dot.active {
              background: ${settings.iconBackgroundColor} !important;
            }
@@ -499,6 +513,24 @@
         document.head.appendChild(styleEl);
       }
 
+      // Helper to render icon correctly (handles base64 SVGs with currentColor)
+      function renderIcon(icon, iconColor) {
+        if (!icon) return '✓';
+        
+        if (icon.startsWith('data:image/svg+xml;base64,')) {
+          try {
+            const base64 = icon.split(',')[1];
+            const svg = atob(base64);
+            return `<div class="usp-icon-svg-wrapper" style="color: ${iconColor};">${svg}</div>`;
+          } catch (e) {
+            console.error('Error decoding icon:', e);
+            return '✓';
+          }
+        }
+        
+        return `<img src="${icon}" alt="Icon" style="width: 16px; height: 16px; object-fit: contain;">`;
+      }
+
        // Render static view (4 or fewer items)
        function renderStaticView() {
          const slider = document.getElementById('usp-slider');
@@ -511,22 +543,15 @@
            const itemSettings = item.designSettings || defaultDesignSettings;
            html += `
              <div class="usp-item">
-                <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">${item.icon ? `<img src="${item.icon}" alt="Icon" style="width: 22px !important; height: 22px !important; object-fit: contain; filter: ${hexToRgb(itemSettings.iconColor) ? `brightness(0) saturate(100%) invert(${hexToRgb(itemSettings.iconColor).r}%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)` : 'brightness(0) invert(1)'};">` : '✓'}</div>
+                <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">
+                  ${renderIcon(item.icon, itemSettings.iconColor)}
+                </div>
                <div class="usp-item-content">
                  <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
                  <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
                </div>
              </div>
            `;
-           {% comment %} html += `
-             <div class="usp-item" style="background: ${itemSettings.itemBackgroundColor};">
-                <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">${item.icon ? `<img src="${item.icon}" alt="Icon" style="width: 20px !important; height: 20px !important; object-fit: contain; filter: ${hexToRgb(itemSettings.iconColor) ? `brightness(0) saturate(100%) invert(${hexToRgb(itemSettings.iconColor).r}%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)` : 'brightness(0) invert(1)'};">` : '✓'}</div>
-               <div class="usp-item-content">
-                 <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
-                 <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
-               </div>
-             </div>
-           `; {% endcomment %}
          });
 
          html += '</div>';
@@ -542,30 +567,23 @@
          // Global settings from first item (for bar background, icon background, icon color)
          const globalSettings = designSettings || defaultDesignSettings;
          
-         // Show only 3 items at a time
-         const visibleItems = getVisibleItems();
-         visibleItems.forEach((item, index) => {
-           // Per-item settings (item background, title color, description color)
-           const itemSettings = item.designSettings || defaultDesignSettings;
-           html += `
-             <div class="usp-item">
-                <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">${item.icon ? `<img src="${item.icon}" alt="Icon" style="width: 16px; height: 16px; object-fit: contain; filter: ${hexToRgb(itemSettings.iconColor) ? `brightness(0) saturate(100%) invert(${hexToRgb(itemSettings.iconColor).r}%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)` : 'brightness(0) invert(1)'};">` : '✓'}</div>
-               <div class="usp-item-content">
-                 <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
-                 <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
+        // Show only 3 items at a time
+        const visibleItems = getVisibleItems();
+        visibleItems.forEach((item, index) => {
+          // Per-item settings (item background, title color, description color)
+          const itemSettings = item.designSettings || defaultDesignSettings;
+          html += `
+            <div class="usp-item">
+               <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">
+                 ${renderIcon(item.icon, itemSettings.iconColor)}
                </div>
-             </div>
-           `;
-            {% comment %} html += `
-             <div class="usp-item" style="background: ${itemSettings.itemBackgroundColor};">
-                <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">${item.icon ? `<img src="${item.icon}" alt="Icon" style="width: 16px; height: 16px; object-fit: contain; filter: ${hexToRgb(itemSettings.iconColor) ? `brightness(0) saturate(100%) invert(${hexToRgb(itemSettings.iconColor).r}%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)` : 'brightness(0) invert(1)'};">` : '✓'}</div>
-               <div class="usp-item-content">
-                 <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
-                 <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
-               </div>
-             </div>
-           `; {% endcomment %}
-         });
+              <div class="usp-item-content">
+                <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
+                <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
+              </div>
+            </div>
+          `;
+        });
 
          html += '</div>';
 
@@ -639,22 +657,15 @@
            const itemSettings = item.designSettings || defaultDesignSettings;
            html += `
              <div class="usp-item">
-                <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">${item.icon ? `<img src="${item.icon}" alt="Icon" style="width: 16px; height: 16px; object-fit: contain; filter: ${hexToRgb(itemSettings.iconColor) ? `brightness(0) saturate(100%) invert(${hexToRgb(itemSettings.iconColor).r}%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)` : 'brightness(0) invert(1)'};">` : '✓'}</div>
+                <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">
+                  ${renderIcon(item.icon, itemSettings.iconColor)}
+                </div>
                <div class="usp-item-content">
                  <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
                  <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
                </div>
              </div>
            `;
-            {% comment %} html += `
-             <div class="usp-item" style="background: ${itemSettings.itemBackgroundColor};">
-                <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">${item.icon ? `<img src="${item.icon}" alt="Icon" style="width: 16px; height: 16px; object-fit: contain; filter: ${hexToRgb(itemSettings.iconColor) ? `brightness(0) saturate(100%) invert(${hexToRgb(itemSettings.iconColor).r}%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)` : 'brightness(0) invert(1)'};">` : '✓'}</div>
-               <div class="usp-item-content">
-                 <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
-                 <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
-               </div>
-             </div>
-           `; {% endcomment %}
          });
         
         wrapper.innerHTML = html;
@@ -696,8 +707,21 @@
         } : null;
       }
 
+      // Calculate YIQ contrast to determine if color is light or dark
+      function getContrastYIQ(hexColor) {
+        // Always make icon white when iconColor is white (#ffffff)
+        if (hexColor && hexColor.toLowerCase() === '#ffffff') {
+          return true;
+        }
+        const rgb = hexToRgb(hexColor);
+        if (!rgb) return false;
+        const yiq = ((rgb.r * 299) + (rgb.g * 587) + (rgb.b * 114)) / 1000;
+        return yiq < 128;
+      }
+
       // Escape HTML to prevent XSS
       function escapeHtml(text) {
+        if (!text) return '';
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
@@ -769,3 +793,5 @@
   ]
 }
 {% endschema %}
+
+
