@@ -16,6 +16,7 @@ import useUspBarSubmit from "../../hooks/useUspBarSubmit";
 import { useNavigate } from "react-router";
 import CircularProgress from "@mui/material/CircularProgress";
 import ColorPicker from "../../components/color-settings.jsx/color-picker";
+import Stack from "@mui/material/Stack";
 
 const GlobalColorSettingsListPage = () => {
   const navigate = useNavigate();
@@ -100,6 +101,21 @@ const GlobalColorSettingsListPage = () => {
   }
   return (
     <>
+      <Box>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          sx={{ mb: 2 }}
+        >
+          <Typography
+            variant="h5"
+            sx={{ fontWeight: 700, color: "#202223", fontSize: 20 }}
+          >
+            Color Settings
+          </Typography>
+        </Stack>
+      </Box>
       <Box
         sx={{
           p: 3,
