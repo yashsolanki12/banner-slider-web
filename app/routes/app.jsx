@@ -36,9 +36,7 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <AppProvider embedded apiKey={apiKey}>
         <s-app-nav>
-          <s-link href="/app/global-color-settings">
-            Global Color Settings
-          </s-link>
+          <s-link href="/app/global-color-settings">Color Settings</s-link>
         </s-app-nav>{" "}
         <Outlet />
       </AppProvider>

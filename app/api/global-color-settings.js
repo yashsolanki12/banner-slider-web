@@ -8,7 +8,7 @@ export const createGlobalColors = async (data) => {
     throw new Error("Shop domain is required.");
   }
   return axiosInstance
-    .create("usp-slider/global-colors", data, {
+    .post("usp-slider/global-colors", data, {
       headers: {
         "x-shopify-shop-domain": shopDomain,
       },

@@ -7,9 +7,7 @@ const GlobalColorSettingsList = React.lazy(
 const GlobalColorSettings = () => {
   return (
     <React.Suspense fallback="">
-      GlobalColorSettings
       <GlobalColorSettingsList />
-      {/* Use to show the toast with desired position */}
     </React.Suspense>
   );
 };

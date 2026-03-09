@@ -13,9 +13,10 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import ColorPicker from "../color-settings.jsx/color-picker";
 // import Slider from "@mui/material/Slider";
 
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 // import SafeLink from "../../helper/safe-link";
 import {
   getUspBarById,
@@ -50,56 +51,12 @@ function a11yProps(index) {
   };
 }
 
-// Color picker component
-const ColorPicker = ({ label, value, onChange, name }) => {
-  return (
-    <Box sx={{ mb: 2 }}>
-      <Typography
-        variant="caption"
-        sx={{
-          color: "#6b7280",
-          mb: 0.5,
-          display: "block",
-          fontSize: "14px",
-        }}
-      >
-        {label}
-      </Typography>
-      <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-        <input
-          type="color"
-          value={value}
-          onChange={(e) =>
-            onChange({ target: { name, value: e.target.value } })
-          }
-          style={{
-            width: 40,
-            height: 40,
-            border: "1px solid #e1e1e1",
-            borderRadius: 4,
-            cursor: "pointer",
-            padding: 2,
-          }}
-        />
-        <TextField
-          size="small"
-          name={name}
-          value={value}
-          onChange={onChange}
-          placeholder="#ffffff"
-          sx={{ flex: 1 }}
-        />
-      </Box>
-    </Box>
-  );
-};
-
 const UspBarForm = ({ id, heading }) => {
   const isEditMode = Boolean(id);
-  const { pathname } = useLocation();
+  // const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  const [loading, setLoading] = React.useState(isEditMode);
+  // const [loading, setLoading] = React.useState(isEditMode);
   const [tabIndex, setTabIndex] = React.useState(0);
   const [useCustomColorSettings, setUseCustomColorSettings] =
     React.useState(false);
@@ -131,11 +88,7 @@ const UspBarForm = ({ id, heading }) => {
   const {
     data: UspBarCurrentSessionData,
     isLoading: UspBarCurrentSessionLoading,
-  } = useUspBarData(
-    ["usp-bar-current-session"],
-    getCurrentSession,
-    setSnackbar,
-  );
+  } = useUspBarData(["usp-bar-current-session"], getCurrentSession, null);
 
   // Correct usage with ID
   const { data: UspBarDetailData, isLoading: UspBarDetailLoading } =
@@ -424,7 +377,6 @@ const UspBarForm = ({ id, heading }) => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          mb: 3,
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
