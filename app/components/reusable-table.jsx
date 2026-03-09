@@ -259,6 +259,7 @@ const ReusableTable = ({
                     color: "#6b7280",
                     fontWeight: 600,
                     fontSize: 13,
+
                     backgroundColor: "#f7f7f7",
                   }}
                 >
@@ -289,6 +290,7 @@ const ReusableTable = ({
                       <TableCell
                         key={`${rowId}-${column.key}`}
                         align={column.align || "left"}
+                        style={{ paddingTop: "10px", paddingBottom: "10px" }}
                         sx={column.sx}
                       >
                         {column.type === "tooltip" ? (
@@ -328,7 +330,10 @@ const ReusableTable = ({
                       </TableCell>
                     ))}
                     {actionButtons.length > 0 && (
-                      <TableCell align="right">
+                      <TableCell
+                        align="right"
+                        sx={{ paddingTop: "10px", paddingBottom: "10px" }}
+                      >
                         {/* Toggle/Visibility Button */}
                         {showStatus && mutations?.toggleMutation && (
                           <Tooltip
