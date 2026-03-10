@@ -64,24 +64,24 @@
     }
 
     #usp-bar-container-{{ block.id }} .usp-items-wrapper {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
       gap: 15px;
       width: 100%;
     }
 
     #usp-bar-container-{{ block.id }} .usp-item {
       display: flex;
+      flex-direction: row;
       justify-content: center;
       align-items: center;
       gap: 15px;
       box-sizing: border-box;
-      width: 100%;
-      max-width: 300px;
-      min-width: 250px;
-      padding: 0px 10px;
+      width: 300px;
+      padding: 5px 5px;
+      border-radius: 5px;
       position: relative;
-      min-height: 60px;
     }
 
     #usp-bar-container-{{ block.id }} .usp-item:not(:last-child)::after {
@@ -137,9 +137,8 @@
     #usp-bar-container-{{ block.id }} .usp-item-content {
       display: flex;
       flex-direction: column;
+      align-items: flex-start;
       overflow: hidden;
-      flex: 1;
-      min-width: 0;
     }
 
     #usp-bar-container-{{ block.id }} .usp-item-title {
@@ -150,7 +149,7 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 180px;
+      max-width: 200px;
       flex-shrink: 1;
     }
 
@@ -161,7 +160,7 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 180px;
+      max-width: 200px;
       flex-shrink: 1;
     }
 
@@ -390,6 +389,7 @@
 
       const defaultDesignSettings = {
         backgroundColor: '#f8f9fa',
+        itemBackgroundColor: '#ffffff', 
         titleColor: '#333333',
         descriptionColor: '#666666',
         iconBackgroundColor: '#4CAF50',
@@ -467,6 +467,7 @@
             background: ${settings.iconBackgroundColor} !important;
           }
           .usp-nav-btn {
+            background: ${settings.itemBackgroundColor} !important;
             color: ${settings.titleColor} !important;
           } 
           .usp-item:not(:last-child)::after {
@@ -509,10 +510,10 @@
         allItems.forEach((item, index) => {
           const itemSettings = item.designSettings || defaultDesignSettings;
           html += `
-            <div class="usp-item">
-               <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">
-                 ${renderIcon(item.icon, itemSettings.iconColor)}
-               </div>
+            <div class="usp-item" style="background: ${itemSettings.itemBackgroundColor};">
+              <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">
+                ${renderIcon(item.icon, itemSettings.iconColor)}
+              </div>
               <div class="usp-item-content">
                 <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
                 <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
@@ -536,14 +537,14 @@
         visibleItems.forEach((item, index) => {
           const itemSettings = item.designSettings || defaultDesignSettings;
           html += `
-            <div class="usp-item">
-               <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">
-                 ${renderIcon(item.icon, itemSettings.iconColor)}
-               </div>
-              <div class="usp-item-content">
-                <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
-                <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
-              </div>
+            <div class="usp-item" style="background: ${itemSettings.itemBackgroundColor};">
+                <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">
+                  ${renderIcon(item.icon, itemSettings.iconColor)}
+                </div>
+                <div class="usp-item-content">
+                  <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
+                  <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
+                </div>
             </div>
           `;
         });
@@ -591,14 +592,14 @@
         visibleItems.forEach((item, index) => {
           const itemSettings = item.designSettings || defaultDesignSettings;
           html += `
-            <div class="usp-item">
-               <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">
-                 ${renderIcon(item.icon, itemSettings.iconColor)}
-               </div>
-              <div class="usp-item-content">
-                <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
-                <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
-              </div>
+            <div class="usp-item" style="background: ${itemSettings.itemBackgroundColor};">
+                <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">
+                  ${renderIcon(item.icon, itemSettings.iconColor)}
+                </div>
+                <div class="usp-item-content">
+                  <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
+                  <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
+                </div>
             </div>
           `;
         });
@@ -668,4 +669,5 @@
     ]
   }
 {% endschema %}
+
 
