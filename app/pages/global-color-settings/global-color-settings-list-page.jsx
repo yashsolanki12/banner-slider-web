@@ -100,17 +100,21 @@ const GlobalColorSettingsListPage = () => {
     return <Loader />;
   }
   return (
-    <>
+    <Box sx={{ p: 2 }}>
       <Box>
         <Stack
           direction="row"
           justifyContent="space-between"
           alignItems="center"
-          sx={{ mb: 2 }}
+          sx={{ mb: 2, flexWrap: "wrap", gap: 1 }}
         >
           <Typography
             variant="h5"
-            sx={{ fontWeight: 700, color: "#202223", fontSize: 20 }}
+            sx={{
+              fontWeight: 700,
+              color: "#202223",
+              fontSize: { xs: 18, sm: 20 },
+            }}
           >
             Color Settings
           </Typography>
@@ -118,18 +122,18 @@ const GlobalColorSettingsListPage = () => {
       </Box>
       <Box
         sx={{
-          p: 3,
+          p: { xs: 2, sm: 3 },
           border: "1px solid #e1e1e1",
           borderRadius: "8px",
-          backgroundColor: "white",
+          backgroundColor: "#f9fafb",
         }}
       >
         {/* Color Selecting input */}
         <Box
           sx={{
             display: "grid",
-            gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-            gap: 2,
+            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+            gap: { xs: 1.5, sm: 2 },
           }}
         >
           {/* Background Color */}
@@ -180,7 +184,7 @@ const GlobalColorSettingsListPage = () => {
             onChange={handleChange}
           />
           {/* Slider Speed */}
-          <Box>
+          <Box sx={{ gridColumn: { xs: "1", sm: "1 / -1" } }}>
             <Typography
               variant="caption"
               sx={{
@@ -200,7 +204,7 @@ const GlobalColorSettingsListPage = () => {
               step={1}
               marks
               valueLabelDisplay="auto"
-              sx={{ maxWidth: 300 }}
+              sx={{ maxWidth: { xs: "100%", sm: 300 } }}
             />
             <Typography
               variant="caption"
@@ -225,7 +229,13 @@ const GlobalColorSettingsListPage = () => {
       </Box>
 
       {/* Save changes button */}
-      <Box sx={{ mt: 2 }}>
+      <Box
+        sx={{
+          mt: 2,
+          display: "flex",
+          justifyContent: { xs: "stretch", sm: "flex-start" },
+        }}
+      >
         <Button
           variant="contained"
           onClick={handleSubmit}
@@ -237,6 +247,7 @@ const GlobalColorSettingsListPage = () => {
             borderRadius: "6px",
             fontWeight: 600,
             padding: "7px 18px",
+            width: { xs: "100%", sm: "auto" },
           }}
         >
           {isSubmitting ? (
@@ -246,7 +257,7 @@ const GlobalColorSettingsListPage = () => {
           )}
         </Button>
       </Box>
-    </>
+    </Box>
   );
 };
 

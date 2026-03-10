@@ -377,6 +377,8 @@ const UspBarForm = ({ id, heading }) => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          flexWrap: "wrap",
+          gap: 1,
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -389,7 +391,11 @@ const UspBarForm = ({ id, heading }) => {
           </IconButton>
           <Typography
             variant="h5"
-            sx={{ fontWeight: 700, color: "#202223", fontSize: 20 }}
+            sx={{
+              fontWeight: 700,
+              color: "#202223",
+              fontSize: { xs: 18, sm: 20 },
+            }}
           >
             {heading || (isEditMode ? "Edit USP Bar" : "Create USP Bar")}
           </Typography>
@@ -441,7 +447,7 @@ const UspBarForm = ({ id, heading }) => {
         <Stack spacing={4}>
           <Box
             sx={{
-              p: 3,
+              p: { xs: 2, sm: 3 },
               border: "1px solid #e1e1e1",
               borderRadius: "8px",
               backgroundColor: "white",
@@ -462,7 +468,7 @@ const UspBarForm = ({ id, heading }) => {
                   Title *
                 </Typography>
                 <TextField
-                  sx={{ width: 500 }}
+                  sx={{ width: "100%", maxWidth: 500 }}
                   name="title"
                   value={formData.title || ""}
                   onChange={handleChange}
@@ -490,7 +496,7 @@ const UspBarForm = ({ id, heading }) => {
                   Description *
                 </Typography>
                 <TextField
-                  sx={{ width: 500 }}
+                  sx={{ width: "100%", maxWidth: 500 }}
                   multiline
                   rows={2}
                   name="description"
@@ -642,9 +648,9 @@ const UspBarForm = ({ id, heading }) => {
                     sx={{
                       display: "grid",
                       gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-                      gap: 2,
+                      gap: { xs: 1.5, sm: 2 },
                       mt: 2,
-                      p: 2,
+                      p: { xs: 1.5, sm: 2 },
                       border: "1px solid #e1e1e1",
                       borderRadius: "8px",
                       backgroundColor: "#f9fafb",
@@ -747,8 +753,15 @@ const UspBarForm = ({ id, heading }) => {
               </Box>
             </Stack>
           </Box>
-          {/* Action Buttons */}
-          <Box sx={{ display: "flex", gap: "16px" }}>
+          {/* Action Buttons - Content Tab */}
+          <Box
+            sx={{
+              display: "flex",
+              gap: "16px",
+              flexWrap: "wrap",
+              flexDirection: { xs: "column", sm: "row" },
+            }}
+          >
             <Button
               variant="contained"
               onClick={handleNavigateBack}
@@ -759,6 +772,7 @@ const UspBarForm = ({ id, heading }) => {
                 borderRadius: "6px",
                 fontWeight: 600,
                 padding: "7px 18px",
+                width: { xs: "100%", sm: "auto" },
               }}
               disabled={isSubmitting}
             >
@@ -775,6 +789,7 @@ const UspBarForm = ({ id, heading }) => {
                 borderRadius: "6px",
                 fontWeight: 600,
                 padding: "7px 18px",
+                width: { xs: "100%", sm: "auto" },
               }}
             >
               {isSubmitting ? (
@@ -794,21 +809,32 @@ const UspBarForm = ({ id, heading }) => {
         <Stack spacing={4}>
           <Box
             sx={{
-              p: 3,
+              p: { xs: 2, sm: 3 },
               border: "1px solid #e1e1e1",
               borderRadius: "8px",
               backgroundColor: "white",
             }}
           >
-            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+            <Typography
+              variant="h6"
+              sx={{
+                mb: { xs: 1.5, sm: 2 },
+                fontWeight: 600,
+                fontSize: { xs: "1rem", sm: "1.25rem" },
+              }}
+            >
               Color Settings
             </Typography>
 
             <Box
               sx={{
                 display: "grid",
-                gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-                gap: 2,
+                gridTemplateColumns: {
+                  xs: "1fr",
+                  sm: "1fr 1fr",
+                  md: "1fr 1fr",
+                },
+                gap: { xs: 1.5, sm: 2 },
               }}
             >
               {/* Background Color */}
@@ -875,8 +901,15 @@ const UspBarForm = ({ id, heading }) => {
             </Box>
           </Box>
 
-          {/* Action Buttons */}
-          <Box sx={{ display: "flex", gap: "16px" }}>
+          {/* Action Buttons - Design Tab */}
+          <Box
+            sx={{
+              display: "flex",
+              gap: "16px",
+              flexWrap: "wrap",
+              flexDirection: { xs: "column", sm: "row" },
+            }}
+          >
             <Button
               variant="contained"
               onClick={handleNavigateBack}
@@ -887,6 +920,7 @@ const UspBarForm = ({ id, heading }) => {
                 borderRadius: "6px",
                 fontWeight: 600,
                 padding: "7px 18px",
+                width: { xs: "100%", sm: "auto" },
               }}
               disabled={isSubmitting}
             >
@@ -903,6 +937,7 @@ const UspBarForm = ({ id, heading }) => {
                 borderRadius: "6px",
                 fontWeight: 600,
                 padding: "7px 18px",
+                width: { xs: "100%", sm: "auto" },
               }}
             >
               {isSubmitting ? (

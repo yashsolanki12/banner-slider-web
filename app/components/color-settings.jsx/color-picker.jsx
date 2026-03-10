@@ -6,7 +6,7 @@ import TextField from "@mui/material/TextField";
 // Color picker component using native HTML input
 const ColorPicker = ({ label, value, onChange, name }) => {
   return (
-    <Box sx={{ mb: 2 }}>
+    <Box sx={{ mb: { xs: 1.5, sm: 2 } }}>
       <Typography
         variant="caption"
         sx={{
@@ -18,7 +18,14 @@ const ColorPicker = ({ label, value, onChange, name }) => {
       >
         {label}
       </Typography>
-      <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: { xs: 1, sm: 2 },
+          flexWrap: "wrap",
+        }}
+      >
         <input
           type="color"
           value={value}
@@ -26,12 +33,13 @@ const ColorPicker = ({ label, value, onChange, name }) => {
             onChange({ target: { name, value: e.target.value } })
           }
           style={{
-            width: 40,
-            height: 40,
+            width: { xs: 36, sm: 40 },
+            height: { xs: 36, sm: 40 },
             border: "1px solid #e1e1e1",
             borderRadius: 4,
             cursor: "pointer",
             padding: 2,
+            minWidth: "36px",
           }}
         />
         <TextField
@@ -40,7 +48,11 @@ const ColorPicker = ({ label, value, onChange, name }) => {
           value={value}
           onChange={onChange}
           placeholder="#ffffff"
-          sx={{ flex: 1 }}
+          sx={{
+            flex: 1,
+            minWidth: { xs: "calc(100% - 48px)", sm: "auto" },
+            maxWidth: { xs: "100%", sm: 200 },
+          }}
         />
       </Box>
     </Box>
