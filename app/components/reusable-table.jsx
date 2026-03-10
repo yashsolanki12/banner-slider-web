@@ -296,8 +296,6 @@ const ReusableTable = ({
                         {column.type === "tooltip" ? (
                           <Tooltip
                             placement="top"
-                            title={row[column.key]}
-                            arrow
                             slotProps={{
                               tooltip: {
                                 sx: {
@@ -305,7 +303,19 @@ const ReusableTable = ({
                                   maxWidth: column.maxWidth || "300px",
                                 },
                               },
+                              popper: {
+                                modifiers: [
+                                  {
+                                    name: "offset",
+                                    options: {
+                                      offset: [0, 10],
+                                    },
+                                  },
+                                ],
+                              },
                             }}
+                            title={row[column.key]}
+                            arrow
                           >
                             <Typography
                               variant="body2"
@@ -332,7 +342,7 @@ const ReusableTable = ({
                     {actionButtons.length > 0 && (
                       <TableCell
                         align="right"
-                        sx={{ paddingTop: "10px", paddingBottom: "10px" }}
+                        sx={{ paddingTop: "2px", paddingBottom: "2px" }}
                       >
                         {/* Toggle/Visibility Button */}
                         {showStatus && mutations?.toggleMutation && (
@@ -343,6 +353,18 @@ const ReusableTable = ({
                                 : "Enable (Show in store)"
                             }
                             placement="top"
+                            slotProps={{
+                              popper: {
+                                modifiers: [
+                                  {
+                                    name: "offset",
+                                    options: {
+                                      offset: [0, -18],
+                                    },
+                                  },
+                                ],
+                              },
+                            }}
                           >
                             <IconButton
                               onClick={() => handleToggleEnabled(row)}
@@ -366,6 +388,18 @@ const ReusableTable = ({
                             key={action.name}
                             title={action.tooltip || action.name}
                             placement="top"
+                            slotProps={{
+                              popper: {
+                                modifiers: [
+                                  {
+                                    name: "offset",
+                                    options: {
+                                      offset: [0, -18],
+                                    },
+                                  },
+                                ],
+                              },
+                            }}
                           >
                             {action.type === "link" ? (
                               <IconButton
