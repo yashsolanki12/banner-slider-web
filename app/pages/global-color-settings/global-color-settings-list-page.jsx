@@ -144,6 +144,22 @@ const GlobalColorSettingsListPage = () => {
             onChange={handleChange}
           />
 
+          {/* Icon Color */}
+          <ColorPicker
+            label="Icon Color"
+            name="designSettings.iconColor"
+            value={formData.iconColor || "#ffffff"}
+            onChange={handleChange}
+          />
+
+          {/* Item Background Color */}
+          <ColorPicker
+            label="Item Background Color"
+            name="designSettings.itemBackgroundColor"
+            value={formData.itemBackgroundColor || "#ffffff"}
+            onChange={handleChange}
+          />
+
           {/* Title Color */}
           <ColorPicker
             label="Title Color"
@@ -168,14 +184,6 @@ const GlobalColorSettingsListPage = () => {
             onChange={handleChange}
           />
 
-          {/* Icon Color */}
-          <ColorPicker
-            label="Icon Color"
-            name="designSettings.iconColor"
-            value={formData.iconColor || "#ffffff"}
-            onChange={handleChange}
-          />
-
           {/* Item Border Right Color */}
           <ColorPicker
             label="Item Border Right Color"
@@ -184,7 +192,7 @@ const GlobalColorSettingsListPage = () => {
             onChange={handleChange}
           />
           {/* Slider Speed */}
-          <Box sx={{ gridColumn: { xs: "1", sm: "1 / -1" } }}>
+          <Box>
             <Typography
               variant="caption"
               sx={{

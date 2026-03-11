@@ -37,7 +37,7 @@ const UspBarList = (props) => {
   const { data: UspBarListData, isLoading: UspBarListLoading } = useUspBarData(
     ["usp-bar"],
     getAllUspBar,
-    setSnackbar, // Show toast for list fetch
+    null, // Show toast for list fetch
   );
 
   // Delete Mutation
