@@ -20,27 +20,38 @@
       position: relative;
       overflow: hidden;
       z-index: 1000;
+      display: flex;        /* MOD: Absolue centering */
+      justify-content: center;
+      align-items: center;
     }
 
     .usp-bar-content {
       width: 100%;
       position: relative;
+      display: flex;       /* MOD: Absolute centering */
+      justify-content: center;
+      align-items: center;
     }
 
-    {% comment %}
+    /* Static Slider Style Template (Kept for reference)
        .usp-bar-slider {
           display: flex;
-      align-items: center;
-      width: 100%;
-      min-height: 50px;
-      box-sizing: border-box;
-      } 
-   {% endcomment %}
+          align-items: center;
+          width: 100%;
+          min-height: 50px;
+          box-sizing: border-box;
+       } 
+    */
     .usp-bar-slider {
       padding: 0 45px;
       box-sizing: border-box;
       display: flex;
-      justify-content: center;
+      justify-content: center; /* Static view centering */
+      align-items: center;
+      width: 100%;
+      margin: 0 auto;
+      overflow: hidden; 
+      position: relative;
     }
 
     @media (max-width: 768px) {
@@ -51,50 +62,78 @@
 
     @media (max-width: 480px) {
       .usp-bar-slider {
-        padding: 0 25px;
-        min-height: 0px
+        padding: 0 10px; /* MOD: Minimal padding for mobile */
       }
     }
 
-     .usp-items-wrapper {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 15px;
-        {% comment %} width: 100%; {% endcomment %}
-      }
+    .usp-items-wrapper {
+      display: flex;
+      justify-content: center; 
+      align-items: center;
+      gap: 15px; 
+      width: auto !important; 
+      max-width: 100%;       /* MOD: Prevent overflow on mobile */
+      flex-wrap: nowrap;
+      transition: transform 0.5s ease;
+      will-change: transform;
+    }
 
+    .usp-item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      box-sizing: border-box; 
+      padding: 10px;
+      border-radius: 5px;
+      position: relative;
+      width: 300px;           
+      min-width: 0;           
+      max-width: 300px;
+      height: 80px !important;   
+      max-height: 80px !important;
+    }
+    
+    @media (max-width: 480px) {
       .usp-item {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 15px;
-        {% comment %} padding: 10px 15px; {% endcomment %}
-        {% comment %} background: #ffffff; {% endcomment %}
-        {% comment %} border-radius: 6px; {% endcomment %}
-        {% comment %} box-shadow: 0 1px 3px rgba(0,0,0,0.1); {% endcomment %}
-        box-sizing: border-box;
-        {% comment %} width: 100%; {% endcomment %}
-        width: 300px;
-        padding: 5px 5px;
-        border-radius: 5px;
-        position: relative;
+        width: 100% !important; /* Force items to fill mobile container */
+        max-width: 100% !important;
       }
+    }
+    
+    .usp-item-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center; 
+      text-align: center;  
+      overflow: hidden;    
+      min-width: 0;        
+      flex: 0 1 auto; /* MOD: Remove flex: 1 to prevent pushing icon away */
+      max-width: 100%;     
+    }
+    
+    .usp-item-title, .usp-item-description {
+      text-align: center !important; /* Force centering */
+      width: 100%;
+    }
 
       .usp-item:not(:last-child)::after {
         content: '';
         position: absolute;
-        right: -10px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 3px;
-        height: 30px;
-        background-color: #000000;
+        right: -10px;      /* MOD: Perfectly centered in 15px/18px gap */
+        top: 25%;
+        height: 50%;
+        width: 3px ;
+        background-color: var(--item-border-color, #cccccc);
+        display: block !important;
+        z-index: 5;
       }
 
       .usp-item-inner {
         display: flex;
         align-items: center;
-        gap: 12px;
+        justify-content: center;
+        gap: 8px;
         padding: 10px 15px; /* this creates space before border */
       }
 
@@ -125,15 +164,11 @@
       width: 100%;
       height: 100%;
       display: block;
-      {% comment %} fill: currentColor;
-      stroke: currentColor; {% endcomment %}
+      /* fill: currentColor;
+      stroke: currentColor; */
     }
 
-    .usp-item-content {
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
+    /* Container already updated above */
 
     .usp-item-title {
       font-weight: 600;
@@ -143,17 +178,24 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 160px;
+      width: 100%;         
+      max-width: 210px !important; 
+      display: block;
+      text-align: center; 
     }
 
     .usp-item-description {
-      font-size: 14px;
+      font-size: 13px;
       color: #666666;
-      margin: 0;
+      margin: 4px 0 0 0;
+      line-height: 1.4;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 160px;
+      width: 100%;         
+      max-width: 210px !important; 
+      display: block;
+      text-align: center !important; /* Force centering */
     }
 
     .usp-loading {
@@ -214,195 +256,44 @@
     .usp-bar-wrapper.has-slider .usp-nav-btn {
       display: flex;
     }
-
-    /* Dots indicator */
-    {% comment %} .usp-dots {
-      display: flex;
-      justify-content: center;
-      gap: 6px;
-      margin-top: 10px;
-      width: 100%;
-    }
-
-    .usp-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #ccc;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    .usp-dot.active {
-      background: #4CAF50;
-    } {% endcomment %}
-
-    /* Responsive */
+     /* Removed media query overrides for item width to keep 300px locked on desktop/tablet */
      @media (max-width: 768px) {
-       .usp-bar-wrapper {
-         padding: 10px 40px;
-       }
-       
-       .usp-items-wrapper {
-         grid-template-columns: repeat(4, 1fr);
-         gap: 10px;
-       }
-       
-       .usp-item {
-         padding: 8px 12px;
-         min-width: 200px;
-         max-width: 250px;
-         min-height: 50px;
-       }
-       
-       .usp-item-title {
-         font-size: 12px;
-         max-width: 140px;
-         line-height: 1.3;
-       }
-       
-       .usp-item-description {
-         font-size: 10px;
-         max-width: 140px;
-         line-height: 1.2;
-       }
-
-       .usp-item-icon {
-         width: 28px;
-         height: 28px;
-         min-width: 28px;
-         min-height: 28px;
-         font-size: 10px;
-       }
-
-       {% comment %}.usp-nav-btn {
-         width: 28px;
-         height: 28px;
-         min-width: 28px;
-         font-size: 16px;
-       }{% endcomment %}
+       {% comment %} .usp-bar-wrapper {
+         padding: 10px 20px;
+       }, {% endcomment %}
+       .usp-bar-slider {
+        padding: 0 35px;
+      }
      }
 
      @media (max-width: 480px) {
        .usp-bar-slider {
          padding: 0 10px;
-         min-height: 60px;
        }
-       
-       .usp-items-wrapper {
-         grid-template-columns: repeat(4, 1fr);
-         gap: 10px;
-         width: 100%;
-       }
-       
-       .usp-item {
-         min-width: auto;
-         max-width: none;
-         min-height: 45px;
-         width: auto;
-         padding: 20px 5px;
-       }
-       
-       .usp-item-title {
-         font-size: 10px;
-         max-width: 80px;
-         line-height: 1.3;
-       }
-       
-       .usp-item-description {
-         font-size: 8px;
-         max-width: 80px;
-         line-height: 1.2;
-       }
-
-       .usp-item-icon {
-         width: 20px;
-         height: 20px;
-         min-width: 20px;
-         min-height: 20px;
-         font-size: 8px;
-       }
-
-       {% comment %}.usp-nav-btn {
-         width: 24px;
-         height: 24px;
-         min-width: 24px;
-         font-size: 14px;
-       }
-       
-       .usp-nav-btn.prev {
-         left: 5px;
-       }
-       
-       .usp-nav-btn.next {
-         right: 5px;
-       }{% endcomment %}
-     }
+      }
 
       @media (max-width: 320px) {
-        .usp-bar-wrapper {
-          padding: 10px;
+        .usp-item-inner {
+          width: 100%;
         }
-        
-        .usp-bar-slider {
-          padding: 0 10px;
-          min-height: 60px;
-        }
-        
-        .usp-item {
-          padding: 8px 5px;
-          min-height: 45px;
-        }
-        
-        .usp-item-title {
-          font-size: 10px;
-          max-width: 70px;
-          line-height: 1.3;
-        }
-        
-        .usp-item-description {
-          font-size: 8px;
-          max-width: 70px;
-          line-height: 1.2;
-        }
-
-        .usp-item-icon {
-          width: 20px;
-          height: 20px;
-          min-width: 20px;
-          min-height: 20px;
-          font-size: 8px;
-        }
-
-        {% comment %}.usp-nav-btn {
-          width: 28px;
-          height: 28px;
-          min-width: 28px;
-          font-size: 16px;
-        }
-        
-        .usp-nav-btn.prev {
-          left: 5px;
-        }
-        
-        .usp-nav-btn.next {
-          right: 5px;
-        }{% endcomment %}
       }
-   </style>
+      
+ </style>
 
   <script>
     (function() {
-      const shop = '{{ shop.domain }}';
-      const apiUrl = 'https://banner-slider-backend.onrender.com';
-      
+       const shop = '{{ shop.domain }}';
+       const apiUrl = 'https://banner-slider-backend.onrender.com';
+       
        let allItems = [];
-       let currentIndex = 0;
-       let itemsPerView = calculateItemsPerView(); // Initialize with correct items per view on load
+       let itemsWithClones = [];
+       let currentIndex = 0; /* This will track the index in itemsWithClones */
+       let itemsPerView = calculateItemsPerView();
        let autoSlideInterval = null;
        let designSettings = null;
+       let isTransitioning = false;
+       let itemWidth = 0;
 
-       // Default design settings
        const defaultDesignSettings = {
          backgroundColor: '#f8f9fa',
          itemBackgroundColor: '#ffffff', 
@@ -414,26 +305,40 @@
          itemBorderRightColor: "#000000"
        };
 
-       // Calculate items per view based on screen size
        function calculateItemsPerView() {
-         // Always show 4 items
-         return 4;
-       }
+        const width = window.innerWidth;
+        if (width <= 650) return 1;  /* Mobile (320, 375, 425) */
+        if (width <= 1250) return 2; /* Tablet/Laptop (768, 1024) */
+        return 4;                    /* Large Laptop (1440) */
+      }
 
-       // Update items per view on resize
-       function handleResize() {
-         const newItemsPerView = calculateItemsPerView();
-         if (newItemsPerView !== itemsPerView) {
-           itemsPerView = newItemsPerView;
-           currentIndex = 0; // Reset to first slide
-           renderUspBar();
-         }
-       }
+       function renderUspBar() {
+        if (allItems.length === 0) return;
+        
+        itemsPerView = calculateItemsPerView();
+        const slider = document.getElementById('usp-slider');
+        const container = document.getElementById('usp-bar-container');
+        
+        if (allItems.length <= itemsPerView) {
+          container.classList.remove('has-slider');
+          renderStaticView();
+          slider.style.display = 'flex';
+          slider.style.justifyContent = 'center';
+          slider.style.padding = designSettings.sliderPadding || '0 45px'; /* Restore default or setting */
+        } else {
+          container.classList.add('has-slider');
+          renderSliderView();
+          slider.style.display = 'flex';
+          slider.style.justifyContent = 'flex-start'; 
+          slider.style.padding = '0'; /* Clear padding in slider view to control offset perfectly */
+          startAutoSlide();
+        }
+      }
 
-       // Add resize listener
-       window.addEventListener('resize', handleResize);
+       /* Add resize listener */
+       window.addEventListener('resize', renderUspBar);
 
-        // Fetch USP Bar data
+        /*  Fetch USP Bar data */
        async function fetchUspBarData() {
          const slider = document.getElementById('usp-slider');
          const container = document.getElementById('usp-bar-container');
@@ -442,263 +347,218 @@
            const response = await fetch(`${apiUrl}/api/usp-slider/public/${shop}`);
            const result = await response.json();
            
-           
            if (result.success && result.data && result.data.length > 0) {
              allItems = result.data;
-             // Get design settings from the first item (all items share the same design settings)
+             /* Get design settings from the first item */
              designSettings = allItems[0].designSettings || defaultDesignSettings;
              applyDesignSettings(container);
-             itemsPerView = calculateItemsPerView(); // Initialize with correct items per view
+             container.style.display = 'flex'; /* MOD: Centering requires flex */
              renderUspBar();
-             container.style.display = 'block';
            } else {
              slider.innerHTML = '<div class="usp-empty">No USP items to display</div>';
-             container.style.display = 'block';
+             container.style.display = 'flex'; /* MOD: Centering requires flex even for empty state*/
            }
          } catch (error) {
            console.error('Error fetching USP Bar data:', error);
            slider.innerHTML = '<div class="usp-error">Failed to load USP Bar</div>';
-           container.style.display = 'block';
+           container.style.display = 'flex'; /* MOD: Centering requires flex even for error state */
          }
        }
 
-      // Render USP Bar items
-       function renderUspBar() {
-         const container = document.getElementById('usp-bar-container');
-         itemsPerView = calculateItemsPerView(); // Ensure correct items per view on render
-         
-         // Always use slider view when there are more items than itemsPerView
-         if (allItems.length > itemsPerView) {
-           container.classList.add('has-slider');
-           renderSliderView();
-           startAutoSlide();
-         } else {
-           container.classList.remove('has-slider');
-           renderStaticView();
-         }
+
+       function prepareItemsWithClones() {
+          /* For infinite sliding, we clone items at both ends */
+          const clonesAtStart = allItems.slice(-itemsPerView);
+         const clonesAtEnd = allItems.slice(0, itemsPerView);
+         itemsWithClones = [...clonesAtStart, ...allItems, ...clonesAtEnd];
+         currentIndex = itemsPerView; // Start at the first original item
        }
 
-       // Apply design settings (only container background - items use inline styles)
-       function applyDesignSettings(container) {
-         const settings = designSettings || defaultDesignSettings;
-         
-         // Apply container background color directly
-         container.style.backgroundColor = settings.backgroundColor;
-         
-         // Create dynamic styles for navigation and dots (these don't have inline styles)
-         const styleEl = document.createElement('style');
-         styleEl.id = 'usp-bar-dynamic-styles';
-         styleEl.textContent = `
-           {% comment %} .usp-bar-wrapper {
-             background: ${settings.backgroundColor} !important;
-           } {% endcomment %}
-              
-           .usp-dot.active {
-             background: ${settings.iconBackgroundColor} !important;
-           }
-           .usp-nav-btn {
-             background: ${settings.itemBackgroundColor} !important;
-             color: ${settings.titleColor} !important;
-           } 
-           .usp-item:not(:last-child)::after {
-             background-color: ${settings.itemBorderRightColor} !important;
-           }
-         `;
-        
-        // Remove existing dynamic styles if any
-        const existingStyles = document.getElementById('usp-bar-dynamic-styles');
-        if (existingStyles) {
-          existingStyles.remove();
-        }
-        
-        document.head.appendChild(styleEl);
+      function calculatePadding() {
+        const slider = document.getElementById('usp-slider');
+        if (!slider) return 0;
+        const style = window.getComputedStyle(slider);
+        return parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
       }
+      
+      /* Render static view (4 or fewer items) */
+      function renderStaticView() {
+        const slider = document.getElementById('usp-slider');
+        const padding = calculatePadding();
+        const itemWidth = Math.min(300, slider.offsetWidth - padding - 20); // MOD: Dynamic width for mobile
 
-      // Helper to render icon correctly (handles base64 SVGs with currentColor)
-      function renderIcon(icon, iconColor) {
-        if (!icon) return '✓';
+        /* Center perfectly in static view */
+        let html = '<div class="usp-items-wrapper" style="transform: none; transition: none; width: auto !important; margin: 0 auto; justify-content: center;">';
         
-        if (icon.startsWith('data:image/svg+xml;base64,')) {
-          try {
-            const base64 = icon.split(',')[1];
-            const svg = atob(base64);
-            return `<div class="usp-icon-svg-wrapper" style="color: ${iconColor};">${svg}</div>`;
-          } catch (e) {
-            console.error('Error decoding icon:', e);
-            return '✓';
-          }
-        }
-        
-        return `<img src="${icon}" alt="Icon" style="width: 16px; height: 16px; object-fit: contain;">`;
-      }
-
-       // Render static view (4 or fewer items)
-       function renderStaticView() {
-         const slider = document.getElementById('usp-slider');
-         let html = '<div class="usp-items-wrapper">';
-         
-         // Global settings from first item (for bar background, icon background, icon color)
-         const globalSettings = designSettings || defaultDesignSettings;
-         allItems.forEach((item, index) => {
-           // Per-item settings (item background, title color, description color)
-           const itemSettings = item.designSettings || defaultDesignSettings;
-           html += `
-             <div class="usp-item" style="background: ${itemSettings.itemBackgroundColor};">
-                <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">
-                  ${renderIcon(item.icon, itemSettings.iconColor)}
-                </div>
-               <div class="usp-item-content">
-                 <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
-                 <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
-               </div>
-             </div>
-           `;
-         });
-
-         html += '</div>';
-         slider.innerHTML = html;
-       }
-
-       // Render slider view (more than 4 items)
-       function renderSliderView() {
-         const slider = document.getElementById('usp-slider');
-         const container = document.getElementById('usp-bar-container');
-         let html = '<div class="usp-items-wrapper">';
-         
-         // Global settings from first item (for bar background, icon background, icon color)
-         const globalSettings = designSettings || defaultDesignSettings;
-         
-        // Show only 3 items at a time
-        const visibleItems = getVisibleItems();
-        visibleItems.forEach((item, index) => {
-          // Per-item settings (item background, title color, description color)
+        allItems.forEach((item) => {
           const itemSettings = item.designSettings || defaultDesignSettings;
+          /* EXTREME LOCKDOWN: Triple-enforce calculated dynamic width*/
+          const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
           html += `
-            <div class="usp-item" style="background: ${itemSettings.itemBackgroundColor};">
-               <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">
-                 ${renderIcon(item.icon, itemSettings.iconColor)}
-               </div>
-              <div class="usp-item-content">
-                <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
-                <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
+            <div class="usp-item" style="${strictStyle}">
+              <div class="usp-item-inner">
+                 <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">
+                   ${renderIcon(item.icon, itemSettings.iconColor)}
+                 </div>
+                <div class="usp-item-content">
+                  <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
+                  <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
+                </div>
               </div>
             </div>
           `;
         });
 
-         html += '</div>';
-
-        // Add dots indicator
-        const totalSlides = Math.ceil(allItems.length / itemsPerView);
-        {% comment %} html += '<div class="usp-dots">';
-        for (let i = 0; i < totalSlides; i++) {
-          html += `<div class="usp-dot ${i === 0 ? 'active' : ''}" data-index="${i}"></div>`;
-        } {% endcomment %}
         html += '</div>';
+        slider.innerHTML = html;
+      }
 
+      /* Render slider view */
+      function renderSliderView() {
+        prepareItemsWithClones(); 
+        const slider = document.getElementById('usp-slider');
+        const sliderWidth = slider.clientWidth; 
+        
+        /* MOD: Fixed gap for separator visibility */
+        const gap = 18; 
+        const itemWidth = itemsPerView === 1 
+          ? (sliderWidth - gap) 
+          : (sliderWidth - (gap * (itemsPerView - 1))) / itemsPerView;
+        
+        let html = `<div class="usp-items-wrapper" id="usp-track" style="justify-content: flex-start !important; gap: ${gap}px !important; width: auto !important;">`;
+        
+          itemsWithClones.forEach((item) => {
+            const itemSettings = item.designSettings || defaultDesignSettings;
+            /* EXTREME LOCKDOWN: Triple-enforce width to prevent expansion */
+            const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
+            html += `
+              <div class="usp-item" style="${strictStyle}">
+                <div class="usp-item-inner">
+                   <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">
+                     ${renderIcon(item.icon, itemSettings.iconColor)}
+                   </div>
+                  <div class="usp-item-content">
+                    <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
+                    <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
+                  </div>
+                </div>
+              </div>
+            `;
+          });
+
+        html += '</div>';
         slider.innerHTML = html;
 
-        // Setup navigation button handlers
-        setupNavigation(container);
-
-        // Add dot click handlers
-        const dots = slider.querySelectorAll('.usp-dot');
-        dots.forEach(dot => {
-          dot.addEventListener('click', () => {
-            goToSlide(parseInt(dot.dataset.index));
-          });
-        });
-      }
-
-      // Get visible items for current slide
-      function getVisibleItems() {
-        const start = currentIndex * itemsPerView;
-        const end = Math.min(start + itemsPerView, allItems.length);
-        return allItems.slice(start, end);
-      }
-
-      // Setup navigation
-      function setupNavigation(container) {
-        {% comment %}const prevBtn = document.getElementById('usp-prev-btn');
-        const nextBtn = document.getElementById('usp-next-btn');
+        const track = document.getElementById('usp-track');
         
-        prevBtn.onclick = () => slideDirection(-1);
-        nextBtn.onclick = () => slideDirection(1);{% endcomment %}
+        /* Set initial position */
+       updateTrackPosition(false);
+
+        /* Add transition end listener for infinite loop */
+        track.addEventListener('transitionend', handleTransitionEnd);
       }
 
-      // Slide navigation
+      function updateTrackPosition(animate = true) {
+        const track = document.getElementById('usp-track');
+        if (!track) return;
+        
+        const slider = document.getElementById('usp-slider');
+        const gap = 18;
+        const itemWidth = itemsPerView === 1 
+          ? (slider.clientWidth - gap) 
+          : (slider.clientWidth - (gap * (itemsPerView - 1))) / itemsPerView;
+        const offset = -(currentIndex * (itemWidth + gap));
+        
+        track.style.transition = animate ? 'transform 0.3s ease-out' : 'none'; 
+        track.style.transform = `translateX(${offset}px)`;
+      }
+
+      function handleTransitionEnd() {
+        isTransitioning = false;
+        
+        /* Infinite loop check */
+        if (currentIndex <= 0) {
+          /* Jump to the end clone set (original items end) */
+          currentIndex = allItems.length;
+          updateTrackPosition(false);
+        } else if (currentIndex >= itemsWithClones.length - itemsPerView) {
+          /* Jump to the start clone set (original items start) */
+          currentIndex = itemsPerView;
+          updateTrackPosition(false);
+        }
+      }
+
+      /* Slide navigation (one by one) */
       function slideDirection(direction) {
-        const totalSlides = Math.ceil(allItems.length / itemsPerView);
+        if (isTransitioning) return;
+        
+        isTransitioning = true;
         currentIndex += direction;
+        updateTrackPosition(true);
         
-        if (currentIndex < 0) currentIndex = totalSlides - 1;
-        if (currentIndex >= totalSlides) currentIndex = 0;
-        
-        updateSlider();
-      }
-
-      // Go to specific slide
-      function goToSlide(index) {
-        currentIndex = index;
-        updateSlider();
-      }
-
-       // Update slider view
-       function updateSlider() {
-         const slider = document.getElementById('usp-slider');
-         const visibleItems = getVisibleItems();
-         const wrapper = slider.querySelector('.usp-items-wrapper');
-         
-         // Global settings from first item (for bar background, icon background, icon color)
-         const globalSettings = designSettings || defaultDesignSettings;
-         
-         let html = '';
-         visibleItems.forEach((item, index) => {
-           // Per-item settings (item background, title color, description color)
-           const itemSettings = item.designSettings || defaultDesignSettings;
-           html += `
-             <div class="usp-item" style="background: ${itemSettings.itemBackgroundColor};">
-                <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">
-                  ${renderIcon(item.icon, itemSettings.iconColor)}
-                </div>
-               <div class="usp-item-content">
-                 <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
-                 <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
-               </div>
-             </div>
-           `;
-         });
-        
-        wrapper.innerHTML = html;
-
-        // Update dots
-        const dots = slider.querySelectorAll('.usp-dot');
-        dots.forEach((dot, i) => {
-          dot.classList.toggle('active', i === currentIndex);
-        });
-
-        // Reset auto slide
         resetAutoSlide();
       }
 
-      // Auto slide functionality
+      /* Auto slide functionality */
       function startAutoSlide() {
         const settings = designSettings || defaultDesignSettings;
         const slideSpeed = (settings.slideSpeed || 4) * 1000;
+        if (autoSlideInterval) clearInterval(autoSlideInterval);
         autoSlideInterval = setInterval(() => {
           slideDirection(1);
         }, slideSpeed);
       }
 
-      // Reset auto slide
+      /* Reset auto slide */
       function resetAutoSlide() {
-        if (autoSlideInterval) {
-          clearInterval(autoSlideInterval);
-          startAutoSlide();
-        }
+        startAutoSlide();
       }
 
-      // Convert hex color to RGB
+      /* Apply design settings */
+      function applyDesignSettings(container) {
+        const settings = designSettings || defaultDesignSettings;
+        
+        /* Apply container background color directly */
+        container.style.backgroundColor = settings.backgroundColor;
+        
+        const styleEl = document.createElement('style');
+        styleEl.id = 'usp-bar-dynamic-styles';
+        styleEl.textContent = `
+          .usp-dot.active {
+            background: ${settings.iconBackgroundColor} !important;
+          }
+          .usp-nav-btn {
+            background: ${settings.itemBackgroundColor} !important;
+            color: ${settings.titleColor} !important;
+          } 
+        `;
+       
+       const existingStyles = document.getElementById('usp-bar-dynamic-styles');
+       if (existingStyles) {
+         existingStyles.remove();
+       }
+       
+       document.head.appendChild(styleEl);
+     }
+
+      /* Helper to render icon correctly */
+     function renderIcon(icon, iconColor) {
+       if (!icon) return '✓';
+       
+       if (icon.startsWith('data:image/svg+xml;base64,')) {
+         try {
+           const base64 = icon.split(',')[1];
+           const svg = atob(base64);
+           return `<div class="usp-icon-svg-wrapper" style="color: ${iconColor};">${svg}</div>`;
+         } catch (e) {
+           return '✓';
+         }
+       }
+       
+       return `<img src="${icon}" alt="Icon" style="width: 16px; height: 16px; object-fit: contain;">`;
+     }
+
+       /* Convert hex color to RGB */
       function hexToRgb(hex) {
         const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         return result ? {
@@ -708,19 +568,7 @@
         } : null;
       }
 
-      // Calculate YIQ contrast to determine if color is light or dark
-      function getContrastYIQ(hexColor) {
-        // Always make icon white when iconColor is white (#ffffff)
-        if (hexColor && hexColor.toLowerCase() === '#ffffff') {
-          return true;
-        }
-        const rgb = hexToRgb(hexColor);
-        if (!rgb) return false;
-        const yiq = ((rgb.r * 299) + (rgb.g * 587) + (rgb.b * 114)) / 1000;
-        return yiq < 128;
-      }
-
-      // Escape HTML to prevent XSS
+       /* Escape HTML to prevent XSS */
       function escapeHtml(text) {
         if (!text) return '';
         const div = document.createElement('div');
@@ -728,12 +576,9 @@
         return div.innerHTML;
       }
 
-      // Initialize when DOM is ready
+       /* Initialize when DOM is ready */
       function init() {
-        // Find the header and insert USP bar after it
         const container = document.getElementById('usp-bar-container');
-        
-        // Try to find common header selectors
         const header = document.querySelector('header') || 
                        document.querySelector('.header') || 
                        document.querySelector('#header') ||
@@ -749,14 +594,14 @@
         fetchUspBarData();
       }
 
-      // Wait for DOM to be ready
+      /* Wait for DOM to be ready */
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
       } else {
         init();
       }
 
-      // Pause on hover
+      /* Pause on hover */
       document.addEventListener('mouseenter', function(e) {
         const container = document.getElementById('usp-bar-container');
         if (container && container.contains(e.target)) {
@@ -770,14 +615,15 @@
       document.addEventListener('mouseleave', function(e) {
         const container = document.getElementById('usp-bar-container');
         if (container && container.contains(e.target)) {
-          if (allItems.length > 4 && !autoSlideInterval) {
+          if (allItems.length > itemsPerView && !autoSlideInterval) {
             startAutoSlide();
           }
         }
       }, true);
     })();
+    
   </script>
-{% endif %}
+  {% endif %}
 
 {% schema %}
 {
@@ -794,5 +640,3 @@
   ]
 }
 {% endschema %}
-
-
