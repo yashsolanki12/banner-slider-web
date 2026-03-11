@@ -27,6 +27,7 @@ import {
 import { validateUspBarForm } from "../../validation/usp-bar-validation";
 import useUspBarData from "../../hooks/useUspBarData";
 import useUspBarSubmit from "../../hooks/useUspBarSubmit";
+import InputAdornment from "@mui/material/InputAdornment";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -75,6 +76,7 @@ const UspBarForm = ({ id, heading }) => {
       slideSpeed: 4,
       itemBorderRightColor: "#000000", // Default vertical border color (black)
     },
+    useCustomColorSettings: false,
   });
 
   // Snackbar state
@@ -92,12 +94,10 @@ const UspBarForm = ({ id, heading }) => {
 
   // Correct usage with ID
   const { data: UspBarDetailData, isLoading: UspBarDetailLoading } =
-    useUspBarData(
-      ["usp-bar-detail", id],
-      () => getUspBarById(id),
-      setSnackbar,
-      { enabled: Boolean(id) && isEditMode, staleTime: 0 },
-    );
+    useUspBarData(["usp-bar-detail", id], () => getUspBarById(id), null, {
+      enabled: Boolean(id) && isEditMode,
+      staleTime: 0,
+    });
 
   // Create mutation using useUspBarSubmit hook
   const createMutation = useUspBarSubmit(
@@ -134,10 +134,16 @@ const UspBarForm = ({ id, heading }) => {
   React.useEffect(() => {
     if (id && isEditMode) {
       if (UspBarDetailData?.success == true && UspBarDetailData?.data) {
+        // Set the checkbox based on the API response
+        setUseCustomColorSettings(
+          UspBarDetailData?.data?.useCustomColorSettings || false,
+        );
         setFormData({
           title: UspBarDetailData?.data?.title || "",
           description: UspBarDetailData?.data?.description || "",
           icon: UspBarDetailData?.data?.icon || null,
+          useCustomColorSettings:
+            UspBarDetailData?.data?.useCustomColorSettings || false,
           designSettings: {
             backgroundColor:
               UspBarDetailData?.data?.designSettings?.backgroundColor ||
@@ -336,6 +342,7 @@ const UspBarForm = ({ id, heading }) => {
         description: formData.description,
         designSettings: formData.designSettings,
         icon: formData.icon,
+        useCustomColorSettings: useCustomColorSettings,
       };
       updateMutation.mutate(payload, {
         onError: handleApiError,
@@ -347,6 +354,7 @@ const UspBarForm = ({ id, heading }) => {
         shopify_session_id: UspBarCurrentSessionData?.data?._id || null,
         designSettings: formData.designSettings,
         icon: formData.icon,
+        useCustomColorSettings: useCustomColorSettings,
       };
       createMutation.mutate(payload, {
         onError: handleApiError,
@@ -476,6 +484,16 @@ const UspBarForm = ({ id, heading }) => {
                   placeholder="Enter title"
                   error={Boolean(errors?.title)}
                   helperText={errors?.title || ""}
+                  inputProps={{ maxLength: 15 }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Typography variant="caption" color="textSecondary">
+                          {formData.title?.length || 0}/15
+                        </Typography>
+                      </InputAdornment>
+                    ),
+                  }}
                   FormHelperTextProps={{
                     sx: { color: "#d32f2f", marginLeft: 0 },
                   }}
@@ -506,6 +524,16 @@ const UspBarForm = ({ id, heading }) => {
                   placeholder="Enter description"
                   error={Boolean(errors?.description)}
                   helperText={errors?.description || ""}
+                  inputProps={{ maxLength: 30 }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Typography variant="caption" color="textSecondary">
+                          {formData.description?.length || 0}/30
+                        </Typography>
+                      </InputAdornment>
+                    ),
+                  }}
                   FormHelperTextProps={{
                     sx: { color: "#d32f2f", marginLeft: 0 },
                   }}
@@ -674,6 +702,17 @@ const UspBarForm = ({ id, heading }) => {
                       onChange={handleChange}
                     />
 
+                    {/* Item Background Color */}
+                    <ColorPicker
+                      label="Item Background Color"
+                      name="designSettings.itemBackgroundColor"
+                      value={
+                        formData.designSettings?.itemBackgroundColor ||
+                        "#ffffff"
+                      }
+                      onChange={handleChange}
+                    />
+
                     {/* Title Color */}
                     <ColorPicker
                       label="Title Color"
@@ -705,7 +744,7 @@ const UspBarForm = ({ id, heading }) => {
 
                     {/* Border Color */}
                     <ColorPicker
-                      label="Border Color"
+                      label="Item Border Right Color"
                       name="designSettings.itemBorderRightColor"
                       value={
                         formData.designSettings?.itemBorderRightColor ||
@@ -844,16 +883,6 @@ const UspBarForm = ({ id, heading }) => {
                 value={formData.designSettings?.backgroundColor || "#f8f9fa"}
                 onChange={handleChange}
               />
-
-              {/* Item Background Color */}
-              {/* <ColorPicker
-                label="Item Background Color"
-                name="designSettings.itemBackgroundColor"
-                value={
-                  formData.designSettings?.itemBackgroundColor || "#ffffff"
-                }
-                onChange={handleChange}
-              /> */}
 
               {/* Title Color */}
               <ColorPicker
