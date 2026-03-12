@@ -22,8 +22,7 @@
     /* MOD: Unified Container Logic */
     #usp-bar-container-{{ block.id }}.usp-bar-wrapper {
       width: 100%;
-      background: #f8f9fa;
-      padding: 15px 20px;
+      padding: 0.2px 20px; 
       box-sizing: border-box;
       position: relative;
       overflow: hidden;
@@ -31,7 +30,9 @@
       display: none;         /* Hidden by default, shown by JS */
       justify-content: center;
       align-items: center;
-      margin: 0 auto;
+      {% comment %} margin-left: 50px;
+      margin-right: 50px;
+      border-radius: 50px; {% endcomment %}
     }
     
     /* MOD: Removed duplicate display: none and unified styles */
@@ -56,11 +57,6 @@
       position: relative;
     }
 
-    @media (max-width: 768px) {
-      #usp-bar-container-{{ block.id }} .usp-bar-slider {
-        padding: 0 35px;
-      }
-    }
 
     @media (max-width: 480px) {
       #usp-bar-container-{{ block.id }} .usp-bar-slider {
@@ -84,7 +80,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 15px;
+      {% comment %} gap: 15px; {% endcomment %}
       box-sizing: border-box; 
       padding: 10px;
       border-radius: 5px;
@@ -92,8 +88,7 @@
       width: 300px;           
       min-width: 0;           
       max-width: 300px;
-      height: 80px !important;   
-      max-height: 80px !important;
+      height: 75px !important;   
     }
 
     /* Separator: positioned on inner div so it stays inside item's padding area */
@@ -114,19 +109,30 @@
       justify-content: center;
       gap: 8px;
       padding: 10px 15px; 
+      {% comment %} width: 160px; /* to create the gap between icon and content */ {% endcomment %}
+      max-width: 190px;
       {% comment %} width: 100%;
       height: 100%; {% endcomment %}
     }
 
     #usp-bar-container-{{ block.id }} .usp-item-icon {
-      width: 35px;
-      height: 35px;
-      min-width: 35px;
-      min-height: 35px;
+      width: 50px;
+      height: 45px;
+      {% comment %} min-width: 35px; {% endcomment %}
+      {% comment %} min-height: 35px; {% endcomment %}
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #4CAF50;
+      overflow: hidden;
+    }
+    
+    #usp-bar-container-{{ block.id }} .usp-item-icon img {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+    }
       border-radius: 50%;
       font-size: 12px;
       font-weight: bold;
@@ -134,21 +140,28 @@
     }
     
     #usp-bar-container-{{ block.id }} .usp-icon-svg-wrapper {
-      width: 20px;
-      height: 20px;
+      width: 40px;
+      height: 35px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      color: inherit;
+    }
+    
+    #usp-bar-container-{{ block.id }} .usp-icon-svg-wrapper svg {
+      fill: currentColor !important;
+      stroke: currentColor !important;
+     }
     }
 
-    #usp-bar-container-{{ block.id }} .usp-icon-svg-wrapper svg {
+    {% comment %} #usp-bar-container-{{ block.id }} .usp-icon-svg-wrapper svg {
       width: 100%;
       height: 100%;
       display: block;
       /* fill: currentColor;
       stroke: currentColor; */
-    }
+    } {% endcomment %}
 
     #usp-bar-container-{{ block.id }} .usp-item-content {
       display: flex;
@@ -176,7 +189,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       width: 100%;         
-      max-width: 210px !important; 
+      max-width: 158px !important; 
       display: block;
       text-align: center; 
     }
@@ -190,7 +203,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       width: 100%;         
-      max-width: 210px !important; 
+      max-width: 217px !important; 
       display: block;
       text-align: center !important; /* MOD: Force centering */
     }
@@ -270,11 +283,14 @@
     }  
   </style>
 
+  {% assign default_icon_url = 'aperture.svg' | asset_url %}
+
   <script>
     (function() {
        const blockId = '{{ block.id }}';
        const shop = '{{ shop.domain }}';
        const apiUrl = 'https://banner-slider-backend.onrender.com';
+       const defaultIconUrl = '{{ default_icon_url }}';
        
        let allItems = [];
        let itemsWithClones = [];
@@ -381,6 +397,23 @@
           const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
           html += `
             <div class="usp-item" style="${strictStyle}">
+             <div class="usp-item-icon" style="color: ${itemSettings.iconColor};">
+                   ${renderIcon(item.icon, itemSettings.iconColor)}
+                 </div>
+              <div class="usp-item-inner">
+                <div class="usp-item-content">
+                  <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
+                  <p class="usp-item-description">${formatDesc(item.description, itemSettings.descriptionColor)}</p>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        {% comment %} allItems.forEach((item) => {
+          const itemSettings = item.designSettings || defaultDesignSettings;
+          const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
+          html += `
+            <div class="usp-item" style="${strictStyle}">
               <div class="usp-item-inner">
                  <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">
                    ${renderIcon(item.icon, itemSettings.iconColor)}
@@ -392,7 +425,7 @@
               </div>
             </div>
           `;
-        });
+        }); {% endcomment %}
 
         html += '</div>';
         slider.innerHTML = html;
@@ -415,6 +448,23 @@
           const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
           html += `
             <div class="usp-item" style="${strictStyle}">
+             <div class="usp-item-icon" style="color: ${itemSettings.iconColor};">
+                   ${renderIcon(item.icon, itemSettings.iconColor)}
+                 </div>
+              <div class="usp-item-inner">
+                <div class="usp-item-content">
+                  <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
+                  <p class="usp-item-description">${formatDesc(item.description, itemSettings.descriptionColor)}</p>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        {% comment %} itemsWithClones.forEach((item) => {
+          const itemSettings = item.designSettings || defaultDesignSettings;
+          const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
+          html += `
+            <div class="usp-item" style="${strictStyle}">
               <div class="usp-item-inner">
                  <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">
                    ${renderIcon(item.icon, itemSettings.iconColor)}
@@ -426,7 +476,7 @@
               </div>
             </div>
           `;
-        });
+        }); {% endcomment %}
 
         html += '</div>';
         slider.innerHTML = html;
@@ -498,7 +548,7 @@
      }
 
      function renderIcon(icon, iconColor) {
-       if (!icon) return '✓';
+       if (!icon) return `<img src="${defaultIconUrl}" alt="box" style="object-fit: contain; color: ${iconColor};">`;
        if (icon.startsWith('data:image/svg+xml;base64,')) {
          try {
            const base64 = icon.split(',')[1];
@@ -506,7 +556,7 @@
            return `<div class="usp-icon-svg-wrapper" style="color: ${iconColor};">${svg}</div>`;
          } catch (e) { return '✓'; }
        }
-       return `<img src="${icon}" alt="Icon" style="width: 16px; height: 16px; object-fit: contain;">`;
+       return `<img src="${icon}" alt="Icon" style="object-fit: contain; color: ${iconColor};">`;
      }
 
       function hexToRgb(hex) {
@@ -523,6 +573,28 @@
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+      }
+      /* Format description - add link if contains https or mail */
+      function formatDesc(text, color) {
+        if (!text) return '';
+
+        const esc = escapeHtml(text);
+        const urlRegex = /(https?:\/\/[^\s<]+)/g;
+        const emailRegex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i;
+
+        let formatted = esc;
+
+        // Convert URLs to clickable links
+        formatted = formatted.replace(urlRegex, function(url) {
+          return `<a href="${url}" target="_blank" style="color:${color};text-decoration:underline;">${url}</a>`;
+        });
+
+        // Convert Emails to mailto links
+        formatted = formatted.replace(emailRegex, function(email) {
+          return `<a href="mailto:${email}" style="color:${color};text-decoration:underline;">${email}</a>`;
+        });
+
+        return `<p class="usp-item-description" style="color:${color};">${formatted}</p>`;
       }
 
       document.addEventListener('DOMContentLoaded', () => { fetchUspBarData(); });
