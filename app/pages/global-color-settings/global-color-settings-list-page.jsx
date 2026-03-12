@@ -177,12 +177,12 @@ const GlobalColorSettingsListPage = () => {
           />
 
           {/* Icon Background Color */}
-          <ColorPicker
+          {/* <ColorPicker
             label="Icon Background Color"
             name="designSettings.iconBackgroundColor"
             value={formData.iconBackgroundColor || "#4CAF50"}
             onChange={handleChange}
-          />
+          /> */}
 
           {/* Item Border Right Color */}
           <ColorPicker
