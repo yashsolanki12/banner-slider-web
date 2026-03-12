@@ -14,7 +14,7 @@
   <style>
     .usp-bar-wrapper {
       width: 100%;
-      padding: 15px 20px;
+      padding: 0px 20px;
       box-sizing: border-box;
       position: relative;
       overflow: hidden;
@@ -22,6 +22,9 @@
       display: flex;        /* MOD: Absolue centering */
       justify-content: center;
       align-items: center;
+      {% comment %} margin-left: 50px;
+      margin-right: 50px;
+      border-radius: 50px; {% endcomment %}
     }
 
     .usp-bar-content {
@@ -53,12 +56,7 @@
       position: relative;
     }
 
-    @media (max-width: 768px) {
-      .usp-bar-slider {
-        padding: 0 35px;
-      }
-    }
-
+    /* Container updated for desktop/mobile responsiveness */
     @media (max-width: 480px) {
       .usp-bar-slider {
         padding: 0 10px; /* MOD: Minimal padding for mobile */
@@ -81,7 +79,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 15px;
+      {% comment %} gap: 15px; {% endcomment %}
       box-sizing: border-box; 
       padding: 10px;
       border-radius: 5px;
@@ -89,8 +87,7 @@
       width: 300px;           
       min-width: 0;           
       max-width: 300px;
-      height: 80px !important;   
-      max-height: 80px !important;
+      height: 75px !important;   
     }
     
     @media (max-width: 480px) {
@@ -129,43 +126,79 @@
       }
 
       .usp-item-inner {
-        display: flex;
+        {% comment %} display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: center; {% endcomment %}
         gap: 8px;
         padding: 10px 15px; /* this creates space before border */
+        {% comment %} width: 155px; /* to create the gap between icon and content */ {% endcomment %}
+        max-width: 190px;
       }
-
-    .usp-item-icon {
-      width: 38px;
-      height: 38px;
-      min-width: 38px;
+      
+     .usp-item-icon {
+      width: 50px;
+      height: 45px;
+      {% comment %} min-width: 38px; {% endcomment %}
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #4CAF50;
+      color: var(--item-icon-color, #f3f3f3);
+      overflow: hidden;
+    }
+    
+    .usp-item-icon img {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+    }
+    
+    .usp-icon-svg-wrapper {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: inherit;
+    }
+    
+    .usp-icon-svg-wrapper svg {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      fill: currentColor !important;
+      stroke: currentColor !important;
+    }
       border-radius: 50%;
       font-size: 12px;
       font-weight: bold;
       flex-shrink: 0;
-    }
+    } 
     
     .usp-icon-svg-wrapper {
-      width: 20px;
-      height: 20px;
+      width: 100%;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
+      color: inherit;
       flex-shrink: 0;
     }
 
     .usp-icon-svg-wrapper svg {
-      width: 100%;
-      height: 100%;
+      fill: currentColor !important;
+      stroke: currentColor !important;
+    }
+
+    {% comment %} .usp-icon-svg-wrapper svg {
+      width: 35px;
+      height: 34px;
       display: block;
       /* fill: currentColor;
       stroke: currentColor; */
-    }
+    } {% endcomment %}
 
     /* Container already updated above */
 
@@ -178,7 +211,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       width: 100%;         
-      max-width: 210px !important; 
+      max-width: 158px !important; 
       display: block;
       text-align: center; 
     }
@@ -192,7 +225,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       width: 100%;         
-      max-width: 210px !important; 
+      max-width: 217px !important; 
       display: block;
       text-align: center !important; /* Force centering */
     }
@@ -256,15 +289,6 @@
       display: flex;
     }
      /* Removed media query overrides for item width to keep 300px locked on desktop/tablet */
-     @media (max-width: 768px) {
-       {% comment %} .usp-bar-wrapper {
-         padding: 10px 20px;
-       }, {% endcomment %}
-       .usp-bar-slider {
-        padding: 0 35px;
-      }
-     }
-
      @media (max-width: 480px) {
        .usp-bar-slider {
          padding: 0 10px;
@@ -279,10 +303,14 @@
       
  </style>
 
+  {% comment %} Define asset URLs for use in JavaScript {% endcomment %}
+  {% assign default_icon_url = 'aperture.svg' | asset_url %}
+
   <script>
     (function() {
        const shop = '{{ shop.domain }}';
        const apiUrl = 'https://banner-slider-backend.onrender.com';
+       const defaultIconUrl = '{{ default_icon_url }}';
        
        let allItems = [];
        let itemsWithClones = [];
@@ -299,7 +327,7 @@
          titleColor: '#333333',
          descriptionColor: '#666666',
          iconBackgroundColor: '#4CAF50',
-         iconColor: '#ffffff',
+         iconColor: '#0c0c0c',
          slideSpeed: 4,
          itemBorderRightColor: "#000000"
        };
@@ -393,6 +421,27 @@
           const itemSettings = item.designSettings || defaultDesignSettings;
           /* EXTREME LOCKDOWN: Triple-enforce calculated dynamic width*/
           const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
+          const iconStyle = `--item-icon-color: ${itemSettings.iconColor};`
+          html += `
+            <div class="usp-item" style="${strictStyle}">
+               <div class="usp-item-icon" style="${iconStyle}">
+                   ${renderIcon(item.icon, itemSettings.iconColor)}
+                 </div>
+              <div class="usp-item-inner">
+                 
+                <div class="usp-item-content">
+                  <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
+                  <p class="usp-item-description">${formatDesc(item.description, itemSettings.descriptionColor)}</p>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        {% comment %} allItems.forEach((item) => {
+          const itemSettings = item.designSettings || defaultDesignSettings;
+          /* EXTREME LOCKDOWN: Triple-enforce calculated dynamic width*/
+          const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
           html += `
             <div class="usp-item" style="${strictStyle}">
               <div class="usp-item-inner">
@@ -406,7 +455,7 @@
               </div>
             </div>
           `;
-        });
+        }); {% endcomment %}
 
         html += '</div>';
         slider.innerHTML = html;
@@ -430,6 +479,26 @@
             const itemSettings = item.designSettings || defaultDesignSettings;
             /* EXTREME LOCKDOWN: Triple-enforce width to prevent expansion */
             const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
+            const iconStyle = `--item-icon-color: ${itemSettings.iconColor};`
+            html += `
+              <div class="usp-item" style="${strictStyle}">
+               <div class="usp-item-icon" style="${iconStyle}">
+                     ${renderIcon(item.icon, itemSettings.iconColor)}
+                </div>
+                <div class="usp-item-inner">
+                  
+                  <div class="usp-item-content">
+                    <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
+                    <p class="usp-item-description">${formatDesc(item.description, itemSettings.descriptionColor)}</p>
+                  </div>
+                </div>
+              </div>
+            `;
+          });
+          {% comment %} itemsWithClones.forEach((item) => {
+            const itemSettings = item.designSettings || defaultDesignSettings;
+            /* EXTREME LOCKDOWN: Triple-enforce width to prevent expansion */
+            const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
             html += `
               <div class="usp-item" style="${strictStyle}">
                 <div class="usp-item-inner">
@@ -443,7 +512,7 @@
                 </div>
               </div>
             `;
-          });
+          }); {% endcomment %}
 
         html += '</div>';
         slider.innerHTML = html;
@@ -550,19 +619,19 @@
 
       /* Helper to render icon correctly */
      function renderIcon(icon, iconColor) {
-       if (!icon) return '✓';
-       
+       if (!icon) return `<img src="${defaultIconUrl}" alt="box" style="object-fit: contain; color: ${iconColor};">`;
+         {% comment %} <img src="{{ 'chevron-left.svg' | asset_url }}" alt="left-arrow" width="20px" height="20px"> {% endcomment %}
        if (icon.startsWith('data:image/svg+xml;base64,')) {
          try {
            const base64 = icon.split(',')[1];
            const svg = atob(base64);
            return `<div class="usp-icon-svg-wrapper" style="color: ${iconColor};">${svg}</div>`;
          } catch (e) {
-           return '✓';
+           return "✓";
          }
        }
        
-       return `<img src="${icon}" alt="Icon" style="width: 16px; height: 16px; object-fit: contain;">`;
+       return `<img src="${icon}" alt="Icon" style="object-fit: contain; color: ${iconColor} !important;">`;
      }
 
        /* Convert hex color to RGB */
@@ -581,6 +650,29 @@
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+      }
+
+      /* Format description - add link if contains https */
+     function formatDesc(text, color) {
+        if (!text) return '';
+
+        const esc = escapeHtml(text);
+        const urlRegex = /(https?:\/\/[^\s<]+)/g;
+        const emailRegex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i;
+
+        let formatted = esc;
+
+        // Convert URLs to clickable links
+        formatted = formatted.replace(urlRegex, function(url) {
+          return `<a href="${url}" target="_blank" style="color:${color};text-decoration:underline;">${url}</a>`;
+        });
+
+        // Convert Emails to mailto links
+        formatted = formatted.replace(emailRegex, function(email) {
+          return `<a href="mailto:${email}" style="color:${color};text-decoration:underline;">${email}</a>`;
+        });
+
+        return `<p class="usp-item-description" style="color:${color};">${formatted}</p>`;
       }
 
        /* Initialize when DOM is ready */

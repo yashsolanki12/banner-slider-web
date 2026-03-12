@@ -732,7 +732,7 @@ const UspBarForm = ({ id, heading }) => {
                     />
 
                     {/* Icon Background Color */}
-                    <ColorPicker
+                    {/* <ColorPicker
                       label="Icon Background Color"
                       name="designSettings.iconBackgroundColor"
                       value={
@@ -740,7 +740,7 @@ const UspBarForm = ({ id, heading }) => {
                         "#4CAF50"
                       }
                       onChange={handleChange}
-                    />
+                    /> */}
 
                     {/* Border Color */}
                     <ColorPicker
