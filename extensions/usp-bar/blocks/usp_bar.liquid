@@ -1,0 +1,642 @@
+{% if block.settings.enabled %}
+  <div id="usp-bar-container" class="usp-bar-wrapper" data-shop="{{ shop.domain }}" style="display: none;">
+    {% comment %}<button class="usp-nav-btn prev" id="usp-prev-btn">
+      <img src="{{ 'chevron-left.svg' | asset_url }}" alt="left-arrow" width="20px" height="20px">
+    </button>{% endcomment %}
+    <div class="usp-bar-content">
+      <div class="usp-bar-slider" id="usp-slider">
+        <div class="usp-loading">Loading USP Bar...</div>
+      </div>
+    </div>
+    {% comment %}<button class="usp-nav-btn next" id="usp-next-btn"> <img src="{{ 'chevron-right.svg' | asset_url }}" alt="right-arrow" width="20px" height="20px"></button>{% endcomment %}
+  </div>
+
+  <style>
+    .usp-bar-wrapper {
+      width: 100%;
+      background: #f8f9fa;
+      padding: 15px 20px;
+      box-sizing: border-box;
+      position: relative;
+      overflow: hidden;
+      z-index: 1000;
+      display: flex;        /* MOD: Absolue centering */
+      justify-content: center;
+      align-items: center;
+    }
+
+    .usp-bar-content {
+      width: 100%;
+      position: relative;
+      display: flex;       /* MOD: Absolute centering */
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Static Slider Style Template (Kept for reference)
+       .usp-bar-slider {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          min-height: 50px;
+          box-sizing: border-box;
+       } 
+    */
+    .usp-bar-slider {
+      padding: 0 45px;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center; /* Static view centering */
+      align-items: center;
+      width: 100%;
+      margin: 0 auto;
+      overflow: hidden; 
+      position: relative;
+    }
+
+    @media (max-width: 768px) {
+      .usp-bar-slider {
+        padding: 0 35px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .usp-bar-slider {
+        padding: 0 10px; /* MOD: Minimal padding for mobile */
+      }
+    }
+
+    .usp-items-wrapper {
+      display: flex;
+      justify-content: center; 
+      align-items: center;
+      gap: 15px; 
+      width: auto !important; 
+      max-width: 100%;       /* MOD: Prevent overflow on mobile */
+      flex-wrap: nowrap;
+      transition: transform 0.5s ease;
+      will-change: transform;
+    }
+
+    .usp-item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      box-sizing: border-box; 
+      padding: 10px;
+      border-radius: 5px;
+      position: relative;
+      width: 300px;           
+      min-width: 0;           
+      max-width: 300px;
+      height: 80px !important;   
+      max-height: 80px !important;
+    }
+    
+    @media (max-width: 480px) {
+      .usp-item {
+        width: 100% !important; /* Force items to fill mobile container */
+        max-width: 100% !important;
+      }
+    }
+    
+    .usp-item-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center; 
+      text-align: center;  
+      overflow: hidden;    
+      min-width: 0;        
+      flex: 0 1 auto; /* MOD: Remove flex: 1 to prevent pushing icon away */
+      max-width: 100%;     
+    }
+    
+    .usp-item-title, .usp-item-description {
+      text-align: center !important; /* Force centering */
+      width: 100%;
+    }
+
+      .usp-item:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        right: -10px;      /* MOD: Perfectly centered in 15px/18px gap */
+        top: 25%;
+        height: 50%;
+        width: 3px ;
+        background-color: var(--item-border-color, #cccccc);
+        display: block !important;
+        z-index: 5;
+      }
+
+      .usp-item-inner {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 15px; /* this creates space before border */
+      }
+
+    .usp-item-icon {
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #4CAF50;
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+    
+    .usp-icon-svg-wrapper {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .usp-icon-svg-wrapper svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      /* fill: currentColor;
+      stroke: currentColor; */
+    }
+
+    /* Container already updated above */
+
+    .usp-item-title {
+      font-weight: 600;
+      font-size: 16px;
+      color: #333333;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;         
+      max-width: 210px !important; 
+      display: block;
+      text-align: center; 
+    }
+
+    .usp-item-description {
+      font-size: 13px;
+      color: #666666;
+      margin: 4px 0 0 0;
+      line-height: 1.4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;         
+      max-width: 210px !important; 
+      display: block;
+      text-align: center !important; /* Force centering */
+    }
+
+    .usp-loading {
+      text-align: center;
+      color: #333333;
+      padding: 10px;
+      width: 100%;
+    }
+
+    .usp-error {
+      text-align: center;
+      color: #e74c3c;
+      padding: 10px;
+      width: 100%;
+    }
+
+    .usp-empty {
+      text-align: center;
+      color: #333333;
+      padding: 10px;
+      width: 100%;
+    }
+
+    /* Slider navigation */
+    .usp-nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      {% comment %} background: #ffffff !important; {% endcomment %}
+      border: 1px solid #ddd;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #333333;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      z-index: 10;
+      transition: all 0.2s ease;
+    }
+
+    .usp-nav-btn:hover {
+      {% comment %} background: #fff; {% endcomment %}
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .usp-nav-btn.prev {
+      left: 5px;
+    }
+
+    .usp-nav-btn.next {
+      right: 5px;
+    }
+
+    .usp-bar-wrapper.has-slider .usp-nav-btn {
+      display: flex;
+    }
+     /* Removed media query overrides for item width to keep 300px locked on desktop/tablet */
+     @media (max-width: 768px) {
+       {% comment %} .usp-bar-wrapper {
+         padding: 10px 20px;
+       }, {% endcomment %}
+       .usp-bar-slider {
+        padding: 0 35px;
+      }
+     }
+
+     @media (max-width: 480px) {
+       .usp-bar-slider {
+         padding: 0 10px;
+       }
+      }
+
+      @media (max-width: 320px) {
+        .usp-item-inner {
+          width: 100%;
+        }
+      }
+      
+ </style>
+
+  <script>
+    (function() {
+       const shop = '{{ shop.domain }}';
+       const apiUrl = 'https://banner-slider-backend.onrender.com';
+       
+       let allItems = [];
+       let itemsWithClones = [];
+       let currentIndex = 0; /* This will track the index in itemsWithClones */
+       let itemsPerView = calculateItemsPerView();
+       let autoSlideInterval = null;
+       let designSettings = null;
+       let isTransitioning = false;
+       let itemWidth = 0;
+
+       const defaultDesignSettings = {
+         backgroundColor: '#f8f9fa',
+         itemBackgroundColor: '#ffffff', 
+         titleColor: '#333333',
+         descriptionColor: '#666666',
+         iconBackgroundColor: '#4CAF50',
+         iconColor: '#ffffff',
+         slideSpeed: 4,
+         itemBorderRightColor: "#000000"
+       };
+
+       function calculateItemsPerView() {
+        const width = window.innerWidth;
+        if (width <= 650) return 1;  /* Mobile (320, 375, 425) */
+        if (width <= 1250) return 2; /* Tablet/Laptop (768, 1024) */
+        return 4;                    /* Large Laptop (1440) */
+      }
+
+       function renderUspBar() {
+        if (allItems.length === 0) return;
+        
+        itemsPerView = calculateItemsPerView();
+        const slider = document.getElementById('usp-slider');
+        const container = document.getElementById('usp-bar-container');
+        
+        if (allItems.length <= itemsPerView) {
+          container.classList.remove('has-slider');
+          renderStaticView();
+          slider.style.display = 'flex';
+          slider.style.justifyContent = 'center';
+          slider.style.padding = designSettings.sliderPadding || '0 45px'; /* Restore default or setting */
+        } else {
+          container.classList.add('has-slider');
+          renderSliderView();
+          slider.style.display = 'flex';
+          slider.style.justifyContent = 'flex-start'; 
+          slider.style.padding = '0'; /* Clear padding in slider view to control offset perfectly */
+          startAutoSlide();
+        }
+      }
+
+       /* Add resize listener */
+       window.addEventListener('resize', renderUspBar);
+
+        /*  Fetch USP Bar data */
+       async function fetchUspBarData() {
+         const slider = document.getElementById('usp-slider');
+         const container = document.getElementById('usp-bar-container');
+         
+         try {
+           const response = await fetch(`${apiUrl}/api/usp-slider/public/${shop}`);
+           const result = await response.json();
+           
+           if (result.success && result.data && result.data.length > 0) {
+             allItems = result.data;
+             /* Get design settings from the first item */
+             designSettings = allItems[0].designSettings || defaultDesignSettings;
+             applyDesignSettings(container);
+             container.style.display = 'flex'; /* MOD: Centering requires flex */
+             renderUspBar();
+           } else {
+             slider.innerHTML = '<div class="usp-empty">No USP items to display</div>';
+             container.style.display = 'flex'; /* MOD: Centering requires flex even for empty state*/
+           }
+         } catch (error) {
+           console.error('Error fetching USP Bar data:', error);
+           slider.innerHTML = '<div class="usp-error">Failed to load USP Bar</div>';
+           container.style.display = 'flex'; /* MOD: Centering requires flex even for error state */
+         }
+       }
+
+
+       function prepareItemsWithClones() {
+          /* For infinite sliding, we clone items at both ends */
+          const clonesAtStart = allItems.slice(-itemsPerView);
+         const clonesAtEnd = allItems.slice(0, itemsPerView);
+         itemsWithClones = [...clonesAtStart, ...allItems, ...clonesAtEnd];
+         currentIndex = itemsPerView; // Start at the first original item
+       }
+
+      function calculatePadding() {
+        const slider = document.getElementById('usp-slider');
+        if (!slider) return 0;
+        const style = window.getComputedStyle(slider);
+        return parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+      }
+      
+      /* Render static view (4 or fewer items) */
+      function renderStaticView() {
+        const slider = document.getElementById('usp-slider');
+        const padding = calculatePadding();
+        const itemWidth = Math.min(300, slider.offsetWidth - padding - 20); // MOD: Dynamic width for mobile
+
+        /* Center perfectly in static view */
+        let html = '<div class="usp-items-wrapper" style="transform: none; transition: none; width: auto !important; margin: 0 auto; justify-content: center;">';
+        
+        allItems.forEach((item) => {
+          const itemSettings = item.designSettings || defaultDesignSettings;
+          /* EXTREME LOCKDOWN: Triple-enforce calculated dynamic width*/
+          const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
+          html += `
+            <div class="usp-item" style="${strictStyle}">
+              <div class="usp-item-inner">
+                 <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">
+                   ${renderIcon(item.icon, itemSettings.iconColor)}
+                 </div>
+                <div class="usp-item-content">
+                  <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
+                  <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        html += '</div>';
+        slider.innerHTML = html;
+      }
+
+      /* Render slider view */
+      function renderSliderView() {
+        prepareItemsWithClones(); 
+        const slider = document.getElementById('usp-slider');
+        const sliderWidth = slider.clientWidth; 
+        
+        /* MOD: Fixed gap for separator visibility */
+        const gap = 18; 
+        const itemWidth = itemsPerView === 1 
+          ? (sliderWidth - gap) 
+          : (sliderWidth - (gap * (itemsPerView - 1))) / itemsPerView;
+        
+        let html = `<div class="usp-items-wrapper" id="usp-track" style="justify-content: flex-start !important; gap: ${gap}px !important; width: auto !important;">`;
+        
+          itemsWithClones.forEach((item) => {
+            const itemSettings = item.designSettings || defaultDesignSettings;
+            /* EXTREME LOCKDOWN: Triple-enforce width to prevent expansion */
+            const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
+            html += `
+              <div class="usp-item" style="${strictStyle}">
+                <div class="usp-item-inner">
+                   <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">
+                     ${renderIcon(item.icon, itemSettings.iconColor)}
+                   </div>
+                  <div class="usp-item-content">
+                    <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
+                    <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
+                  </div>
+                </div>
+              </div>
+            `;
+          });
+
+        html += '</div>';
+        slider.innerHTML = html;
+
+        const track = document.getElementById('usp-track');
+        
+        /* Set initial position */
+       updateTrackPosition(false);
+
+        /* Add transition end listener for infinite loop */
+        track.addEventListener('transitionend', handleTransitionEnd);
+      }
+
+      function updateTrackPosition(animate = true) {
+        const track = document.getElementById('usp-track');
+        if (!track) return;
+        
+        const slider = document.getElementById('usp-slider');
+        const gap = 18;
+        const itemWidth = itemsPerView === 1 
+          ? (slider.clientWidth - gap) 
+          : (slider.clientWidth - (gap * (itemsPerView - 1))) / itemsPerView;
+        const offset = -(currentIndex * (itemWidth + gap));
+        
+        track.style.transition = animate ? 'transform 0.3s ease-out' : 'none'; 
+        track.style.transform = `translateX(${offset}px)`;
+      }
+
+      function handleTransitionEnd() {
+        isTransitioning = false;
+        
+        /* Infinite loop check */
+        if (currentIndex <= 0) {
+          /* Jump to the end clone set (original items end) */
+          currentIndex = allItems.length;
+          updateTrackPosition(false);
+        } else if (currentIndex >= itemsWithClones.length - itemsPerView) {
+          /* Jump to the start clone set (original items start) */
+          currentIndex = itemsPerView;
+          updateTrackPosition(false);
+        }
+      }
+
+      /* Slide navigation (one by one) */
+      function slideDirection(direction) {
+        if (isTransitioning) return;
+        
+        isTransitioning = true;
+        currentIndex += direction;
+        updateTrackPosition(true);
+        
+        resetAutoSlide();
+      }
+
+      /* Auto slide functionality */
+      function startAutoSlide() {
+        const settings = designSettings || defaultDesignSettings;
+        const slideSpeed = (settings.slideSpeed || 4) * 1000;
+        if (autoSlideInterval) clearInterval(autoSlideInterval);
+        autoSlideInterval = setInterval(() => {
+          slideDirection(1);
+        }, slideSpeed);
+      }
+
+      /* Reset auto slide */
+      function resetAutoSlide() {
+        startAutoSlide();
+      }
+
+      /* Apply design settings */
+      function applyDesignSettings(container) {
+        const settings = designSettings || defaultDesignSettings;
+        
+        /* Apply container background color directly */
+        container.style.backgroundColor = settings.backgroundColor;
+        
+        const styleEl = document.createElement('style');
+        styleEl.id = 'usp-bar-dynamic-styles';
+        styleEl.textContent = `
+          .usp-dot.active {
+            background: ${settings.iconBackgroundColor} !important;
+          }
+          .usp-nav-btn {
+            background: ${settings.itemBackgroundColor} !important;
+            color: ${settings.titleColor} !important;
+          } 
+        `;
+       
+       const existingStyles = document.getElementById('usp-bar-dynamic-styles');
+       if (existingStyles) {
+         existingStyles.remove();
+       }
+       
+       document.head.appendChild(styleEl);
+     }
+
+      /* Helper to render icon correctly */
+     function renderIcon(icon, iconColor) {
+       if (!icon) return '✓';
+       
+       if (icon.startsWith('data:image/svg+xml;base64,')) {
+         try {
+           const base64 = icon.split(',')[1];
+           const svg = atob(base64);
+           return `<div class="usp-icon-svg-wrapper" style="color: ${iconColor};">${svg}</div>`;
+         } catch (e) {
+           return '✓';
+         }
+       }
+       
+       return `<img src="${icon}" alt="Icon" style="width: 16px; height: 16px; object-fit: contain;">`;
+     }
+
+       /* Convert hex color to RGB */
+      function hexToRgb(hex) {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16)
+        } : null;
+      }
+
+       /* Escape HTML to prevent XSS */
+      function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+       /* Initialize when DOM is ready */
+      function init() {
+        const container = document.getElementById('usp-bar-container');
+        const header = document.querySelector('header') || 
+                       document.querySelector('.header') || 
+                       document.querySelector('#header') ||
+                       document.querySelector('.shopify-section-header') ||
+                       document.querySelector('[role="banner"]');
+        
+        if (header && header.nextSibling) {
+          header.parentNode.insertBefore(container, header.nextSibling);
+        } else if (header) {
+          header.parentNode.appendChild(container);
+        }
+        
+        fetchUspBarData();
+      }
+
+      /* Wait for DOM to be ready */
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+
+      /* Pause on hover */
+      document.addEventListener('mouseenter', function(e) {
+        const container = document.getElementById('usp-bar-container');
+        if (container && container.contains(e.target)) {
+          if (autoSlideInterval) {
+            clearInterval(autoSlideInterval);
+            autoSlideInterval = null;
+          }
+        }
+      }, true);
+
+      document.addEventListener('mouseleave', function(e) {
+        const container = document.getElementById('usp-bar-container');
+        if (container && container.contains(e.target)) {
+          if (allItems.length > itemsPerView && !autoSlideInterval) {
+            startAutoSlide();
+          }
+        }
+      }, true);
+    })();
+    
+  </script>
+  {% endif %}
+
+{% schema %}
+{
+  "name": "USP Bar App",
+  "target": "body",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Enable USP Bar",
+      "default": true,
+      "info": "Toggle to show or hide the USP Bar"
+    }
+  ]
+}
+{% endschema %}
