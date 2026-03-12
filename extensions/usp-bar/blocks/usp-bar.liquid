@@ -485,7 +485,7 @@
 
       function applyDesignSettings(container) {
         const settings = designSettings || defaultDesignSettings;
-        container.style.backgroundColor = settings.backgroundColor;
+        container.style.background = settings.backgroundColor;
         const styleEl = document.createElement('style');
         styleEl.id = 'usp-bar-dynamic-styles-' + blockId;
         styleEl.textContent = `

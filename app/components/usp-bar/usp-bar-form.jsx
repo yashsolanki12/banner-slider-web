@@ -685,14 +685,14 @@ const UspBarForm = ({ id, heading }) => {
                     }}
                   >
                     {/* Bar Background Color */}
-                    <ColorPicker
+                    {/* <ColorPicker
                       label="Bar Background Color"
                       name="designSettings.backgroundColor"
                       value={
                         formData.designSettings?.backgroundColor || "#f8f9fa"
                       }
                       onChange={handleChange}
-                    />
+                    /> */}
 
                     {/* Icon Color */}
                     <ColorPicker
@@ -877,12 +877,12 @@ const UspBarForm = ({ id, heading }) => {
               }}
             >
               {/* Background Color */}
-              <ColorPicker
+              {/* <ColorPicker
                 label="Bar Background Color"
                 name="designSettings.backgroundColor"
                 value={formData.designSettings?.backgroundColor || "#f8f9fa"}
                 onChange={handleChange}
-              />
+              /> */}
 
               {/* Title Color */}
               <ColorPicker
