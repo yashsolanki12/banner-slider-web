@@ -14,7 +14,6 @@
   <style>
     .usp-bar-wrapper {
       width: 100%;
-      background: #f8f9fa;
       padding: 15px 20px;
       box-sizing: border-box;
       position: relative;
@@ -516,14 +515,22 @@
 
       /* Apply design settings */
       function applyDesignSettings(container) {
+        if (!container) {
+          console.error('Container element not found!');
+          return;
+        }
+        
         const settings = designSettings || defaultDesignSettings;
         
         /* Apply container background color directly */
-        container.style.backgroundColor = settings.backgroundColor;
+        container.style.background = settings.backgroundColor;
         
         const styleEl = document.createElement('style');
         styleEl.id = 'usp-bar-dynamic-styles';
         styleEl.textContent = `
+          .usp-bar-wrapper {
+            background: ${settings.backgroundColor} !important;
+          }
           .usp-dot.active {
             background: ${settings.iconBackgroundColor} !important;
           }
