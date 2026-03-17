@@ -3,7 +3,9 @@ import { z } from "zod";
 // Zod validation schema for USP Bar - matches backend validation
 export const uspBarSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
-  description: z.string().min(1, { message: "Description is required" }),
+  description: z.string().optional(),
+  // .string()
+  // .min(1, { message: "Description is required" }),
 });
 
 // Validate form data and return errors object

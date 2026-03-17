@@ -178,6 +178,14 @@ const ReusableTable = ({
     return icons[iconName] || icons.custom;
   };
 
+  // Helper to get cell value with render function applied
+  const getCellValue = (column, row) => {
+    if (column.render) {
+      return column.render(row[column.key], row);
+    }
+    return row[column.key];
+  };
+
   // Render cell content based on column configuration
   const renderCellContent = (column, row) => {
     if (column.render) {
@@ -314,7 +322,7 @@ const ReusableTable = ({
                                 ],
                               },
                             }}
-                            title={row[column.key]}
+                            title={getCellValue(column, row)}
                             arrow
                           >
                             <Typography
@@ -331,7 +339,7 @@ const ReusableTable = ({
                                 ...column.typographySx,
                               }}
                             >
-                              {row[column.key]}
+                              {getCellValue(column, row)}
                             </Typography>
                           </Tooltip>
                         ) : (

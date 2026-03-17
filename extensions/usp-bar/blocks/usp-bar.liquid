@@ -87,7 +87,7 @@
       position: relative;
       width: 300px;           
       min-width: 0;           
-      max-width: 300px;
+      {% comment %} max-width: 300px; {% endcomment %}
       height: 75px !important;   
     }
 
@@ -110,7 +110,7 @@
       gap: 8px;
       padding: 10px 15px; 
       {% comment %} width: 160px; /* to create the gap between icon and content */ {% endcomment %}
-      max-width: 190px;
+      {% comment %} max-width: 190px; {% endcomment %}
       {% comment %} width: 100%;
       height: 100%; {% endcomment %}
     }
@@ -189,7 +189,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       width: 100%;         
-      max-width: 158px !important; 
+      {% comment %} max-width: 158px !important;  {% endcomment %}
       display: block;
       text-align: center; 
     }
@@ -203,7 +203,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       width: 100%;         
-      max-width: 217px !important; 
+      {% comment %} max-width: 2017px !important;  {% endcomment %}
       display: block;
       text-align: center !important; /* MOD: Force centering */
     }
@@ -315,7 +315,7 @@
         const width = window.innerWidth;
         if (width <= 650) return 1;  // Mobile (320, 375, 425)
         if (width <= 1250) return 2; // Tablet/Laptop (768, 1024)
-        return 4;                    // Large Laptop (1440)
+        return 3;                    // Large Laptop (1440)
       }
 
 
@@ -387,7 +387,7 @@
       function renderStaticView() {
         const slider = document.getElementById('usp-slider-' + blockId);
         const padding = calculatePadding();
-        const itemWidth = Math.min(300, slider.offsetWidth - padding - 20); 
+        const itemWidth = Math.min(490, slider.offsetWidth - padding - 20); 
 
         // Perfectly centered static view
         let html = '<div class="usp-items-wrapper" style="transform: none; transition: none; width: auto !important; margin: 0 auto; justify-content: center;">';
@@ -522,7 +522,7 @@
 
       function startAutoSlide() {
         const settings = designSettings || defaultDesignSettings;
-        const slideSpeed = (settings.slideSpeed || 4) * 1000;
+        const slideSpeed = (settings.slideSpeed || 3) * 1000;
         if (autoSlideInterval) clearInterval(autoSlideInterval);
         autoSlideInterval = setInterval(() => {
           slideDirection(1);

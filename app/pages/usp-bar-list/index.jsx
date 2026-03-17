@@ -152,25 +152,27 @@ const UspBarList = (props) => {
           >
             USP Bar List
           </Typography>
-          <Button
-            variant="contained"
-            component={SafeLink}
-            to="/app/usp-bar/create"
-            sx={{
-              backgroundColor: "#202223",
-              color: "white",
-              textTransform: "none",
-              borderRadius: "6px",
-              fontWeight: 600,
-              padding: "7px 18px",
-              textDecoration: "none",
-              "&:hover": {
-                backgroundColor: "#303030",
-              },
-            }}
-          >
-            Create
-          </Button>
+          {UspBarListData?.data.length < 10 && (
+            <Button
+              variant="contained"
+              component={SafeLink}
+              to="/app/usp-bar/create"
+              sx={{
+                backgroundColor: "#202223",
+                color: "white",
+                textTransform: "none",
+                borderRadius: "6px",
+                fontWeight: 600,
+                padding: "7px 18px",
+                textDecoration: "none",
+                "&:hover": {
+                  backgroundColor: "#303030",
+                },
+              }}
+            >
+              Create
+            </Button>
+          )}
         </Stack>
 
         {/* Table which manage all list data */}

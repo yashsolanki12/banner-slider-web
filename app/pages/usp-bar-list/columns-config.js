@@ -18,6 +18,7 @@ export const uspBarColumns = [
     type: "tooltip",
     maxWidth: 400,
     tooltipFontSize: "1rem",
+    render: (value) => value || "-",
   },
   {
     key: "enabled",

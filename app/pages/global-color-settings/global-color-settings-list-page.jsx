@@ -125,7 +125,7 @@ const GlobalColorSettingsListPage = () => {
           p: { xs: 2, sm: 3 },
           border: "1px solid #e1e1e1",
           borderRadius: "8px",
-          backgroundColor: "#f9fafb",
+          backgroundColor: "#ffffff",
         }}
       >
         {/* Color Selecting input */}
@@ -148,7 +148,7 @@ const GlobalColorSettingsListPage = () => {
           <ColorPicker
             label="Icon Color"
             name="designSettings.iconColor"
-            value={formData.iconColor || "#ffffff"}
+            value={formData.iconColor || "#050505"}
             onChange={handleChange}
           />
 
