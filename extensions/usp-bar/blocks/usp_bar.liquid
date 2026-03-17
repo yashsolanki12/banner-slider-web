@@ -84,9 +84,9 @@
       padding: 10px;
       border-radius: 5px;
       position: relative;
-      width: 300px;           
+      {% comment %} width: 300px;            {% endcomment %}
       min-width: 0;           
-      max-width: 300px;
+      {% comment %} max-width: 300px; {% endcomment %}
       height: 75px !important;   
     }
     
@@ -132,7 +132,7 @@
         gap: 8px;
         padding: 10px 15px; /* this creates space before border */
         {% comment %} width: 155px; /* to create the gap between icon and content */ {% endcomment %}
-        max-width: 190px;
+        {% comment %} max-width: 190px; {% endcomment %}
       }
       
      .usp-item-icon {
@@ -211,7 +211,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       width: 100%;         
-      max-width: 158px !important; 
+      max-width: 200px; 
       display: block;
       text-align: center; 
     }
@@ -225,7 +225,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       width: 100%;         
-      max-width: 217px !important; 
+      max-width: 360px; 
       display: block;
       text-align: center !important; /* Force centering */
     }
@@ -289,17 +289,48 @@
       display: flex;
     }
      /* Removed media query overrides for item width to keep 300px locked on desktop/tablet */
-     @media (max-width: 480px) {
+     @media (max-width: 480px)  {
        .usp-bar-slider {
          padding: 0 10px;
        }
+       .usp-item-description {
+          max-width: 200px;
+       } 
       }
 
-      @media (max-width: 320px) {
+      @media (max-width: 380px) {
+        .usp-item-description {
+          max-width: 130px;
+        } 
+        .usp-item-title {
+            max-width: 130px
+        }
+      }
+
+      @media (max-width: 330px) {
         .usp-item-inner {
           width: 100%;
         }
+        .usp-item-description {
+           max-width: 90px;
+        } 
+       .usp-item-title {
+          max-width: 90px
+       }
       }
+
+       @media (max-width: 780px) {
+        .usp-item-inner {
+          width: 100%;
+        }
+        .usp-item-description {
+          max-width: 150px;
+        } 
+       .usp-item-title {
+          max-width: 150px
+       }
+      }
+      
       
  </style>
 
@@ -336,7 +367,7 @@
         const width = window.innerWidth;
         if (width <= 650) return 1;  /* Mobile (320, 375, 425) */
         if (width <= 1250) return 2; /* Tablet/Laptop (768, 1024) */
-        return 4;                    /* Large Laptop (1440) */
+        return 3;                    /* Large Laptop (1440) */
       }
 
        function renderUspBar() {
@@ -412,7 +443,7 @@
       function renderStaticView() {
         const slider = document.getElementById('usp-slider');
         const padding = calculatePadding();
-        const itemWidth = Math.min(300, slider.offsetWidth - padding - 20); // MOD: Dynamic width for mobile
+        const itemWidth = Math.min(435, slider.offsetWidth - padding - 20); // MOD: Dynamic width for mobile
 
         /* Center perfectly in static view */
         let html = '<div class="usp-items-wrapper" style="transform: none; transition: none; width: auto !important; margin: 0 auto; justify-content: center;">';
@@ -570,7 +601,7 @@
       /* Auto slide functionality */
       function startAutoSlide() {
         const settings = designSettings || defaultDesignSettings;
-        const slideSpeed = (settings.slideSpeed || 4) * 1000;
+        const slideSpeed = (settings.slideSpeed || 3) * 1000;
         if (autoSlideInterval) clearInterval(autoSlideInterval);
         autoSlideInterval = setInterval(() => {
           slideDirection(1);
