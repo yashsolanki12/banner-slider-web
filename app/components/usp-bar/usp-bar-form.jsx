@@ -16,18 +16,20 @@ import Checkbox from "@mui/material/Checkbox";
 import ColorPicker from "../color-settings.jsx/color-picker";
 // import Slider from "@mui/material/Slider";
 
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 // import SafeLink from "../../helper/safe-link";
 import {
   getUspBarById,
   createUspBar,
   updateUspBar,
   getCurrentSession,
+  getAllUspBar,
 } from "../../api/usp-bar";
 import { validateUspBarForm } from "../../validation/usp-bar-validation";
 import useUspBarData from "../../hooks/useUspBarData";
 import useUspBarSubmit from "../../hooks/useUspBarSubmit";
 import InputAdornment from "@mui/material/InputAdornment";
+import Loader from "../../ui/loader";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -54,7 +56,8 @@ function a11yProps(index) {
 
 const UspBarForm = ({ id, heading }) => {
   const isEditMode = Boolean(id);
-  // const { pathname } = useLocation();
+  const { pathname } = useLocation();
+  // console.log("path", pathname);
   const navigate = useNavigate();
 
   // const [loading, setLoading] = React.useState(isEditMode);
@@ -72,12 +75,19 @@ const UspBarForm = ({ id, heading }) => {
       titleColor: "#333333",
       descriptionColor: "#666666",
       iconBackgroundColor: "#4CAF50",
-      iconColor: "#ffffff",
+      iconColor: "#0e0e0e",
       slideSpeed: 4,
       itemBorderRightColor: "#000000", // Default vertical border color (black)
     },
     useCustomColorSettings: false,
   });
+
+  // Usp Bar List - Show toast for list API messages
+  const { data: UspBarListData, isLoading: UspBarListLoading } = useUspBarData(
+    ["usp-bar"],
+    getAllUspBar,
+    null, // Show toast for list fetch
+  );
 
   // Snackbar state
   const [snackbar, setSnackbar] = React.useState({
@@ -160,7 +170,7 @@ const UspBarForm = ({ id, heading }) => {
               UspBarDetailData?.data?.designSettings?.iconBackgroundColor ||
               "#4CAF50",
             iconColor:
-              UspBarDetailData?.data?.designSettings?.iconColor || "#ffffff",
+              UspBarDetailData?.data?.designSettings?.iconColor || "#111111",
             slideSpeed: UspBarDetailData?.data?.designSettings?.slideSpeed || 4,
             itemBorderRightColor:
               UspBarDetailData?.data?.designSettings?.itemBorderRightColor ||
@@ -301,9 +311,10 @@ const UspBarForm = ({ id, heading }) => {
         if (typeof msg === "string") {
           if (msg.toLowerCase().includes("title")) {
             newErrors.title = msg;
-          } else if (msg.toLowerCase().includes("description")) {
-            newErrors.description = msg;
           }
+          // else if (msg.toLowerCase().includes("description")) {
+          //   newErrors.description = msg;
+          // }
         }
       });
 
@@ -362,19 +373,20 @@ const UspBarForm = ({ id, heading }) => {
     }
   };
 
+  // Show info message if user already has 10 or more USP bars (only in create mode)
+  React.useEffect(() => {
+    if (!isEditMode && UspBarListData?.data?.length >= 10) {
+      setSnackbar({
+        open: true,
+        message:
+          "Cannot create more than 10 USP bars. Please delete an existing one to create a new one.",
+        severity: "info",
+      });
+    }
+  }, [UspBarListData, isEditMode]);
+
   if (UspBarDetailLoading) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "50vh",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
+    return <Loader />;
   }
 
   return (
@@ -484,12 +496,12 @@ const UspBarForm = ({ id, heading }) => {
                   placeholder="Enter title"
                   error={Boolean(errors?.title)}
                   helperText={errors?.title || ""}
-                  inputProps={{ maxLength: 15 }}
+                  inputProps={{ maxLength: 30 }}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
                         <Typography variant="caption" color="textSecondary">
-                          {formData.title?.length || 0}/15
+                          {formData.title?.length || 0}/30
                         </Typography>
                       </InputAdornment>
                     ),
@@ -511,7 +523,7 @@ const UspBarForm = ({ id, heading }) => {
                     fontSize: "16px",
                   }}
                 >
-                  Description *
+                  Description
                 </Typography>
                 <TextField
                   sx={{ width: "100%", maxWidth: 500 }}
@@ -522,21 +534,21 @@ const UspBarForm = ({ id, heading }) => {
                   onChange={handleChange}
                   size="medium"
                   placeholder="Enter description"
-                  error={Boolean(errors?.description)}
-                  helperText={errors?.description || ""}
-                  inputProps={{ maxLength: 30 }}
+                  // error={Boolean(errors?.description)}
+                  // helperText={errors?.description || ""}
+                  inputProps={{ maxLength: 50 }}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
                         <Typography variant="caption" color="textSecondary">
-                          {formData.description?.length || 0}/30
+                          {formData.description?.length || 0}/50
                         </Typography>
                       </InputAdornment>
                     ),
                   }}
-                  FormHelperTextProps={{
-                    sx: { color: "#d32f2f", marginLeft: 0 },
-                  }}
+                  // FormHelperTextProps={{
+                  //   sx: { color: "#d32f2f", marginLeft: 0 },
+                  // }}
                 />
               </Box>
 
@@ -681,7 +693,7 @@ const UspBarForm = ({ id, heading }) => {
                       p: { xs: 1.5, sm: 2 },
                       border: "1px solid #e1e1e1",
                       borderRadius: "8px",
-                      backgroundColor: "#f9fafb",
+                      backgroundColor: "#ffffff",
                     }}
                   >
                     {/* Bar Background Color */}
@@ -698,7 +710,7 @@ const UspBarForm = ({ id, heading }) => {
                     <ColorPicker
                       label="Icon Color"
                       name="designSettings.iconColor"
-                      value={formData.designSettings?.iconColor || "#ffffff"}
+                      value={formData.designSettings?.iconColor || "#0a0a0a"}
                       onChange={handleChange}
                     />
 
@@ -914,7 +926,7 @@ const UspBarForm = ({ id, heading }) => {
               <ColorPicker
                 label="Icon Color"
                 name="designSettings.iconColor"
-                value={formData.designSettings?.iconColor || "#ffffff"}
+                value={formData.designSettings?.iconColor || "#1b1b1b"}
                 onChange={handleChange}
               />
 
@@ -984,7 +996,7 @@ const UspBarForm = ({ id, heading }) => {
       {/* Snackbar for notifications */}
       <Snackbar
         open={snackbar.open}
-        autoHideDuration={snackbar.severity === "error" ? 5000 : 3000}
+        autoHideDuration={snackbar.severity === "error" ? 5000 : 4000}
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
