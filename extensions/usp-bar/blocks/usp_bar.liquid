@@ -204,16 +204,17 @@
 
     .usp-item-title {
       font-weight: 600;
-      font-size: 16px;
+      font-size: 18px;
       color: #333333;
       margin: 0;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       width: 100%;         
-      max-width: 200px; 
+      max-width: 256px; 
       display: block;
       text-align: center; 
+      font-family: fangsong;
     }
 
     .usp-item-description {
@@ -228,6 +229,7 @@
       max-width: 360px; 
       display: block;
       text-align: center !important; /* Force centering */
+      font-family: fangsong;
     }
 
     .usp-loading {
@@ -452,7 +454,7 @@
           const itemSettings = item.designSettings || defaultDesignSettings;
           /* EXTREME LOCKDOWN: Triple-enforce calculated dynamic width*/
           const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
-          const iconStyle = `--item-icon-color: ${itemSettings.iconColor};`
+          const iconStyle = `color: ${itemSettings.iconColor};`
           html += `
             <div class="usp-item" style="${strictStyle}">
                <div class="usp-item-icon" style="${iconStyle}">
@@ -510,7 +512,7 @@
             const itemSettings = item.designSettings || defaultDesignSettings;
             /* EXTREME LOCKDOWN: Triple-enforce width to prevent expansion */
             const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
-            const iconStyle = `--item-icon-color: ${itemSettings.iconColor};`
+            const iconStyle = `color: ${itemSettings.iconColor};`
             html += `
               <div class="usp-item" style="${strictStyle}">
                <div class="usp-item-icon" style="${iconStyle}">
@@ -650,7 +652,7 @@
 
       /* Helper to render icon correctly */
      function renderIcon(icon, iconColor) {
-       if (!icon) return `<img src="${defaultIconUrl}" alt="box" style="object-fit: contain; color: ${iconColor};">`;
+       if (!icon) return `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${iconColor}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="14.31" y1="8" x2="20.05" y2="17.94"></line><line x1="9.69" y1="8" x2="21.17" y2="8"></line><line x1="7.38" y1="12" x2="13.12" y2="2.06"></line><line x1="9.69" y1="16" x2="3.95" y2="6.06"></line><line x1="14.31" y1="16" x2="2.83" y2="16"></line><line x1="16.62" y1="12" x2="10.88" y2="21.94"></line></svg>`;
          {% comment %} <img src="{{ 'chevron-left.svg' | asset_url }}" alt="left-arrow" width="20px" height="20px"> {% endcomment %}
        if (icon.startsWith('data:image/svg+xml;base64,')) {
          try {
