@@ -351,7 +351,9 @@ const UspBarForm = ({ id, heading }) => {
         id: id,
         title: formData.title,
         description: formData.description,
-        designSettings: formData.designSettings,
+        designSettings: useCustomColorSettings
+          ? formData.designSettings
+          : undefined,
         icon: formData.icon,
         useCustomColorSettings: useCustomColorSettings,
       };
@@ -363,7 +365,9 @@ const UspBarForm = ({ id, heading }) => {
         title: formData.title,
         description: formData.description,
         shopify_session_id: UspBarCurrentSessionData?.data?._id || null,
-        designSettings: formData.designSettings,
+        designSettings: useCustomColorSettings
+          ? formData.designSettings
+          : undefined,
         icon: formData.icon,
         useCustomColorSettings: useCustomColorSettings,
       };
@@ -832,7 +836,11 @@ const UspBarForm = ({ id, heading }) => {
             <Button
               variant="contained"
               onClick={handleSubmit}
-              disabled={isSubmitting}
+              disabled={
+                isSubmitting ||
+                (UspBarListData?.data.length >= 10 &&
+                  heading === "Create USP Bar")
+              }
               sx={{
                 backgroundColor: "#202223",
                 color: "white",
