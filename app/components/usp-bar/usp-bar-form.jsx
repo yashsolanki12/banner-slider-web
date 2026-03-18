@@ -832,7 +832,11 @@ const UspBarForm = ({ id, heading }) => {
             <Button
               variant="contained"
               onClick={handleSubmit}
-              disabled={isSubmitting}
+              disabled={
+                isSubmitting ||
+                (UspBarListData?.data.length >= 10 &&
+                  heading === "Create USP Bar")
+              }
               sx={{
                 backgroundColor: "#202223",
                 color: "white",
