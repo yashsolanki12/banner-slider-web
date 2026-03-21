@@ -37,6 +37,7 @@ export default function App() {
       <AppProvider embedded apiKey={apiKey}>
         <s-app-nav>
           <s-link href="/app/color-settings">Color Settings</s-link>
+          <s-link href="/app/billing">Billing</s-link>
         </s-app-nav>{" "}
         <Outlet />
       </AppProvider>
