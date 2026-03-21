@@ -17,7 +17,7 @@ const BillingPage = ({ shop, submit, actionData }) => {
     severity: "success",
   });
   const [cancelPlanDialogOpen, setCancelPlanDialogOpen] = React.useState(false);
-
+  console.log("SHOP", shop);
   // Show snackbar when actionData changes
   React.useEffect(() => {
     if (actionData) {

@@ -342,7 +342,8 @@
   <script>
     (function() {
        const shop = '{{ shop.domain }}';
-       const apiUrl = 'https://banner-slider-backend.onrender.com';
+       {% comment %} const apiUrl = 'https://banner-slider-backend.onrender.com'; {% endcomment %}
+       const apiUrl = 'http://localhost:4000';
        const defaultIconUrl = '{{ default_icon_url }}';
        
        let allItems = [];
@@ -398,6 +399,22 @@
        /* Add resize listener */
        window.addEventListener('resize', renderUspBar);
 
+       function showToast(message) {
+         const toast = document.createElement('div');
+         toast.textContent = message;
+         toast.style.cssText = 'position: fixed; top: 60px; right: 20px; background: #a5dc86; color: black; padding: 12px 20px; border-radius: 6px; z-index: 2147483647; font-family: sans-serif; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); opacity: 0; transition: opacity 0.3s ease-in-out; pointer-events: none;';
+         document.body.appendChild(toast);
+         
+         requestAnimationFrame(() => {
+           toast.style.opacity = '1';
+         });
+         
+         setTimeout(() => {
+           toast.style.opacity = '0';
+           setTimeout(() => toast.remove(), 300);
+         }, 4000);
+       }
+
         /*  Fetch USP Bar data */
        async function fetchUspBarData() {
          const slider = document.getElementById('usp-slider');
@@ -415,8 +432,13 @@
              container.style.display = 'flex'; /* MOD: Centering requires flex */
              renderUspBar();
            } else {
-             slider.innerHTML = '<div class="usp-empty">No USP items to display</div>';
-             container.style.display = 'flex'; /* MOD: Centering requires flex even for empty state*/
+             if (result.message && result.message === "Monthly view limit exceeded.") {
+               showToast(result.message);
+               container.style.display = 'none';
+             } else {
+               slider.innerHTML = '<div class="usp-empty">No USP items to display</div>';
+               container.style.display = 'flex'; /* MOD: Centering requires flex even for empty state*/
+             }
            }
          } catch (error) {
            console.error('Error fetching USP Bar data:', error);

@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import LinearProgress from "@mui/material/LinearProgress";
 import useUspBarData from "../../hooks/useUspBarData";
 import useUspBarSubmit from "../../hooks/useUspBarSubmit";
 import Loader from "../../ui/loader";
@@ -15,6 +16,7 @@ import {
   deleteUspBar,
   toggleUspBarEnabled,
   getCurrentSession,
+  syncStoreMetrics,
 } from "../../api/usp-bar";
 import { uspBarColumns, uspBarActions } from "./columns-config";
 
@@ -26,6 +28,19 @@ const UspBarList = (props) => {
     message: "",
     severity: "success",
   });
+
+  const [metrics, setMetrics] = React.useState(null);
+
+  React.useEffect(() => {
+    const planName = props?.subscription?.name || "Free";
+    syncStoreMetrics(planName)
+      .then((res) => {
+        if (res?.success && res?.data) {
+          setMetrics(res.data);
+        }
+      })
+      .catch(console.error);
+  }, [props.subscription]);
 
   // Current Session
   const {
@@ -146,13 +161,15 @@ const UspBarList = (props) => {
           alignItems="center"
           sx={{ mb: 4 }}
         >
-          <Typography
-            variant="h5"
-            sx={{ fontWeight: 700, color: "#202223", fontSize: 20 }}
-          >
-            USP Bar List
-          </Typography>
-          {UspBarListData?.data.length < 10 && (
+          {(!appEmbedEnabled || appEmbedEnabled) && (
+            <Typography
+              variant="h5"
+              sx={{ fontWeight: 700, color: "#202223", fontSize: 20 }}
+            >
+              USP Bar List
+            </Typography>
+          )}
+          {(UspBarListData?.data?.length || 0) < 10 && (
             <Button
               variant="contained"
               component={SafeLink}
@@ -174,6 +191,42 @@ const UspBarList = (props) => {
             </Button>
           )}
         </Stack>
+
+        {/* View Limit Progress */}
+        {metrics && props?.subscription !== undefined && (
+          <Box
+            sx={{
+              mb: 3,
+              p: 2,
+              border: "1px solid #e0e0e0",
+              borderRadius: "8px",
+              backgroundColor: "#fff",
+            }}
+          >
+            <Typography variant="body2" sx={{ mb: 1, color: "#202223" }}>
+              You're currently on <strong>{metrics.planName}</strong> (
+              {metrics.viewsCount} /{" "}
+              {metrics.limit === -1 ? "Unlimited" : metrics.limit} monthly
+              views). One visitor can have multiple views per session.
+            </Typography>
+            <LinearProgress
+              variant="determinate"
+              value={
+                metrics.limit === -1
+                  ? 0
+                  : Math.min((metrics.viewsCount / metrics.limit) * 100, 100)
+              }
+              sx={{
+                height: 8,
+                borderRadius: 4,
+                backgroundColor: "#e0e0e0",
+                "& .MuiLinearProgress-bar": {
+                  backgroundColor: "#202223",
+                },
+              }}
+            />
+          </Box>
+        )}
 
         {/* Table which manage all list data */}
         <ReusableTable
