@@ -13,6 +13,7 @@ api_version = "2026-04"
 
   [[webhooks.subscriptions]]
   topics = [ "app/uninstalled" ]
+  compliance_topics = ["customers/data_request", "customers/redact", "shop/redact"]
   uri = "https://banner-slider-backend.onrender.com/api/shopify/webhook"
 
 
