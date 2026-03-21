@@ -4,7 +4,8 @@ import { useLoaderData } from "react-router";
 const UspBarList = React.lazy(() => import("../pages/usp-bar-list/index"));
 
 export const loader = async ({ request }) => {
-  const { admin, session } = await authenticate.admin(request);
+  const { admin, session, billing } = await authenticate.admin(request);
+  const { appSubscriptions } = await billing.check();
 
   try {
     // Fetch main theme using raw fetch
@@ -26,6 +27,7 @@ export const loader = async ({ request }) => {
         error: "Theme fetch failed",
         status: themesResponse.status,
         details: errorText,
+        subscription: appSubscriptions?.[0],
         sessionDebug: {
           shop: session?.shop,
           scopes: session?.scope,
@@ -44,6 +46,7 @@ export const loader = async ({ request }) => {
       return {
         appEmbedEnabled: false,
         session: session,
+        subscription: appSubscriptions?.[0],
         error: "No main theme found in response",
         response: themesData,
       };
@@ -69,6 +72,7 @@ export const loader = async ({ request }) => {
       return {
         appEmbedEnabled: false,
         session: session,
+        subscription: appSubscriptions?.[0],
         error: "No settings_data.json found",
       };
     }
@@ -124,11 +128,13 @@ export const loader = async ({ request }) => {
       settings: settings,
       raw: asset.value,
       simulation,
+      subscription: appSubscriptions?.[0],
     };
   } catch (error) {
     return {
       appEmbedEnabled: false,
       session: session,
+      subscription: appSubscriptions?.[0],
       error: error.message,
       stack: error.stack,
       sessionDebug: {
@@ -148,7 +154,11 @@ export default function Usp() {
   const appEmbedEnabled = data?.appEmbedEnabled ?? false;
   return (
     <React.Suspense fallback="">
-      <UspBarList appEmbedEnabled={appEmbedEnabled} session={data?.session} />
+      <UspBarList
+        appEmbedEnabled={appEmbedEnabled}
+        session={data?.session}
+        subscription={data?.subscription}
+      />
     </React.Suspense>
   );
 }

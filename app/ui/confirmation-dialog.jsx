@@ -30,7 +30,7 @@ const ConfirmationDialog = (props) => {
       aria-labelledby="confirm-dialog-title"
     >
       <DialogTitle id="confirm-dialog-title">
-        <Typography variant="h6">{title}</Typography>
+        <span style={{ fontSize: "18px", fontWeight: "bold" }}>{title}</span>
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
