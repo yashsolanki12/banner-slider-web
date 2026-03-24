@@ -162,7 +162,102 @@ export const toggleUspBarEnabled = async (id) => {
     .then((res) => res.data)
     .catch((error) => {
       const errorMessage = error.response?.data?.message || error.message;
+      console.error("API Error in toggle usp bar:", errorMessage);
+      throw new Error(errorMessage);
+    });
+};
+
+// Duplicate USP Bar
+export const duplicateUspBar = async (id) => {
+  const shopDomain = getShopDomain();
+
+  if (!shopDomain) {
+    console.error("No shop domain found in URL parameters.");
+    throw new Error("Shop domain is required.");
+  }
+  return axiosInstance
+    .post(
+      `usp-slider/duplicate/${id}`,
+      {},
+      {
+        headers: {
+          "x-shopify-shop-domain": shopDomain,
+        },
+      },
+    )
+    .then((res) => res.data)
+    .catch((error) => {
+      const errorMessage = error.response?.data?.message || error.message;
       console.error("API Error in toggle usp bar enabled:", errorMessage);
+      throw new Error(errorMessage);
+    });
+};
+
+// Bulk Delete USP Bars
+export const bulkDeleteUspBar = async (ids) => {
+  const shopDomain = getShopDomain();
+
+  if (!shopDomain) {
+    console.error("No shop domain found in URL parameters.");
+    throw new Error("Shop domain is required.");
+  }
+
+  if (!Array.isArray(ids) || ids.length === 0) {
+    throw new Error("No IDs provided for deletion.");
+  }
+
+  return axiosInstance
+    .post(
+      `usp-slider/bulk-delete`,
+      { ids },
+      {
+        headers: {
+          "x-shopify-shop-domain": shopDomain,
+        },
+      },
+    )
+    .then((res) => res.data)
+    .catch((error) => {
+      const errorMessage = error.response?.data?.message || error.message;
+      console.error("API Error in bulkDeleteUspBar:", errorMessage);
+      throw new Error(errorMessage);
+    });
+};
+
+// Bulk Toggle USP Bars (enable or disable)
+export const bulkToggleUspBar = async (ids, enabled) => {
+  const shopDomain = getShopDomain();
+
+  if (!shopDomain) {
+    console.error("No shop domain found in URL parameters.");
+    throw new Error("Shop domain is required.");
+  }
+
+  if (!Array.isArray(ids) || ids.length === 0) {
+    throw new Error("No IDs provided for toggle.");
+  }
+
+  console.log(
+    `📤 Sending bulk toggle request for IDs:`,
+    ids,
+    "enabled:",
+    enabled,
+  );
+
+  return axiosInstance
+    .post(
+      `usp-slider/bulk-toggle`,
+      { ids, enabled },
+      {
+        headers: {
+          "x-shopify-shop-domain": shopDomain,
+        },
+      },
+    )
+    .then((res) => res.data)
+    .catch((error) => {
+      const errorMessage = error.response?.data?.message || error.message;
+      console.error("API Error in bulkToggleUspBar:", errorMessage);
       throw new Error(errorMessage);
     });
 };
@@ -183,7 +278,7 @@ export const syncStoreMetrics = async (planName) => {
         headers: {
           "x-shopify-shop-domain": shopDomain,
         },
-      }
+      },
     )
     .then((res) => res.data)
     .catch((error) => {

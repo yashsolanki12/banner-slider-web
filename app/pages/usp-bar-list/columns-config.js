@@ -42,6 +42,13 @@ export const uspBarActions = [
     to: (row) => `/app/usp-bar/${row._id}`,
   },
   {
+    name: "duplicate",
+    icon: "content_copy",
+    tooltip: "Duplicate",
+    color: "secondary",
+    type: "action",
+  },
+  {
     name: "delete",
     icon: "delete",
     tooltip: "Delete",

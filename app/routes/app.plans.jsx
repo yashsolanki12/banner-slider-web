@@ -175,7 +175,7 @@ export async function action({ request }) {
   }
 }
 
-export default function Billing() {
+export default function PlansPage() {
   const data = useLoaderData();
   const submit = useSubmit();
   const actionData = useActionData();

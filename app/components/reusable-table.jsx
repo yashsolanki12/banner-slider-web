@@ -13,12 +13,14 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import SafeLink from "../helper/safe-link";
 import ConfirmDialog from "../ui/confirmation-dialog";
+import Checkbox from "@mui/material/Checkbox";
 
 // Icons
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 /**
  * ReusableTable - A customizable table component
@@ -50,6 +52,10 @@ const ReusableTable = ({
   getId = (row) => row._id || row.id,
   snackbarState,
   setSnackbar,
+  showCheckbox = false,
+  selectedIds = [],
+  onSelectAll,
+  onSelectOne,
 }) => {
   // Internal snackbar state (used if external state not provided)
   const [internalSnackbar, setInternalSnackbar] = React.useState({
@@ -142,15 +148,35 @@ const ReusableTable = ({
   };
 
   const handleActionClick = (action, row) => {
+    const id = getId(row);
+
     // Handle action type (for delete etc)
     if (action.type === "action") {
       // If action has onClick, call it
       if (action.onClick) {
-        action.onClick(getId(row));
+        action.onClick(id);
+      }
+      // Handle duplicate action
+      else if (action.name === "duplicate" && mutations?.duplicateMutation) {
+        mutations.duplicateMutation.mutate(id, {
+          onSuccess: (response) => {
+            setCurrentSnackbar({
+              open: true,
+              message: response?.message || "Duplicated successfully",
+              severity: "success",
+            });
+          },
+          onError: (error) => {
+            setCurrentSnackbar({
+              open: true,
+              message: error?.message || "Failed to duplicate",
+              severity: "error",
+            });
+          },
+        });
       }
       // Otherwise check if deleteMutation is available
       else if (action.name === "delete" && mutations?.deleteMutation) {
-        const id = getId(row);
         setSelectedId(id);
         setDeleteDialogOpen(true);
       }
@@ -173,6 +199,7 @@ const ReusableTable = ({
       view: <VisibilityIcon fontSize="medium" />,
       visibility: <VisibilityIcon fontSize="medium" />,
       visibilityOff: <VisibilityOffIcon fontSize="medium" />,
+      content_copy: <ContentCopyIcon fontSize="medium" />,
       custom: null,
     };
     return icons[iconName] || icons.custom;
@@ -245,6 +272,26 @@ const ReusableTable = ({
         <Table stickyHeader sx={{ minWidth: 650 }} aria-label="data table">
           <TableHead>
             <TableRow>
+              {showCheckbox && (
+                <TableCell
+                  sx={{
+                    color: "#6b7280",
+                    fontWeight: 600,
+                    fontSize: 13,
+                    backgroundColor: "#f7f7f7",
+                  }}
+                >
+                  <Checkbox
+                    indeterminate={
+                      selectedIds.length > 0 && selectedIds.length < data.length
+                    }
+                    checked={
+                      data.length > 0 && selectedIds.length === data.length
+                    }
+                    onChange={onSelectAll}
+                  />
+                </TableCell>
+              )}
               {columns.map((column) => (
                 <TableCell
                   key={column.key}
@@ -280,20 +327,29 @@ const ReusableTable = ({
             {data && data.length > 0 ? (
               data.map((row) => {
                 const rowId = getId(row);
+                const isSelected = selectedIds.includes(rowId);
                 return (
                   <TableRow
                     key={rowId}
                     sx={{
                       "&:nth-of-type(odd)": {
-                        backgroundColor: "#f4f4f4",
+                        backgroundColor: isSelected ? "#e3f2fd" : "#f4f4f4",
                       },
                       "&:hover": {
-                        backgroundColor: "#f7f7f7",
+                        backgroundColor: isSelected ? "#bbdefb" : "#f7f7f7",
                       },
                       "&:last-child td, &:last-child th": { border: 0 },
                       opacity: row.enabled !== false ? 1 : 0.6,
                     }}
                   >
+                    {showCheckbox && (
+                      <TableCell>
+                        <Checkbox
+                          checked={isSelected}
+                          onChange={() => onSelectOne(rowId)}
+                        />
+                      </TableCell>
+                    )}
                     {columns.map((column) => (
                       <TableCell
                         key={`${rowId}-${column.key}`}
@@ -439,7 +495,11 @@ const ReusableTable = ({
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length + (actionButtons.length > 0 ? 1 : 0)}
+                  colSpan={
+                    columns.length +
+                    (actionButtons.length > 0 ? 1 : 0) +
+                    (showCheckbox ? 1 : 0)
+                  }
                   align="center"
                 >
                   <Typography variant="body2" color="text.secondary">
