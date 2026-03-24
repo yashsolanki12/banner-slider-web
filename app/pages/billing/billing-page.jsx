@@ -9,6 +9,8 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 import ConfirmDialog from "../../ui/confirmation-dialog";
+import LinearProgress from "@mui/material/LinearProgress";
+import { syncStoreMetrics } from "../../api/usp-bar";
 
 const BillingPage = ({ shop, submit, actionData }) => {
   const [snackbar, setSnackbar] = React.useState({
@@ -16,8 +18,8 @@ const BillingPage = ({ shop, submit, actionData }) => {
     message: "",
     severity: "success",
   });
+  const [metrics, setMetrics] = React.useState(null);
   const [cancelPlanDialogOpen, setCancelPlanDialogOpen] = React.useState(false);
-
   // Show snackbar when actionData changes
   React.useEffect(() => {
     if (actionData) {
@@ -28,6 +30,19 @@ const BillingPage = ({ shop, submit, actionData }) => {
       });
     }
   }, [actionData]);
+
+  React.useEffect(() => {
+    const planName = shop?.subscription?.name || "Free";
+    syncStoreMetrics(planName)
+      .then((res) => {
+        if (res?.success && res?.data) {
+          setMetrics(res.data);
+        }
+      })
+      .catch((error) => {
+        console.error('Sync error:',error)
+      });
+  }, [shop.subscription]);
 
   const handleCloseSnackbar = () => {
     setSnackbar({ ...snackbar, open: false });
@@ -64,10 +79,48 @@ const BillingPage = ({ shop, submit, actionData }) => {
               fontSize: { xs: 18, sm: 20 },
             }}
           >
-            Billing Page
+            Plans
           </Typography>
         </Stack>
       </Box>
+      <Box sx={{ maxWidth: "500px" }}>
+        {/* View Limit Progress */}
+        {metrics && shop?.subscription !== undefined && (
+          <Box
+            sx={{
+              mb: 3,
+              p: 2,
+              border: "1px solid #e0e0e0",
+              borderRadius: "8px",
+              backgroundColor: "#fff",
+            }}
+          >
+            <Typography variant="body2" sx={{ mb: 1, color: "#202223" }}>
+              You're currently on <strong>{metrics.planName}</strong> (
+              {metrics.viewsCount} /{" "}
+              {metrics.limit === -1 ? "Unlimited" : metrics.limit} monthly
+              views). One visitor can have multiple views per session.
+            </Typography>
+            <LinearProgress
+              variant="determinate"
+              value={
+                metrics.limit === -1
+                  ? 0
+                  : Math.min((metrics.viewsCount / metrics.limit) * 100, 100)
+              }
+              sx={{
+                height: 8,
+                borderRadius: 4,
+                backgroundColor: "#e0e0e0",
+                "& .MuiLinearProgress-bar": {
+                  backgroundColor: "#202223",
+                },
+              }}
+            />
+          </Box>
+        )}
+      </Box>
+
       {shop.subscription ? (
         <>
           <Card
