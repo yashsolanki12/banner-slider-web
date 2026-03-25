@@ -168,8 +168,9 @@
       max-height: 100%;
       width: auto;
       height: auto;
-      fill: currentColor !important;
+      fill: none !important;
       stroke: currentColor !important;
+      stroke-width: 2;
     }
       border-radius: 50%;
       font-size: 12px;
@@ -188,8 +189,9 @@
     }
 
     .usp-icon-svg-wrapper svg {
-      fill: currentColor !important;
+      fill: none !important;
       stroke: currentColor !important;
+      stroke-width: 2;
     }
 
     {% comment %} .usp-icon-svg-wrapper svg {
@@ -211,7 +213,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       width: 100%;         
-      max-width: 256px; 
+      {% comment %} max-width: 256px;  {% endcomment %}
       display: block;
       text-align: center; 
       font-family: fangsong;
@@ -226,7 +228,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       width: 100%;         
-      max-width: 360px; 
+      {% comment %} max-width: 360px;  {% endcomment %}
       display: block;
       text-align: center !important; /* Force centering */
       font-family: fangsong;
@@ -345,6 +347,44 @@
        const apiUrl = 'https://banner-slider-backend.onrender.com';
        {% comment %} const apiUrl = 'http://localhost:4000'; {% endcomment %}
        const defaultIconUrl = '{{ default_icon_url }}';
+
+        /* Display on Page - will be set from API response */
+        let pageDisplay = ['all'];
+
+        function shouldShowWidget(pageDisplaySetting) {
+          const path = window.location.pathname;
+
+          if(!pageDisplaySetting || !Array.isArray(pageDisplaySetting) || pageDisplaySetting.length === 0) {
+            return true; /* Show on all pages if no setting */
+          }
+
+          if(pageDisplaySetting.includes("all")) {
+            return true;
+          }
+
+          /* Check if current page matches any of the page_display settings */
+          const result = pageDisplaySetting.some(setting => matchPage(path, setting));
+          return result;
+        }
+
+        function matchPage(path, setting) {
+          switch(setting) {
+            case "all":
+              return true;
+            case "home":
+              return path === "/" || path === "/index" || path === "/index.liquid";
+            case "products":
+              return path.includes("/products") || path.includes("/search");
+            case "catalog":
+              return path.includes("/collections") || path.includes("/collections/all");
+            case "contact":
+              return path.includes("/pages/contact") || path.includes("/contact");
+            default:
+              return false;
+          }
+        }
+
+        /* Early return removed - page display check now happens after API fetch */
        
        let allItems = [];
        let itemsWithClones = [];
@@ -426,8 +466,30 @@
            
            if (result.success && result.data && result.data.length > 0) {
              allItems = result.data;
-             /* Get design settings from the first item */
+            
+             
+             /* FIXED: Check if ANY item should show on current page */
+             /* We filter to only show items that match the current page, then render them */
+             const visibleItems = allItems.filter(item => {
+               const itemPageDisplay = item.page_display || ['all'];
+               return shouldShowWidget(itemPageDisplay);
+             });
+             
+             if (visibleItems.length === 0) {
+               console.log('USP Bar: No items should show on this page based on page_display settings');
+               container.style.display = 'none';
+               return;
+             }
+             
+             /* Use only the visible items */
+             allItems = visibleItems;
+             
+             /* Get design settings from the first visible item */
              designSettings = allItems[0].designSettings || defaultDesignSettings;
+             
+             /* Get page_display setting from the first visible item - for reference */
+             pageDisplay = allItems[0].page_display || ['all'];
+             
              applyDesignSettings(container);
              container.style.display = 'flex'; /* MOD: Centering requires flex */
              renderUspBar();
@@ -493,25 +555,6 @@
           `;
         });
 
-        {% comment %} allItems.forEach((item) => {
-          const itemSettings = item.designSettings || defaultDesignSettings;
-          /* EXTREME LOCKDOWN: Triple-enforce calculated dynamic width*/
-          const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
-          html += `
-            <div class="usp-item" style="${strictStyle}">
-              <div class="usp-item-inner">
-                 <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">
-                   ${renderIcon(item.icon, itemSettings.iconColor)}
-                 </div>
-                <div class="usp-item-content">
-                  <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
-                  <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
-                </div>
-              </div>
-            </div>
-          `;
-        }); {% endcomment %}
-
         html += '</div>';
         slider.innerHTML = html;
       }
@@ -550,24 +593,6 @@
               </div>
             `;
           });
-          {% comment %} itemsWithClones.forEach((item) => {
-            const itemSettings = item.designSettings || defaultDesignSettings;
-            /* EXTREME LOCKDOWN: Triple-enforce width to prevent expansion */
-            const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
-            html += `
-              <div class="usp-item" style="${strictStyle}">
-                <div class="usp-item-inner">
-                   <div class="usp-item-icon" style="background: ${itemSettings.iconBackgroundColor}; color: ${itemSettings.iconColor};">
-                     ${renderIcon(item.icon, itemSettings.iconColor)}
-                   </div>
-                  <div class="usp-item-content">
-                    <p class="usp-item-title" style="color: ${itemSettings.titleColor};">${escapeHtml(item.title)}</p>
-                    <p class="usp-item-description" style="color: ${itemSettings.descriptionColor};">${escapeHtml(item.description)}</p>
-                  </div>
-                </div>
-              </div>
-            `;
-          }); {% endcomment %}
 
         html += '</div>';
         slider.innerHTML = html;
@@ -686,10 +711,10 @@
          }
        }
        
-       return `<img src="${icon}" alt="Icon" style="object-fit: contain; color: ${iconColor} !important;">`;
+       return `<div class="usp-icon-img-wrapper" style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; background-color: ${iconColor}; mask-image: url('${icon}'); mask-size: contain; mask-repeat: no-repeat; mask-position: center; -webkit-mask-image: url('${icon}'); -webkit-mask-size: contain; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center;"></div>`;
      }
 
-       /* Convert hex color to RGB */
+      /* Convert hex color to RGB */
       function hexToRgb(hex) {
         const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         return result ? {
@@ -699,7 +724,7 @@
         } : null;
       }
 
-       /* Escape HTML to prevent XSS */
+      /* Escape HTML to prevent XSS */
       function escapeHtml(text) {
         if (!text) return '';
         const div = document.createElement('div');
@@ -730,7 +755,7 @@
         return `<p class="usp-item-description" style="color:${color};">${formatted}</p>`;
       }
 
-       /* Initialize when DOM is ready */
+      /* Initialize when DOM is ready */
       function init() {
         const container = document.getElementById('usp-bar-container');
         const header = document.querySelector('header') || 
