@@ -15,6 +15,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import ColorPicker from "../color-settings.jsx/color-picker";
 // import Slider from "@mui/material/Slider";
+import OutlinedInput from "@mui/material/OutlinedInput";
 
 import { useLocation, useNavigate } from "react-router";
 // import SafeLink from "../../helper/safe-link";
@@ -30,6 +31,12 @@ import useUspBarData from "../../hooks/useUspBarData";
 import useUspBarSubmit from "../../hooks/useUspBarSubmit";
 import InputAdornment from "@mui/material/InputAdornment";
 import Loader from "../../ui/loader";
+import LivePreview from "./live-preview";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemText from "@mui/material/ListItemText";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -80,6 +87,7 @@ const UspBarForm = ({ id, heading }) => {
       itemBorderRightColor: "#000000", // Default vertical border color (black)
     },
     useCustomColorSettings: false,
+    page_display: ["all"],
   });
 
   // Usp Bar List - Show toast for list API messages
@@ -154,6 +162,7 @@ const UspBarForm = ({ id, heading }) => {
           icon: UspBarDetailData?.data?.icon || null,
           useCustomColorSettings:
             UspBarDetailData?.data?.useCustomColorSettings || false,
+          page_display: UspBarDetailData?.data?.page_display || ["all"],
           designSettings: {
             backgroundColor:
               UspBarDetailData?.data?.designSettings?.backgroundColor ||
@@ -356,6 +365,7 @@ const UspBarForm = ({ id, heading }) => {
           : undefined,
         icon: formData.icon,
         useCustomColorSettings: useCustomColorSettings,
+        page_display: formData.page_display,
       };
       updateMutation.mutate(payload, {
         onError: handleApiError,
@@ -370,6 +380,7 @@ const UspBarForm = ({ id, heading }) => {
           : undefined,
         icon: formData.icon,
         useCustomColorSettings: useCustomColorSettings,
+        page_display: formData.page_display,
       };
       createMutation.mutate(payload, {
         onError: handleApiError,
@@ -403,6 +414,7 @@ const UspBarForm = ({ id, heading }) => {
           alignItems: "center",
           flexWrap: "wrap",
           gap: 1,
+          mb: 3,
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -426,8 +438,24 @@ const UspBarForm = ({ id, heading }) => {
         </Box>
       </Box>
 
-      {/* Tabs */}
-      {/* <Tabs
+      {/* Live Preview - Sticky at top, below header */}
+      <Box
+        sx={{
+          mb: 3,
+          position: "sticky",
+          top: 0,
+          zIndex: 100,
+          backgroundColor: "#f5f5f5",
+          pt: 1,
+        }}
+      >
+        <LivePreview formData={formData} />
+      </Box>
+
+      {/* Form Content */}
+      <Box>
+        {/* Tabs */}
+        {/* <Tabs
         value={tabIndex}
         onChange={handleTabChange}
         // variant="fullWidth"
@@ -466,242 +494,354 @@ const UspBarForm = ({ id, heading }) => {
         />
       </Tabs> */}
 
-      {/* Content Tab */}
-      <TabPanel value={tabIndex} index={0}>
-        <Stack spacing={4}>
-          <Box
-            sx={{
-              p: { xs: 2, sm: 3 },
-              border: "1px solid #e1e1e1",
-              borderRadius: "8px",
-              backgroundColor: "white",
-            }}
-          >
-            <Stack spacing={2}>
-              {/* Title */}
-              <Box>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    color: "#6b7280",
-                    mb: 0.5,
-                    display: "block",
-                    fontSize: "16px",
-                  }}
-                >
-                  Title *
-                </Typography>
-                <TextField
-                  sx={{ width: "100%", maxWidth: 500 }}
-                  name="title"
-                  value={formData.title || ""}
-                  onChange={handleChange}
-                  size="small"
-                  placeholder="Enter title"
-                  error={Boolean(errors?.title)}
-                  helperText={errors?.title || ""}
-                  inputProps={{ maxLength: 30 }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <Typography variant="caption" color="textSecondary">
-                          {formData.title?.length || 0}/30
-                        </Typography>
-                      </InputAdornment>
-                    ),
-                  }}
-                  FormHelperTextProps={{
-                    sx: { color: "#d32f2f", marginLeft: 0 },
-                  }}
-                />
-              </Box>
-
-              {/* Description */}
-              <Box>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    color: "#6b7280",
-                    mb: 0.5,
-                    display: "block",
-                    fontSize: "16px",
-                  }}
-                >
-                  Description
-                </Typography>
-                <TextField
-                  sx={{ width: "100%", maxWidth: 500 }}
-                  multiline
-                  rows={2}
-                  name="description"
-                  value={formData.description || ""}
-                  onChange={handleChange}
-                  size="medium"
-                  placeholder="Enter description"
-                  // error={Boolean(errors?.description)}
-                  // helperText={errors?.description || ""}
-                  inputProps={{ maxLength: 50 }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <Typography variant="caption" color="textSecondary">
-                          {formData.description?.length || 0}/50
-                        </Typography>
-                      </InputAdornment>
-                    ),
-                  }}
-                  // FormHelperTextProps={{
-                  //   sx: { color: "#d32f2f", marginLeft: 0 },
-                  // }}
-                />
-              </Box>
-
-              {/* Icon Upload */}
-              <Box>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    color: "#6b7280",
-                    mb: 0.5,
-                    display: "block",
-                    fontSize: "16px",
-                  }}
-                >
-                  Icon (Optional)
-                </Typography>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 1,
-                    width: "fit-content",
-                  }}
-                >
-                  {/* Icon Preview */}
-                  {formData.icon && (
-                    <Box sx={{ position: "relative", marginTop: "0.20rem" }}>
-                      <img
-                        src={formData.icon}
-                        alt="Icon Preview"
-                        style={{
-                          width: 60,
-                          height: 60,
-                          objectFit: "contain",
-                          border: "1px solid #e1e1e1",
-                          borderRadius: "8px",
-                          padding: "8px",
-                          backgroundColor: "white",
-                        }}
-                      />
-                      <IconButton
-                        size="small"
-                        onClick={handleRemoveIcon}
-                        sx={{
-                          position: "absolute",
-                          top: -8,
-                          left: "64px",
-                          // right: -8,
-                          backgroundColor: "white",
-                          "&:hover": {
-                            backgroundColor: "#f0f0f0",
-                          },
-                          borderRadius: "50%",
-                          width: 24,
-                          height: 24,
-                          minWidth: 24,
-                          boxShadow: 1,
-                        }}
-                      >
-                        ✕
-                      </IconButton>
-                    </Box>
-                  )}
-
-                  {/* File Input */}
-                  <input
-                    type="file"
-                    accept="image/jpeg,image/png,image/svg+xml"
-                    onChange={handleIconUpload}
-                    style={{
-                      display: "none",
-                    }}
-                    id="icon-upload"
-                  />
-                  <label htmlFor="icon-upload">
-                    <Button
-                      variant="outlined"
-                      component="span"
-                      sx={{
-                        textTransform: "none",
-                        borderRadius: "6px",
-                        fontWeight: 500,
-                        width: "fit-content",
-                      }}
-                    >
-                      {formData.icon ? "Change Icon" : "Upload Icon"}
-                    </Button>
-                  </label>
-
-                  {!formData.icon && (
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        color: "#6b7280",
-                        fontSize: 13,
-                        width: "fit-content",
-                      }}
-                    >
-                      Supported formats: JPG, PNG, SVG (max: 2MB)
-                    </Typography>
-                  )}
-                </Box>
-
-                {/* Color Settings Checkbox */}
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={useCustomColorSettings}
-                      onChange={(e) =>
-                        setUseCustomColorSettings(e.target.checked)
-                      }
-                      sx={{
-                        color: "#6b7280",
-                        "&.Mui-checked": {
-                          color: "#202223",
-                        },
-                      }}
-                    />
-                  }
-                  label={
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        color: "#6b7280",
-                        fontSize: "14px",
-                      }}
-                    >
-                      Color Settings
-                    </Typography>
-                  }
-                  sx={{ mt: 1 }}
-                />
-
-                {/* Color Settings Grid - Show when checkbox is checked */}
-                {useCustomColorSettings && (
-                  <Box
+        {/* Content Tab */}
+        <TabPanel value={tabIndex} index={0}>
+          <Stack spacing={4}>
+            <Box
+              sx={{
+                p: { xs: 2, sm: 3 },
+                border: "1px solid #e1e1e1",
+                borderRadius: "8px",
+                backgroundColor: "white",
+              }}
+            >
+              <Stack spacing={2}>
+                {/* Title */}
+                <Box>
+                  <Typography
+                    variant="caption"
                     sx={{
-                      display: "grid",
-                      gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-                      gap: { xs: 1.5, sm: 2 },
-                      mt: 2,
-                      p: { xs: 1.5, sm: 2 },
-                      border: "1px solid #e1e1e1",
-                      borderRadius: "8px",
-                      backgroundColor: "#ffffff",
+                      color: "#6b7280",
+                      mb: 0.5,
+                      display: "block",
+                      fontSize: "16px",
                     }}
                   >
-                    {/* Bar Background Color */}
-                    {/* <ColorPicker
+                    Title *
+                  </Typography>
+                  <TextField
+                    sx={{ width: "100%", maxWidth: 500 }}
+                    name="title"
+                    value={formData.title || ""}
+                    onChange={handleChange}
+                    size="small"
+                    placeholder="Enter title"
+                    error={Boolean(errors?.title)}
+                    helperText={errors?.title || ""}
+                    inputProps={{ maxLength: 30 }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <Typography variant="caption" color="textSecondary">
+                            {formData.title?.length || 0}/30
+                          </Typography>
+                        </InputAdornment>
+                      ),
+                    }}
+                    FormHelperTextProps={{
+                      sx: { color: "#d32f2f", marginLeft: 0 },
+                    }}
+                  />
+                </Box>
+
+                {/* Description */}
+                <Box>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      color: "#6b7280",
+                      mb: 0.5,
+                      display: "block",
+                      fontSize: "16px",
+                    }}
+                  >
+                    Description
+                  </Typography>
+                  <TextField
+                    sx={{ width: "100%", maxWidth: 500 }}
+                    multiline
+                    rows={2}
+                    name="description"
+                    value={formData.description || ""}
+                    onChange={handleChange}
+                    size="medium"
+                    placeholder="Enter description"
+                    // error={Boolean(errors?.description)}
+                    // helperText={errors?.description || ""}
+                    inputProps={{ maxLength: 50 }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <Typography variant="caption" color="textSecondary">
+                            {formData.description?.length || 0}/50
+                          </Typography>
+                        </InputAdornment>
+                      ),
+                    }}
+                    // FormHelperTextProps={{
+                    //   sx: { color: "#d32f2f", marginLeft: 0 },
+                    // }}
+                  />
+                </Box>
+
+                {/* Display on page */}
+                <Box>
+                  <Typography
+                    sx={{
+                      color: "#6b7280",
+                      mb: 0.5,
+                      display: "block",
+                      fontSize: "16px",
+                    }}
+                  >
+                    Display On Pages (Optional)
+                  </Typography>
+                  <FormControl
+                    size="small"
+                    sx={{ mt: 1, width: "100%", maxWidth: 500 }}
+                  >
+                    <InputLabel id="page-display-label">Display on</InputLabel>
+                    <Select
+                      labelId="page-display-label"
+                      id="page-display-label"
+                      multiple
+                      value={formData.page_display}
+                      label="Display On"
+                      onChange={(e) => {
+                        const value = e.target.value;
+
+                        const newValue =
+                          typeof value === "string" ? value.split(",") : value;
+
+                        const wasAllSelected =
+                          formData.page_display.includes("all");
+                        const isAllSelected = newValue.includes("all");
+
+                        if (isAllSelected) {
+                          setFormData({
+                            ...formData,
+                            page_display: [
+                              "all",
+                              "home",
+                              "products",
+                              "catalog",
+                              "contact",
+                            ],
+                          });
+                        } else if (wasAllSelected && !isAllSelected) {
+                          setFormData({ ...formData, page_display: [] });
+                        } else {
+                          setFormData({
+                            ...formData,
+                            page_display: newValue,
+                          });
+                        }
+                      }}
+                      input={<OutlinedInput label="Display On" />}
+                      renderValue={(selected) => {
+                        if (selected.length === 0) {
+                          return "Select pages";
+                        }
+                        const allPages = [
+                          "all",
+                          "home",
+                          "products",
+                          "catalog",
+                          "contact",
+                        ];
+                        const allSelected = allPages.every((p) =>
+                          selected.includes(p),
+                        );
+                        if (allSelected) {
+                          return "All Pages";
+                        }
+                        const displayPages = selected
+                          .filter((i) => i !== "all")
+                          .map((i) => i.charAt(0).toUpperCase() + i.slice(1))
+                          .join(", ");
+                        return displayPages || "Select pages";
+                      }}
+                    >
+                      <MenuItem value="all">
+                        <Checkbox
+                          checked={formData.page_display.includes("all")}
+                        />
+                        <ListItemText primary="All pages" />
+                      </MenuItem>
+                      <MenuItem value="home">
+                        <Checkbox
+                          checked={formData.page_display.includes("home")}
+                        />
+                        <ListItemText primary="Home Page" />
+                      </MenuItem>
+                      <MenuItem value="products">
+                        <Checkbox
+                          checked={formData.page_display.includes("products")}
+                        />
+                        <ListItemText primary="Product Page" />
+                      </MenuItem>
+                      <MenuItem value="catalog">
+                        <Checkbox
+                          checked={formData.page_display.includes("catalog")}
+                        />
+                        <ListItemText primary="Collections Page" />
+                      </MenuItem>
+                      <MenuItem value="contact">
+                        <Checkbox
+                          checked={formData.page_display.includes("contact")}
+                        />
+                        <ListItemText primary="Contact Page" />
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
+
+                {/* Icon Upload */}
+                <Box>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      color: "#6b7280",
+                      mb: 0.5,
+                      display: "block",
+                      fontSize: "16px",
+                    }}
+                  >
+                    Icon (Optional)
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 1,
+                      width: "fit-content",
+                    }}
+                  >
+                    {/* Icon Preview */}
+                    {formData.icon && (
+                      <Box sx={{ position: "relative", marginTop: "0.20rem" }}>
+                        <img
+                          src={formData.icon}
+                          alt="Icon Preview"
+                          style={{
+                            width: 60,
+                            height: 60,
+                            objectFit: "contain",
+                            border: "1px solid #e1e1e1",
+                            borderRadius: "8px",
+                            padding: "8px",
+                            backgroundColor: "white",
+                          }}
+                        />
+                        <IconButton
+                          size="small"
+                          onClick={handleRemoveIcon}
+                          sx={{
+                            position: "absolute",
+                            top: -8,
+                            left: "64px",
+                            // right: -8,
+                            backgroundColor: "white",
+                            "&:hover": {
+                              backgroundColor: "#f0f0f0",
+                            },
+                            borderRadius: "50%",
+                            width: 24,
+                            height: 24,
+                            minWidth: 24,
+                            boxShadow: 1,
+                          }}
+                        >
+                          ✕
+                        </IconButton>
+                      </Box>
+                    )}
+
+                    {/* File Input */}
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/png,image/svg+xml"
+                      onChange={handleIconUpload}
+                      style={{
+                        display: "none",
+                      }}
+                      id="icon-upload"
+                    />
+                    <label htmlFor="icon-upload">
+                      <Button
+                        variant="outlined"
+                        component="span"
+                        sx={{
+                          textTransform: "none",
+                          borderRadius: "6px",
+                          fontWeight: 500,
+                          width: "fit-content",
+                        }}
+                      >
+                        {formData.icon ? "Change Icon" : "Upload Icon"}
+                      </Button>
+                    </label>
+
+                    {!formData.icon && (
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          color: "#6b7280",
+                          fontSize: 13,
+                          width: "fit-content",
+                        }}
+                      >
+                        Supported formats: JPG, PNG, SVG (max: 2MB)
+                      </Typography>
+                    )}
+                  </Box>
+
+                  {/* Color Settings Checkbox */}
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={useCustomColorSettings}
+                        onChange={(e) =>
+                          setUseCustomColorSettings(e.target.checked)
+                        }
+                        sx={{
+                          color: "#6b7280",
+                          "&.Mui-checked": {
+                            color: "#202223",
+                          },
+                        }}
+                      />
+                    }
+                    label={
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          color: "#6b7280",
+                          fontSize: "14px",
+                        }}
+                      >
+                        Color Settings
+                      </Typography>
+                    }
+                    sx={{ mt: 1 }}
+                  />
+
+                  {/* Color Settings Grid - Show when checkbox is checked */}
+                  {useCustomColorSettings && (
+                    <Box
+                      sx={{
+                        display: "grid",
+                        gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                        gap: { xs: 1.5, sm: 2 },
+                        mt: 2,
+                        p: { xs: 1.5, sm: 2 },
+                        border: "1px solid #e1e1e1",
+                        borderRadius: "8px",
+                        backgroundColor: "#ffffff",
+                      }}
+                    >
+                      {/* Bar Background Color */}
+                      {/* <ColorPicker
                       label="Bar Background Color"
                       name="designSettings.backgroundColor"
                       value={
@@ -710,45 +850,45 @@ const UspBarForm = ({ id, heading }) => {
                       onChange={handleChange}
                     /> */}
 
-                    {/* Icon Color */}
-                    <ColorPicker
-                      label="Icon Color"
-                      name="designSettings.iconColor"
-                      value={formData.designSettings?.iconColor || "#0a0a0a"}
-                      onChange={handleChange}
-                    />
+                      {/* Icon Color */}
+                      <ColorPicker
+                        label="Icon Color"
+                        name="designSettings.iconColor"
+                        value={formData.designSettings?.iconColor || "#0a0a0a"}
+                        onChange={handleChange}
+                      />
 
-                    {/* Item Background Color */}
-                    <ColorPicker
-                      label="Item Background Color"
-                      name="designSettings.itemBackgroundColor"
-                      value={
-                        formData.designSettings?.itemBackgroundColor ||
-                        "#ffffff"
-                      }
-                      onChange={handleChange}
-                    />
+                      {/* Item Background Color */}
+                      <ColorPicker
+                        label="Item Background Color"
+                        name="designSettings.itemBackgroundColor"
+                        value={
+                          formData.designSettings?.itemBackgroundColor ||
+                          "#ffffff"
+                        }
+                        onChange={handleChange}
+                      />
 
-                    {/* Title Color */}
-                    <ColorPicker
-                      label="Title Color"
-                      name="designSettings.titleColor"
-                      value={formData.designSettings?.titleColor || "#333333"}
-                      onChange={handleChange}
-                    />
+                      {/* Title Color */}
+                      <ColorPicker
+                        label="Title Color"
+                        name="designSettings.titleColor"
+                        value={formData.designSettings?.titleColor || "#333333"}
+                        onChange={handleChange}
+                      />
 
-                    {/* Description Color */}
-                    <ColorPicker
-                      label="Description Color"
-                      name="designSettings.descriptionColor"
-                      value={
-                        formData.designSettings?.descriptionColor || "#666666"
-                      }
-                      onChange={handleChange}
-                    />
+                      {/* Description Color */}
+                      <ColorPicker
+                        label="Description Color"
+                        name="designSettings.descriptionColor"
+                        value={
+                          formData.designSettings?.descriptionColor || "#666666"
+                        }
+                        onChange={handleChange}
+                      />
 
-                    {/* Icon Background Color */}
-                    {/* <ColorPicker
+                      {/* Icon Background Color */}
+                      {/* <ColorPicker
                       label="Icon Background Color"
                       name="designSettings.iconBackgroundColor"
                       value={
@@ -758,19 +898,19 @@ const UspBarForm = ({ id, heading }) => {
                       onChange={handleChange}
                     /> */}
 
-                    {/* Border Color */}
-                    <ColorPicker
-                      label="Item Border Right Color"
-                      name="designSettings.itemBorderRightColor"
-                      value={
-                        formData.designSettings?.itemBorderRightColor ||
-                        "#000000"
-                      }
-                      onChange={handleChange}
-                    />
+                      {/* Border Color */}
+                      <ColorPicker
+                        label="Item Border Right Color"
+                        name="designSettings.itemBorderRightColor"
+                        value={
+                          formData.designSettings?.itemBorderRightColor ||
+                          "#000000"
+                        }
+                        onChange={handleChange}
+                      />
 
-                    {/* Slider Speed */}
-                    {/* <Box>
+                      {/* Slider Speed */}
+                      {/* <Box>
                       <Typography
                         variant="caption"
                         sx={{
@@ -803,203 +943,205 @@ const UspBarForm = ({ id, heading }) => {
                         more than 4 items)
                       </Typography>
                     </Box> */}
-                  </Box>
-                )}
-              </Box>
-            </Stack>
-          </Box>
-          {/* Action Buttons - Content Tab */}
-          <Box
-            sx={{
-              display: "flex",
-              gap: "16px",
-              flexWrap: "wrap",
-              flexDirection: { xs: "column", sm: "row" },
-            }}
-          >
-            <Button
-              variant="contained"
-              onClick={handleNavigateBack}
-              sx={{
-                backgroundColor: "#c9c9c9",
-                color: "black",
-                textTransform: "none",
-                borderRadius: "6px",
-                fontWeight: 600,
-                padding: "7px 18px",
-                width: { xs: "100%", sm: "auto" },
-              }}
-              disabled={isSubmitting}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="contained"
-              onClick={handleSubmit}
-              disabled={
-                isSubmitting ||
-                (UspBarListData?.data.length >= 10 &&
-                  heading === "Create USP Bar")
-              }
-              sx={{
-                backgroundColor: "#202223",
-                color: "white",
-                textTransform: "none",
-                borderRadius: "6px",
-                fontWeight: 600,
-                padding: "7px 18px",
-                width: { xs: "100%", sm: "auto" },
-              }}
-            >
-              {isSubmitting ? (
-                <CircularProgress size={20} color="success" />
-              ) : isEditMode ? (
-                "Save Changes"
-              ) : (
-                "Create"
-              )}
-            </Button>
-          </Box>
-        </Stack>
-      </TabPanel>
-
-      {/* Design Tab */}
-      <TabPanel value={tabIndex} index={1}>
-        <Stack spacing={4}>
-          <Box
-            sx={{
-              p: { xs: 2, sm: 3 },
-              border: "1px solid #e1e1e1",
-              borderRadius: "8px",
-              backgroundColor: "white",
-            }}
-          >
-            <Typography
-              variant="h6"
-              sx={{
-                mb: { xs: 1.5, sm: 2 },
-                fontWeight: 600,
-                fontSize: { xs: "1rem", sm: "1.25rem" },
-              }}
-            >
-              Color Settings
-            </Typography>
-
+                    </Box>
+                  )}
+                </Box>
+              </Stack>
+            </Box>
+            {/* Action Buttons - Content Tab */}
             <Box
               sx={{
-                display: "grid",
-                gridTemplateColumns: {
-                  xs: "1fr",
-                  sm: "1fr 1fr",
-                  md: "1fr 1fr",
-                },
-                gap: { xs: 1.5, sm: 2 },
+                display: "flex",
+                gap: "16px",
+                flexWrap: "wrap",
+                flexDirection: { xs: "column", sm: "row" },
               }}
             >
-              {/* Background Color */}
-              {/* <ColorPicker
+              <Button
+                variant="contained"
+                onClick={handleNavigateBack}
+                sx={{
+                  backgroundColor: "#c9c9c9",
+                  color: "black",
+                  textTransform: "none",
+                  borderRadius: "6px",
+                  fontWeight: 600,
+                  padding: "7px 18px",
+                  width: { xs: "100%", sm: "auto" },
+                }}
+                disabled={isSubmitting}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                onClick={handleSubmit}
+                disabled={
+                  isSubmitting ||
+                  (UspBarListData?.data.length >= 10 &&
+                    heading === "Create USP Bar")
+                }
+                sx={{
+                  backgroundColor: "#202223",
+                  color: "white",
+                  textTransform: "none",
+                  borderRadius: "6px",
+                  fontWeight: 600,
+                  padding: "7px 18px",
+                  width: { xs: "100%", sm: "auto" },
+                }}
+              >
+                {isSubmitting ? (
+                  <CircularProgress size={20} color="success" />
+                ) : isEditMode ? (
+                  "Save Changes"
+                ) : (
+                  "Create"
+                )}
+              </Button>
+            </Box>
+          </Stack>
+        </TabPanel>
+
+        {/* Design Tab */}
+        <TabPanel value={tabIndex} index={1}>
+          <Stack spacing={4}>
+            <Box
+              sx={{
+                p: { xs: 2, sm: 3 },
+                border: "1px solid #e1e1e1",
+                borderRadius: "8px",
+                backgroundColor: "white",
+              }}
+            >
+              <Typography
+                variant="h6"
+                sx={{
+                  mb: { xs: 1.5, sm: 2 },
+                  fontWeight: 600,
+                  fontSize: { xs: "1rem", sm: "1.25rem" },
+                }}
+              >
+                Color Settings
+              </Typography>
+
+              <Box
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: {
+                    xs: "1fr",
+                    sm: "1fr 1fr",
+                    md: "1fr 1fr",
+                  },
+                  gap: { xs: 1.5, sm: 2 },
+                }}
+              >
+                {/* Background Color */}
+                {/* <ColorPicker
                 label="Bar Background Color"
                 name="designSettings.backgroundColor"
                 value={formData.designSettings?.backgroundColor || "#f8f9fa"}
                 onChange={handleChange}
               /> */}
 
-              {/* Title Color */}
-              <ColorPicker
-                label="Title Color"
-                name="designSettings.titleColor"
-                value={formData.designSettings?.titleColor || "#333333"}
-                onChange={handleChange}
-              />
+                {/* Title Color */}
+                <ColorPicker
+                  label="Title Color"
+                  name="designSettings.titleColor"
+                  value={formData.designSettings?.titleColor || "#333333"}
+                  onChange={handleChange}
+                />
 
-              {/* Description Color */}
-              <ColorPicker
-                label="Description Color"
-                name="designSettings.descriptionColor"
-                value={formData.designSettings?.descriptionColor || "#666666"}
-                onChange={handleChange}
-              />
+                {/* Description Color */}
+                <ColorPicker
+                  label="Description Color"
+                  name="designSettings.descriptionColor"
+                  value={formData.designSettings?.descriptionColor || "#666666"}
+                  onChange={handleChange}
+                />
 
-              {/* Icon Background Color */}
-              <ColorPicker
-                label="Icon Background Color"
-                name="designSettings.iconBackgroundColor"
-                value={
-                  formData.designSettings?.iconBackgroundColor || "#4CAF50"
-                }
-                onChange={handleChange}
-              />
+                {/* Icon Background Color */}
+                <ColorPicker
+                  label="Icon Background Color"
+                  name="designSettings.iconBackgroundColor"
+                  value={
+                    formData.designSettings?.iconBackgroundColor || "#4CAF50"
+                  }
+                  onChange={handleChange}
+                />
 
-              {/* Icon Color */}
-              <ColorPicker
-                label="Icon Color"
-                name="designSettings.iconColor"
-                value={formData.designSettings?.iconColor || "#1b1b1b"}
-                onChange={handleChange}
-              />
+                {/* Icon Color */}
+                <ColorPicker
+                  label="Icon Color"
+                  name="designSettings.iconColor"
+                  value={formData.designSettings?.iconColor || "#1b1b1b"}
+                  onChange={handleChange}
+                />
 
-              {/* Item Border Right Color */}
-              <ColorPicker
-                label="Item Border Right Color"
-                name="designSettings.itemBorderRightColor"
-                value={
-                  formData.designSettings?.itemBorderRightColor || "#000000"
-                }
-                onChange={handleChange}
-              />
+                {/* Item Border Right Color */}
+                <ColorPicker
+                  label="Item Border Right Color"
+                  name="designSettings.itemBorderRightColor"
+                  value={
+                    formData.designSettings?.itemBorderRightColor || "#000000"
+                  }
+                  onChange={handleChange}
+                />
+              </Box>
             </Box>
-          </Box>
 
-          {/* Action Buttons - Design Tab */}
-          <Box
-            sx={{
-              display: "flex",
-              gap: "16px",
-              flexWrap: "wrap",
-              flexDirection: { xs: "column", sm: "row" },
-            }}
-          >
-            <Button
-              variant="contained"
-              onClick={handleNavigateBack}
+            {/* Action Buttons - Design Tab */}
+            <Box
               sx={{
-                backgroundColor: "#c9c9c9",
-                color: "black",
-                textTransform: "none",
-                borderRadius: "6px",
-                fontWeight: 600,
-                padding: "7px 18px",
-                width: { xs: "100%", sm: "auto" },
-              }}
-              disabled={isSubmitting}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="contained"
-              onClick={handleSubmit}
-              disabled={isSubmitting}
-              sx={{
-                backgroundColor: "#202223",
-                color: "white",
-                textTransform: "none",
-                borderRadius: "6px",
-                fontWeight: 600,
-                padding: "7px 18px",
-                width: { xs: "100%", sm: "auto" },
+                display: "flex",
+                gap: "16px",
+                flexWrap: "wrap",
+                flexDirection: { xs: "column", sm: "row" },
               }}
             >
-              {isSubmitting ? (
-                <CircularProgress size={20} color="success" />
-              ) : isEditMode ? (
-                "Save Changes"
-              ) : (
-                "Create"
-              )}
-            </Button>
-          </Box>
-        </Stack>
-      </TabPanel>
+              <Button
+                variant="contained"
+                onClick={handleNavigateBack}
+                sx={{
+                  backgroundColor: "#c9c9c9",
+                  color: "black",
+                  textTransform: "none",
+                  borderRadius: "6px",
+                  fontWeight: 600,
+                  padding: "7px 18px",
+                  width: { xs: "100%", sm: "auto" },
+                }}
+                disabled={isSubmitting}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+                sx={{
+                  backgroundColor: "#202223",
+                  color: "white",
+                  textTransform: "none",
+                  borderRadius: "6px",
+                  fontWeight: 600,
+                  padding: "7px 18px",
+                  width: { xs: "100%", sm: "auto" },
+                }}
+              >
+                {isSubmitting ? (
+                  <CircularProgress size={20} color="success" />
+                ) : isEditMode ? (
+                  "Save Changes"
+                ) : (
+                  "Create"
+                )}
+              </Button>
+            </Box>
+          </Stack>
+        </TabPanel>
+      </Box>
+      {/* End Form Content */}
 
       {/* Snackbar for notifications */}
       <Snackbar

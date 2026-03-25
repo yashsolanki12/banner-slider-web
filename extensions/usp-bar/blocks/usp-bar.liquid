@@ -150,9 +150,10 @@
     }
     
     #usp-bar-container-{{ block.id }} .usp-icon-svg-wrapper svg {
-      fill: currentColor !important;
+      fill: none !important;
       stroke: currentColor !important;
-     }
+      stroke-width: 2;
+    }
     }
 
     {% comment %} #usp-bar-container-{{ block.id }} .usp-icon-svg-wrapper svg {
@@ -294,6 +295,42 @@
        const apiUrl = 'https://banner-slider-backend.onrender.com';
        {% comment %} const apiUrl = 'http://localhost:4000'; {% endcomment %}
        const defaultIconUrl = '{{ default_icon_url }}';
+
+        /* Display on Page - will be set from API response */
+        let pageDisplay = ['all'];
+
+        function shouldShowWidget(pageDisplaySetting) {
+          const path = window.location.pathname;
+
+          if(!pageDisplaySetting || !Array.isArray(pageDisplaySetting) || pageDisplaySetting.length === 0) {
+            return true; /* Show on all pages if no setting */
+          }
+
+          if(pageDisplaySetting.includes("all")) {
+            return true;
+          }
+
+          /* Check if current page matches any of the page_display settings */
+          const result = pageDisplaySetting.some(setting => matchPage(path, setting));
+          return result;
+        }
+
+        function matchPage(path, setting) {
+          switch(setting) {
+            case "all":
+              return true;
+            case "home":
+              return path === "/" || path === "/index" || path === "/index.liquid";
+            case "products":
+              return path.includes("/products") || path.includes("/search");
+            case "catalog":
+              return path.includes("/collections") || path.includes("/collections/all");
+            case "contact":
+              return path.includes("/pages/contact") || path.includes("/contact");
+            default:
+              return false;
+          }
+        }
        
        let allItems = [];
        let itemsWithClones = [];
@@ -351,6 +388,29 @@
            
            if (result.success && result.data && result.data.length > 0) {
              allItems = result.data;
+
+              /* FIXED: Check if ANY item should show on current page */
+             /* We filter to only show items that match the current page, then render them */
+             const visibleItems = allItems.filter(item => {
+               const itemPageDisplay = item.page_display || ['all'];
+               return shouldShowWidget(itemPageDisplay);
+             });
+             
+             if (visibleItems.length === 0) {
+               console.log('USP Bar: No items should show on this page based on page_display settings');
+               container.style.display = 'none';
+               return;
+             }
+             
+             /* Use only the visible items */
+             allItems = visibleItems;
+             
+             /* Get design settings from the first visible item */
+             designSettings = allItems[0].designSettings || defaultDesignSettings;
+             
+             /* Get page_display setting from the first visible item - for reference */
+             pageDisplay = allItems[0].page_display || ['all'];
+             
              designSettings = allItems[0].designSettings || defaultDesignSettings;
              applyDesignSettings(container);
               container.style.display = 'flex'; // Centering requires flex
@@ -580,7 +640,7 @@
            return `<div class="usp-icon-svg-wrapper" style="color: ${iconColor};">${svg}</div>`;
          } catch (e) { return '✓'; }
        }
-       return `<img src="${icon}" alt="Icon" style="object-fit: contain; color: ${iconColor};">`;
+       return `<div class="usp-icon-img-wrapper" style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; background-color: ${iconColor}; mask-image: url('${icon}'); mask-size: contain; mask-repeat: no-repeat; mask-position: center; -webkit-mask-image: url('${icon}'); -webkit-mask-size: contain; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center;"></div>`;
      }
 
       function hexToRgb(hex) {
