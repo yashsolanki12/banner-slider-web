@@ -26,6 +26,18 @@ const ColorPicker = ({ label, value, onChange, name }) => {
           flexWrap: "wrap",
         }}
       >
+        <TextField
+          size="small"
+          name={name}
+          value={value}
+          onChange={onChange}
+          placeholder="#ffffff"
+          sx={{
+            flex: 1,
+            minWidth: { xs: "calc(100% - 48px)", sm: "auto" },
+            maxWidth: { xs: "100%", sm: 200 },
+          }}
+        />
         <input
           type="color"
           value={value}
@@ -40,18 +52,6 @@ const ColorPicker = ({ label, value, onChange, name }) => {
             cursor: "pointer",
             padding: 2,
             minWidth: "36px",
-          }}
-        />
-        <TextField
-          size="small"
-          name={name}
-          value={value}
-          onChange={onChange}
-          placeholder="#ffffff"
-          sx={{
-            flex: 1,
-            minWidth: { xs: "calc(100% - 48px)", sm: "auto" },
-            maxWidth: { xs: "100%", sm: 200 },
           }}
         />
       </Box>

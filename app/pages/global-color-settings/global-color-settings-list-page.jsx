@@ -37,7 +37,7 @@ const GlobalColorSettingsListPage = () => {
   });
 
   const { data: GetGlobalColorsData, isLoading: GetGlobalColorsLoading } =
-    useUspBarData(["get-global-colors"], getGlobalColors, setSnackbar);
+    useUspBarData(["get-global-colors"], getGlobalColors, null);
 
   const handleSliderChange = (name, value) => {
     setFormData((prev) => ({

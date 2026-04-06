@@ -706,7 +706,7 @@ const UspBarForm = ({ id, heading }) => {
                       display: "block",
                       fontSize: "16px",
                     }}
-                  >
+                  >1
                     Icon (Optional)
                   </Typography>
                   <Box
@@ -719,18 +719,32 @@ const UspBarForm = ({ id, heading }) => {
                   >
                     {/* Icon Preview */}
                     {formData.icon && (
-                      <Box sx={{ position: "relative", marginTop: "0.20rem" }}>
+                      <Box
+                        sx={{
+                          position: "relative",
+                          marginTop: "0.20rem",
+                          width: "100%",
+                          height: "100%",
+                          border: "1px solid #e1e1e1",
+                          borderRadius: "8px",
+                          padding: "8px",
+                          backgroundColor: "white",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
                         <img
                           src={formData.icon}
                           alt="Icon Preview"
                           style={{
-                            width: 60,
-                            height: 60,
+                            width: "32px",
+                            height: "32px",
                             objectFit: "contain",
-                            border: "1px solid #e1e1e1",
-                            borderRadius: "8px",
-                            padding: "8px",
-                            backgroundColor: "white",
+                            // border: "1px solid #e1e1e1",
+                            // borderRadius: "8px",
+                            // padding: "8px",
+                            // backgroundColor: "white",
                           }}
                         />
                         <IconButton
@@ -739,8 +753,8 @@ const UspBarForm = ({ id, heading }) => {
                           sx={{
                             position: "absolute",
                             top: -8,
-                            left: "64px",
-                            // right: -8,
+                            // left: "64px",
+                            right: -3,
                             backgroundColor: "white",
                             "&:hover": {
                               backgroundColor: "#f0f0f0",
@@ -1003,7 +1017,7 @@ const UspBarForm = ({ id, heading }) => {
           </Stack>
         </TabPanel>
 
-        {/* Design Tab */}
+        {/* Design Tab Unused */}
         <TabPanel value={tabIndex} index={1}>
           <Stack spacing={4}>
             <Box

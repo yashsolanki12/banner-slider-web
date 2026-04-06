@@ -41,6 +41,7 @@
       width: 100%;
       position: relative;
       display: flex;        /* MOD: Absolute centering */
+      flex-direction: column; /* MOD: Stack warning and slider */
       justify-content: center;
       align-items: center;
     }
@@ -232,6 +233,18 @@
       width: 100%;
     }
 
+    #usp-bar-container-{{ block.id }} .usp-limit-message {
+      text-align: center;
+      color: #e74c3c;
+      padding: 8px 16px;
+      background-color: #fef3cd;
+      border: 1px solid #ffc107;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      width: 100%;
+      font-size: 14px;
+    }
+
     /* Slider navigation */
     #usp-bar-container-{{ block.id }} .usp-nav-btn {
       position: absolute;
@@ -333,12 +346,13 @@
         }
        
        let allItems = [];
-       let itemsWithClones = [];
-       let currentIndex = 0; 
-       let itemsPerView = calculateItemsPerView();
-       let autoSlideInterval = null;
-       let designSettings = null;
-       let isTransitioning = false;
+        let itemsWithClones = [];
+        let currentIndex = 0; 
+        let itemsPerView = calculateItemsPerView();
+        let autoSlideInterval = null;
+        let designSettings = null;
+        let isTransitioning = false;
+        let limitExceeded = false;
 
        const defaultDesignSettings = {
          backgroundColor: '#f8f9fa',
@@ -381,62 +395,103 @@
        async function fetchUspBarData() {
          const slider = document.getElementById('usp-slider-' + blockId);
          const container = document.getElementById('usp-bar-container-' + blockId);
-         
-         try {
-           const response = await fetch(`${apiUrl}/api/usp-slider/public/${shop}`);
-           const result = await response.json();
-           
-           if (result.success && result.data && result.data.length > 0) {
-             allItems = result.data;
+         const shopDomain = Shopify.shop;
 
-              /* FIXED: Check if ANY item should show on current page */
-             /* We filter to only show items that match the current page, then render them */
-             const visibleItems = allItems.filter(item => {
-               const itemPageDisplay = item.page_display || ['all'];
-               return shouldShowWidget(itemPageDisplay);
-             });
-             
-             if (visibleItems.length === 0) {
-               console.log('USP Bar: No items should show on this page based on page_display settings');
-               container.style.display = 'none';
-               return;
-             }
-             
-             /* Use only the visible items */
-             allItems = visibleItems;
-             
-             /* Get design settings from the first visible item */
-             designSettings = allItems[0].designSettings || defaultDesignSettings;
-             
-             /* Get page_display setting from the first visible item - for reference */
-             pageDisplay = allItems[0].page_display || ['all'];
-             
-             designSettings = allItems[0].designSettings || defaultDesignSettings;
-             applyDesignSettings(container);
-              container.style.display = 'flex'; // Centering requires flex
-             renderUspBar();
-           } else {
-             if (result.message && result.message === "Monthly view limit exceeded.") {
-                showToast(result.message);
+         try {
+          const url = `${apiUrl}/api/usp-slider/public/${shopDomain}`
+           const response = await fetch(url);
+           const result = await response.json();
+            console.log('Fetching from:', url);  // Add this line
+           
+            if (result.message && result.message.includes("limit")) {
+              limitExceeded = true;
+            }
+
+            if (result.success && result.data && result.data.length > 0) {
+              allItems = result.data;
+
+               /* FIXED: Check if ANY item should show on current page */
+              /* We filter to only show items that match the current page, then render them */
+              const visibleItems = allItems.filter(item => {
+                const itemPageDisplay = item.page_display || ['all'];
+                return shouldShowWidget(itemPageDisplay);
+              });
+              
+              if (visibleItems.length === 0 && !limitExceeded) {
+                console.log('USP Bar: No items should show on this page based on page_display settings');
                 container.style.display = 'none';
-              } else {
-                slider.innerHTML = '<div class="usp-empty">No USP items to display</div>';
-                container.style.display = 'block';
+                return;
               }
-           }
+              
+              /* Use only the visible items */
+              allItems = visibleItems.length > 0 ? visibleItems : allItems;
+              
+              /* Get design settings from the first item */
+              designSettings = allItems[0].designSettings || defaultDesignSettings;
+              
+              /* Get page_display setting from the first item - for reference */
+              pageDisplay = allItems[0].page_display || ['all'];
+              
+              applyDesignSettings(container);
+              container.style.display = 'flex'; // Centering requires flex
+              
+              if (limitExceeded) {
+                // Add warning message BEFORE the slider
+                const barContent = container.querySelector('.usp-bar-content');
+                const existingWarning = barContent.querySelector('.usp-limit-message');
+                if (!existingWarning && barContent) {
+                  const warningDiv = document.createElement('div');
+                  warningDiv.className = 'usp-limit-message';
+                  warningDiv.style.cssText = 'width: 100%; padding: 8px 16px; background-color: #da5e71; border: 1px solid #ffc107; border-radius: 4px; margin: 10px 0; text-align: center; font-size: 14px; color: #ffffff; font-family: sans-serif; display: block !important;';
+                  warningDiv.innerHTML = '⚠️ Monthly view limit reached. Upgrade your plan for unlimited views. Developed by <a href="https://ecodesoft.com/" target="_blank" style="color: #ffffff; text-decoration: underline;">eCodeSoft Solutions</a>';
+                  barContent.insertBefore(warningDiv, barContent.firstChild);
+                }
+              }
+
+              renderUspBar();
+            } else if (limitExceeded) {
+              allItems = result.data || [];
+              console.log('Limit exceeded - items:', allItems.length);
+              if (allItems.length > 0) {
+                // Show all items without page_display filter when limit exceeded
+                designSettings = allItems[0].designSettings || defaultDesignSettings;
+                applyDesignSettings(container);
+                container.style.display = 'flex';
+                
+                // Add warning message BEFORE the slider
+                const barContent = container.querySelector('.usp-bar-content');
+                const existingWarning = barContent.querySelector('.usp-limit-message');
+                if (!existingWarning && barContent) {
+                  const warningDiv = document.createElement('div');
+                  warningDiv.className = 'usp-limit-message';
+                  warningDiv.style.cssText = 'width: 100%; padding: 8px 16px; background-color: #fef3cd; border: 1px solid #ffc107; border-radius: 4px; margin: 10px 0; text-align: center; font-size: 14px; color: #856404; font-family: sans-serif; display: block !important;';
+                  warningDiv.innerHTML = '⚠️ Monthly view limit reached. Upgrade your plan for unlimited views. Developed by <a href="https://ecodesoft.com/" target="_blank" style="color: #856404; text-decoration: underline;">eCodeSoft Solutions</a>';
+                  barContent.insertBefore(warningDiv, barContent.firstChild);
+                }
+                
+                renderUspBar();
+              } else {
+                slider.innerHTML = '<div class="usp-empty">USP Bar temporarily unavailable. Please upgrade your plan for unlimited views.</div>';
+                container.style.display = 'flex';
+              }
+            } else {
+               slider.innerHTML = '<div class="usp-empty">No USP items to display</div>';
+               container.style.display = 'flex';
+            }
          } catch (error) {
-           console.error('Error fetching USP Bar data:', error);
-           slider.innerHTML = '<div class="usp-error">Failed to load USP Bar</div>';
-           container.style.display = 'block';
+            console.error('Error fetching USP Bar data:', error);
+            slider.innerHTML = '<div class="usp-error">Failed to load USP Bar</div>';
+            container.style.display = 'flex';
          }
        }
 
        function renderUspBar() {
         if (allItems.length === 0) return;
         
-        itemsPerView = calculateItemsPerView();
-        const slider = document.getElementById('usp-slider-' + blockId);
         const container = document.getElementById('usp-bar-container-' + blockId);
+        const slider = document.getElementById('usp-slider-' + blockId);
+        
+        itemsPerView = calculateItemsPerView();
         
         if (allItems.length <= itemsPerView) {
           container.classList.remove('has-slider');
