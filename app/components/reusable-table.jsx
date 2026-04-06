@@ -240,7 +240,7 @@ const ReusableTable = ({
             fontWeight: 500,
           }}
         >
-          {isEnabled ? "Enabled" : "Disabled"}
+          {isEnabled ? "Active" : "Inactive"}
         </Box>
       );
     }
