@@ -31,6 +31,7 @@ import Tab from "@mui/material/Tab";
 import ConfirmDialog from "../../ui/confirmation-dialog";
 // import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { uspBarColumns, uspBarActions } from "./columns-config";
+import { useNavigate } from "react-router";
 
 const UspBarList = (props) => {
   const { appEmbedEnabled, session } = props;
@@ -40,8 +41,7 @@ const UspBarList = (props) => {
     message: "",
     severity: "success",
   });
-
-  const [metrics, setMetrics] = React.useState(null);
+  const navigate = useNavigate();
 
   // Filter state
   const [filter, setFilter] = React.useState("all"); // "all", "active", "inactive"
@@ -101,16 +101,27 @@ const UspBarList = (props) => {
     setBulkMenuAnchor(null);
   };
 
-  React.useEffect(() => {
-    const planName = props?.subscription?.name || "Free";
-    syncStoreMetrics(planName)
-      .then((res) => {
-        if (res?.success && res?.data) {
-          setMetrics(res.data);
-        }
-      })
-      .catch(console.error);
-  }, [props.subscription]);
+  const planName = props?.subscription?.name || "Free";
+  const {
+    data: UspBarViewSyncData,
+    isLoading: UspBarViewSyncLoading,
+    error: UspBarViewSynError,
+  } = useUspBarData(
+    ["usp-bar-view-sync"],
+    () => syncStoreMetrics(planName),
+    null,
+  );
+
+  // React.useEffect(() => {
+  //   const planName = props?.subscription?.name || "Free";
+  //   syncStoreMetrics(planName)
+  //     .then((res) => {
+  //       if (res?.success && res?.data) {
+  //         setMetrics(res.data);
+  //       }
+  //     })
+  //     .catch(console.error);
+  // }, [props.subscription]);
 
   // Current Session
   const {
@@ -159,6 +170,8 @@ const UspBarList = (props) => {
     setSnackbar,
     { invalidateKeys: [["usp-bar"]] },
   );
+
+  const isLimitExceeded = String(UspBarViewSynError).includes("limit");
 
   // Handle bulk delete - show confirmation
   const handleBulkDeleteClick = () => {
@@ -295,6 +308,73 @@ const UspBarList = (props) => {
         </Box>
       )}
 
+      {/* Fallback for view limit reached */}
+      {isLimitExceeded && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            mt: appEmbedEnabled ? 3 : 0, // Add margin if theme warning is not present
+          }}
+        >
+          <Box
+            sx={{
+              p: 3,
+              mb: 3,
+              borderRadius: 2,
+              bgcolor: "#fff3cd",
+              border: "1px solid #ffeeba",
+              display: "flex",
+              flexDirection: "column",
+              gap: 1.5,
+              maxWidth: 550,
+              width: "100%",
+              boxShadow: 1,
+            }}
+          >
+            <Typography
+              variant="body2"
+              color="#856404"
+              fontWeight={600}
+              textAlign="center"
+              fontSize={18}
+            >
+              ⚠️ Monthly View Limit Reached
+            </Typography>
+            <Typography
+              variant="body2"
+              color="#856404"
+              textAlign="center"
+              sx={{
+                letterSpacing: "0.30px",
+                fontSize: 13,
+              }}
+            >
+              Your USP Bar has reached its monthly view limit. To keep
+              displaying your announcements to customers, please upgrade your
+              plan. Unlimited views are available on our premium plans.
+            </Typography>
+            <Button
+              variant="contained"
+              color="warning"
+              size="small"
+              fullWidth
+              sx={{
+                textTransform: "none",
+                mt: 1,
+                backgroundColor: "#856404",
+                "&:hover": { backgroundColor: "#6d5203" },
+              }}
+              onClick={() => navigate("/app/plans")}
+            >
+              Explore Plans
+            </Button>
+          </Box>
+        </Box>
+      )}
+
       {/* USP Bar List */}
       <Box sx={{ p: 4 }}>
         <Stack
@@ -314,7 +394,7 @@ const UspBarList = (props) => {
                 textAlign: { xs: "center", sm: "left" },
               }}
             >
-              USP Bar List
+              Usp Bar List
             </Typography>
           )}
           {(UspBarListData?.data?.length || 0) < 10 && (
@@ -335,13 +415,13 @@ const UspBarList = (props) => {
                 },
               }}
             >
-              Create USP Bar
+              New bar
             </Button>
           )}
         </Stack>
-
         {/* View Limit Progress */}
-        {metrics && props?.subscription !== undefined && (
+        {/* && props?.subscription !== undefined */}
+        {true === UspBarViewSyncData?.success && (
           <Box
             sx={{
               mb: 3,
@@ -352,17 +432,25 @@ const UspBarList = (props) => {
             }}
           >
             <Typography variant="body2" sx={{ mb: 1, color: "#202223" }}>
-              You're currently on <strong>{metrics.planName}</strong> (
-              {metrics.viewsCount} /{" "}
-              {metrics.limit === -1 ? "Unlimited" : metrics.limit} monthly
-              views). One visitor can have multiple views per session.
+              You're currently on{" "}
+              <strong>{UspBarViewSyncData.data.planName}</strong> (
+              {UspBarViewSyncData.data.viewsCount} /{" "}
+              {UspBarViewSyncData.data.limit === -1
+                ? "Unlimited"
+                : UspBarViewSyncData.data.limit}{" "}
+              monthly views). One visitor can have multiple views per session.
             </Typography>
             <LinearProgress
               variant="determinate"
               value={
-                metrics.limit === -1
+                UspBarViewSyncData.data.limit === -1
                   ? 0
-                  : Math.min((metrics.viewsCount / metrics.limit) * 100, 100)
+                  : Math.min(
+                      (UspBarViewSyncData.data.viewsCount /
+                        UspBarViewSyncData.data.limit) *
+                        100,
+                      100,
+                    )
               }
               sx={{
                 height: 8,
@@ -375,7 +463,6 @@ const UspBarList = (props) => {
             />
           </Box>
         )}
-
         {/* Filter Tabs */}
         <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 2 }}>
           <Tabs
@@ -386,18 +473,23 @@ const UspBarList = (props) => {
             <Tab
               label={`All (${UspBarListData?.data?.length || 0})`}
               value="all"
+              disableTypography
+              sx={{ textTransform: "none" }}
             />
             <Tab
               label={`Active (${UspBarListData?.data?.filter((item) => item.enabled === true).length || 0})`}
               value="active"
+              disableTypography
+              sx={{ textTransform: "none" }}
             />
             <Tab
               label={`Inactive (${UspBarListData?.data?.filter((item) => item.enabled === false).length || 0})`}
               value="inactive"
+              disableTypography
+              sx={{ textTransform: "none" }}
             />
           </Tabs>
         </Box>
-
         {/* Bulk Actions Bar */}
         {selectedIds.length > 0 && (
           <Box
@@ -465,7 +557,6 @@ const UspBarList = (props) => {
             </Box>
           </Box>
         )}
-
         {/* Table which manage all list data */}
         <ReusableTable
           data={getFilteredData()}
@@ -485,7 +576,6 @@ const UspBarList = (props) => {
           onSelectOne={handleSelectOne}
           showCheckbox={true}
         />
-
         {/* Bulk Delete Confirmation Dialog */}
         <ConfirmDialog
           open={bulkDeleteDialogOpen}
