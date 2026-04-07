@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 // import Snackbar from "@mui/material/Snackbar";
 // import Alert from "@mui/material/Alert";
 import ReusableTable from "../../components/reusable-table";
@@ -223,6 +223,16 @@ const UspBarList = (props) => {
       );
     }
   };
+  
+  useEffect(() => {
+    if (isLimitExceeded) {
+      setSnackbar({
+        open: true,
+        message: String(UspBarViewSynError),
+        severity: "error",
+      });
+    }
+  }, [isLimitExceeded]);
 
   if (UspBarListLoading) {
     return <Loader />;
@@ -309,7 +319,7 @@ const UspBarList = (props) => {
       )}
 
       {/* Fallback for view limit reached */}
-      {isLimitExceeded && (
+      {/* {isLimitExceeded && (
         <Box
           sx={{
             display: "flex",
@@ -373,7 +383,7 @@ const UspBarList = (props) => {
             </Button>
           </Box>
         </Box>
-      )}
+      )} */}
 
       {/* USP Bar List */}
       <Box sx={{ p: 4 }}>
