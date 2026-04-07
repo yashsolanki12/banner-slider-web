@@ -88,6 +88,7 @@ const UspBarForm = ({ id, heading }) => {
     },
     useCustomColorSettings: false,
     page_display: ["all"],
+    enabled: false,
   });
 
   // Usp Bar List - Show toast for list API messages
@@ -163,6 +164,7 @@ const UspBarForm = ({ id, heading }) => {
           useCustomColorSettings:
             UspBarDetailData?.data?.useCustomColorSettings || false,
           page_display: UspBarDetailData?.data?.page_display || ["all"],
+          enabled: UspBarDetailData?.data?.enabled || false,
           designSettings: {
             backgroundColor:
               UspBarDetailData?.data?.designSettings?.backgroundColor ||
@@ -435,6 +437,18 @@ const UspBarForm = ({ id, heading }) => {
           >
             {heading || (isEditMode ? "Edit USP Bar" : "Create USP Bar")}
           </Typography>
+          <Box
+            sx={{
+              bgcolor: formData.enabled ? "#dcfce7" : "#feeded",
+              color: formData.enabled ? "#44895e" : "#d17688",
+              px: 1,
+              py: "5px",
+              borderRadius: "7px",
+              fontSize: "12px",
+            }}
+          >
+            {formData.enabled ? "Active" : "Inactive"}
+          </Box>
         </Box>
       </Box>
 
@@ -514,7 +528,7 @@ const UspBarForm = ({ id, heading }) => {
                       color: "#6b7280",
                       mb: 0.5,
                       display: "block",
-                      fontSize: "16px",
+                      fontSize: "14px",
                     }}
                   >
                     Title *
@@ -552,7 +566,7 @@ const UspBarForm = ({ id, heading }) => {
                       color: "#6b7280",
                       mb: 0.5,
                       display: "block",
-                      fontSize: "16px",
+                      fontSize: "14px",
                     }}
                   >
                     Description
@@ -591,10 +605,10 @@ const UspBarForm = ({ id, heading }) => {
                       color: "#6b7280",
                       mb: 0.5,
                       display: "block",
-                      fontSize: "16px",
+                      fontSize: "14px",
                     }}
                   >
-                    Display On Pages (Optional)
+                    Display on pages (optional)
                   </Typography>
                   <FormControl
                     size="small"
@@ -684,7 +698,7 @@ const UspBarForm = ({ id, heading }) => {
                         <Checkbox
                           checked={formData.page_display.includes("catalog")}
                         />
-                        <ListItemText primary="Collections Page" />
+                        <ListItemText primary="Collection Page" />
                       </MenuItem>
                       <MenuItem value="contact">
                         <Checkbox
@@ -704,10 +718,10 @@ const UspBarForm = ({ id, heading }) => {
                       color: "#6b7280",
                       mb: 0.5,
                       display: "block",
-                      fontSize: "16px",
+                      fontSize: "14px",
                     }}
-                  >1
-                    Icon (Optional)
+                  >
+                    Icon (optional)
                   </Typography>
                   <Box
                     sx={{
@@ -866,7 +880,7 @@ const UspBarForm = ({ id, heading }) => {
 
                       {/* Icon Color */}
                       <ColorPicker
-                        label="Icon Color"
+                        label="Icon color"
                         name="designSettings.iconColor"
                         value={formData.designSettings?.iconColor || "#0a0a0a"}
                         onChange={handleChange}
@@ -874,7 +888,7 @@ const UspBarForm = ({ id, heading }) => {
 
                       {/* Item Background Color */}
                       <ColorPicker
-                        label="Item Background Color"
+                        label="Item background color"
                         name="designSettings.itemBackgroundColor"
                         value={
                           formData.designSettings?.itemBackgroundColor ||
@@ -885,7 +899,7 @@ const UspBarForm = ({ id, heading }) => {
 
                       {/* Title Color */}
                       <ColorPicker
-                        label="Title Color"
+                        label="Title color"
                         name="designSettings.titleColor"
                         value={formData.designSettings?.titleColor || "#333333"}
                         onChange={handleChange}
@@ -893,7 +907,7 @@ const UspBarForm = ({ id, heading }) => {
 
                       {/* Description Color */}
                       <ColorPicker
-                        label="Description Color"
+                        label="Description color"
                         name="designSettings.descriptionColor"
                         value={
                           formData.designSettings?.descriptionColor || "#666666"
@@ -914,7 +928,7 @@ const UspBarForm = ({ id, heading }) => {
 
                       {/* Border Color */}
                       <ColorPicker
-                        label="Item Border Right Color"
+                        label="Item border right color"
                         name="designSettings.itemBorderRightColor"
                         value={
                           formData.designSettings?.itemBorderRightColor ||
@@ -1001,14 +1015,15 @@ const UspBarForm = ({ id, heading }) => {
                   textTransform: "none",
                   borderRadius: "6px",
                   fontWeight: 600,
-                  padding: "7px 18px",
+                  p: "1px 16px",
+                  // padding: "6px 15px",
                   width: { xs: "100%", sm: "auto" },
                 }}
               >
                 {isSubmitting ? (
                   <CircularProgress size={20} color="success" />
                 ) : isEditMode ? (
-                  "Save Changes"
+                  "Save"
                 ) : (
                   "Create"
                 )}
