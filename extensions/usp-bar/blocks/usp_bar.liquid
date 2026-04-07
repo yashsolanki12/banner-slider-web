@@ -459,7 +459,7 @@
        function showToast(message) {
          const toast = document.createElement('div');
          toast.textContent = message;
-         toast.style.cssText = 'position: fixed; top: 60px; right: 20px; background: #a5dc86; color: black; padding: 12px 20px; border-radius: 6px; z-index: 2147483647; font-family: sans-serif; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); opacity: 0; transition: opacity 0.3s ease-in-out; pointer-events: none;';
+         toast.style.cssText = 'position: fixed; top: 60px; right: 20px; background: #f36060; color: white; padding: 12px 20px; border-radius: 6px; z-index: 2147483647; font-family: sans-serif; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); opacity: 0; transition: opacity 0.3s ease-in-out; pointer-events: none;';
          document.body.appendChild(toast);
          
          requestAnimationFrame(() => {
@@ -480,7 +480,55 @@
          try {
            const response = await fetch(`${apiUrl}/api/usp-slider/public/${shopDomain}`);
            const result = await response.json();
-           
+
+             
+           if (result.success && result.data && result.data.length > 0) {
+             allItems = result.data;
+            
+             
+             /* FIXED: Check if ANY item should show on current page */
+             /* We filter to only show items that match the current page, then render them */
+             const visibleItems = allItems.filter(item => {
+               const itemPageDisplay = item.page_display || ['all'];
+               return shouldShowWidget(itemPageDisplay);
+             });
+             
+             if (visibleItems.length === 0) {
+               console.log('USP Bar: No items should show on this page based on page_display settings');
+               container.style.display = 'none';
+               return;
+             }
+             
+             /* Use only the visible items */
+             allItems = visibleItems;
+             
+             /* Get design settings from the first visible item */
+             designSettings = allItems[0].designSettings || defaultDesignSettings;
+             
+             /* Get page_display setting from the first visible item - for reference */
+             pageDisplay = allItems[0].page_display || ['all'];
+             
+             applyDesignSettings(container);
+             container.style.display = 'flex'; /* MOD: Centering requires flex */
+             renderUspBar();
+           } else {
+             if (result.message) {
+              console.log("res",result)
+               showToast(result.message);
+               container.style.display = 'none';
+             } else {
+               slider.innerHTML = '<div class="usp-empty">No USP items to display</div>';
+               container.style.display = 'flex'; /* MOD: Centering requires flex even for empty state*/
+             }
+           }
+         } catch (error) {
+           console.error('Error fetching USP Bar data:', error);
+           slider.innerHTML = '<div class="usp-error">Failed to load USP Bar</div>';
+           container.style.display = 'flex'; /* MOD: Centering requires flex even for error state */
+         }
+       }
+
+         {% comment %}            
            if (result.message && result.message.includes("limit")) {
              limitExceeded = true;
            }
@@ -527,7 +575,8 @@
               }
               
               renderUspBar();
-            } else if (limitExceeded) {
+            } 
+            else if (limitExceeded) {
               allItems = result.data || [];
               if (allItems.length > 0) {
                 designSettings = allItems[0].designSettings || defaultDesignSettings;
@@ -544,10 +593,11 @@
                   barContent.insertBefore(warningDiv, barContent.firstChild);
                 }
                 renderUspBar();
-              } else {
-                slider.innerHTML = '<div class="usp-empty">USP Bar temporarily unavailable. Please upgrade your plan for unlimited views.</div>';
-                container.style.display = 'flex';
-              }
+              } 
+              else {
+               slider.innerHTML = '<div class="usp-empty">USP Bar temporarily unavailable. Please upgrade your plan for unlimited views.</div>';
+                container.style.display = 'flex'; 
+                
             } else {
               slider.innerHTML = '<div class="usp-empty">No USP items to display</div>';
               container.style.display = 'flex'; /* MOD: Centering requires flex even for empty state*/
@@ -557,7 +607,7 @@
            slider.innerHTML = '<div class="usp-error">Failed to load USP Bar</div>';
            container.style.display = 'flex'; /* MOD: Centering requires flex even for error state */
          }
-       }
+       } {% endcomment %}
 
 
        function prepareItemsWithClones() {
