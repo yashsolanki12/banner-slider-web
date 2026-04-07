@@ -138,7 +138,7 @@ const GlobalColorSettingsListPage = () => {
         >
           {/* Background Color */}
           <ColorPicker
-            label="Bar Background Color"
+            label="Bar background color"
             name="designSettings.backgroundColor"
             value={formData.backgroundColor || "#f8f9fa"}
             onChange={handleChange}
@@ -146,7 +146,7 @@ const GlobalColorSettingsListPage = () => {
 
           {/* Icon Color */}
           <ColorPicker
-            label="Icon Color"
+            label="Icon color"
             name="designSettings.iconColor"
             value={formData.iconColor || "#050505"}
             onChange={handleChange}
@@ -154,7 +154,7 @@ const GlobalColorSettingsListPage = () => {
 
           {/* Item Background Color */}
           <ColorPicker
-            label="Item Background Color"
+            label="Item background color"
             name="designSettings.itemBackgroundColor"
             value={formData.itemBackgroundColor || "#ffffff"}
             onChange={handleChange}
@@ -162,7 +162,7 @@ const GlobalColorSettingsListPage = () => {
 
           {/* Title Color */}
           <ColorPicker
-            label="Title Color"
+            label="Title color"
             name="designSettings.titleColor"
             value={formData.titleColor || "#333333"}
             onChange={handleChange}
@@ -170,7 +170,7 @@ const GlobalColorSettingsListPage = () => {
 
           {/* Description Color */}
           <ColorPicker
-            label="Description Color"
+            label="Description color"
             name="designSettings.descriptionColor"
             value={formData.descriptionColor || "#666666"}
             onChange={handleChange}
@@ -186,7 +186,7 @@ const GlobalColorSettingsListPage = () => {
 
           {/* Item Border Right Color */}
           <ColorPicker
-            label="Item Border Right Color"
+            label="Item border right color"
             name="designSettings.itemBorderRightColor"
             value={formData.itemBorderRightColor || "#000000"}
             onChange={handleChange}
@@ -202,7 +202,7 @@ const GlobalColorSettingsListPage = () => {
                 fontSize: "14px",
               }}
             >
-              Slider Speed (seconds): {formData.slideSpeed || 4}
+              Slider speed (seconds): {formData.slideSpeed || 4}
             </Typography>
             <Slider
               value={formData.slideSpeed || 4}
@@ -261,7 +261,7 @@ const GlobalColorSettingsListPage = () => {
           {isSubmitting ? (
             <CircularProgress size={20} color="success" />
           ) : (
-            "Save Changes"
+            "Save"
           )}
         </Button>
       </Box>

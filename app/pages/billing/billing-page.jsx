@@ -40,7 +40,7 @@ const BillingPage = ({ shop, submit, actionData }) => {
         }
       })
       .catch((error) => {
-        console.error('Sync error:',error)
+        console.error("Sync error:", error);
       });
   }, [shop.subscription]);
 
@@ -179,7 +179,8 @@ const BillingPage = ({ shop, submit, actionData }) => {
                     textTransform: "none",
                     borderRadius: "6px",
                     fontWeight: 600,
-                    padding: { xs: "10px 18px", sm: "7px 18px" },
+                    fontSize: "13px",
+                    padding: { xs: "10px 18px", sm: "5px 10px" },
                     textDecoration: "none",
                     width: { xs: "100%", sm: "auto" },
                     "&:hover": {
@@ -188,7 +189,7 @@ const BillingPage = ({ shop, submit, actionData }) => {
                   }}
                   onClick={handleChangePlan}
                 >
-                  Change Plan
+                  Change plan
                 </Button>
                 <Button
                   variant="contained"
@@ -198,7 +199,8 @@ const BillingPage = ({ shop, submit, actionData }) => {
                     textTransform: "none",
                     borderRadius: "6px",
                     fontWeight: 600,
-                    padding: { xs: "10px 18px", sm: "7px 18px" },
+                    fontSize: "13px",
+                    padding: { xs: "10px 18px", sm: "5px 10px" },
                     textDecoration: "none",
                     width: { xs: "100%", sm: "auto" },
                     border: "1px solid #ddd",
@@ -208,7 +210,7 @@ const BillingPage = ({ shop, submit, actionData }) => {
                   }}
                   onClick={() => setCancelPlanDialogOpen(true)}
                 >
-                  Cancel Plan
+                  Cancel plan
                 </Button>
               </Box>
             </CardContent>
