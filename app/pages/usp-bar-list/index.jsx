@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
-// import Snackbar from "@mui/material/Snackbar";
-// import Alert from "@mui/material/Alert";
+import React from "react";
+
 import ReusableTable from "../../components/reusable-table";
 import SafeLink from "../../helper/safe-link";
 import Box from "@mui/material/Box";
@@ -23,15 +22,12 @@ import {
 } from "../../api/usp-bar";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-// import Checkbox from "@mui/material/Checkbox";
-// import FormControlLabel from "@mui/material/FormControlLabel";
-// import Menu from "@mui/material/Menu";
-// import MenuItem from "@mui/material/MenuItem";
-// import IconButton from "@mui/material/IconButton";
 import ConfirmDialog from "../../ui/confirmation-dialog";
-// import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { uspBarColumns, uspBarActions } from "./columns-config";
+import Warning from "@mui/icons-material/Warning";
 import { useNavigate } from "react-router";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 
 const UspBarList = (props) => {
   const { appEmbedEnabled, session } = props;
@@ -224,8 +220,18 @@ const UspBarList = (props) => {
     }
   };
 
-  useEffect(() => {
-    if (isLimitExceeded) {
+  const navigateAppEmbed = () => {
+    const currentShop =
+      session?.shop ||
+      UspBarCurrentSessionData?.session?.shop ||
+      new URLSearchParams(window.location.search).get("shop") ||
+      window.location.hostname;
+    const url = `https://${currentShop}/admin/themes/current/editor?context=apps`;
+    window.open(url, "_blank");
+  };
+
+  React.useEffect(() => {
+    if (isLimitExceeded && props?.subscription !== undefined) {
       setSnackbar({
         open: true,
         message: String(UspBarViewSynError),
@@ -241,80 +247,79 @@ const UspBarList = (props) => {
     <>
       {/* Fallback dialog for enable theme */}
       {!appEmbedEnabled && (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center", // Horizontal centering
-            alignItems: "center", // Vertical centering
-            width: "100%", // Takes full width
-          }}
-        >
-          {!appEmbedEnabled && (
-            <Box
-              sx={{
-                p: 3,
-                mb: 3,
-                borderRadius: 2,
-                bgcolor: "error.lighter",
-                border: "1px solid",
-                borderColor: "error.light",
-                display: "flex",
-                flexDirection: "column",
-                gap: 1.5,
-                maxWidth: 550,
-                width: "100%",
-                boxShadow: 1,
-                backgroundColor: "#ebebeb",
-              }}
-            >
-              <Typography
-                variant="body2"
-                color="error.dark"
-                fontWeight={600}
-                textAlign="center"
-                fontSize={18}
-              >
-                ⚠️ USP Bar Widget is Currently Inactive
-              </Typography>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                textAlign="center"
+        <Box sx={{ p: 4 }}>
+          <Card sx={{ borderRadius: "10px", boxShadow: 2 }}>
+            <CardContent sx={{ p: { xs: 2, sm: 2 } }}>
+              {/* Header/Warning Bar */}
+              <Box
                 sx={{
-                  color: "black",
-                  letterSpacing: "0.30px",
-                  textJustify: "inter-character",
-                  fontSize: 13,
+                  backgroundColor: "#ffb800",
+                  borderRadius: "5px",
+                  p: { xs: 1.5, sm: 2 },
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1.5,
+                  mb: 2,
                 }}
               >
-                To activate your USP Bar, please first define your custom
-                titles, descriptions, and brand styling using the configuration
-                settings below. Once your design is finalized, you must navigate
-                to the Shopify Theme Editor to enable the App Embed for this
-                application. This step is required to integrate the bar into
-                your live storefront and ensure your unique selling propositions
-                are professionally displayed to your customers.
+                <Warning sx={{ fontSize: { xs: 20, sm: 24 }, flexShrink: 0 }} />
+                <Typography
+                  variant="h6"
+                  component="span"
+                  sx={{
+                    color: "#232220",
+                    fontSize: { xs: "0.95rem", sm: "1rem" },
+                    fontWeight: 700,
+                    lineHeight: 1.2,
+                  }}
+                >
+                  Usp bar is not activated yet.
+                </Typography>
+              </Box>
+
+              {/* Instruction Text */}
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "#6d7175",
+                  fontSize: { xs: "0.85rem", sm: "1rem" },
+                  mb: 2,
+                }}
+              >
+                <span style={{ fontSize: "14px" }}>
+                  Please activate the app by clicking{" "}
+                </span>
+                <Box
+                  component="span"
+                  sx={{ fontWeight: 700, color: "black", fontSize: "14px" }}
+                >
+                  'Activate'
+                </Box>{" "}
+                button.
               </Typography>
+
+              {/* Action Button */}
               <Button
                 variant="contained"
-                color="error"
-                size="small"
-                fullWidth
-                onClick={() => {
-                  const currentShop =
-                    session?.shop ||
-                    UspBarCurrentSessionData?.session?.shop ||
-                    new URLSearchParams(window.location.search).get("shop") ||
-                    window.location.hostname;
-                  const url = `https://${currentShop}/admin/themes/current/editor?context=apps`;
-                  window.open(url, "_blank");
+                fullWidth={{ xs: true, sm: false }} // Auto-stretches on mobile
+                sx={{
+                  backgroundColor: "#202223",
+                  color: "white",
+                  textTransform: "none",
+                  borderRadius: "6px",
+                  fontWeight: 600,
+                  p: "5px 10px",
+                  fontSize: "13px",
+                  "&:hover": {
+                    backgroundColor: "#303030",
+                  },
                 }}
-                sx={{ textTransform: "none", mt: 1 }}
+                onClick={navigateAppEmbed}
               >
-                Enable in Theme Editor
+                Activate
               </Button>
-            </Box>
-          )}
+            </CardContent>
+          </Card>
         </Box>
       )}
 
