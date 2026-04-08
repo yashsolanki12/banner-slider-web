@@ -254,7 +254,7 @@ const GlobalColorSettingsListPage = () => {
             textTransform: "none",
             borderRadius: "6px",
             fontWeight: 600,
-            padding: "7px 18px",
+            padding: "5px 10px",
             width: { xs: "100%", sm: "auto" },
           }}
         >

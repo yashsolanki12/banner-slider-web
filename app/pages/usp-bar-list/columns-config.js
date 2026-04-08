@@ -8,7 +8,7 @@ export const uspBarColumns = [
     key: "title",
     label: "Title",
     type: "tooltip",
-    maxWidth: 200,
+    maxWidth: 150,
     tooltipFontSize: "12px",
   },
   {
@@ -17,7 +17,7 @@ export const uspBarColumns = [
     // align: "center",
     type: "tooltip",
     maxWidth: 400,
-    tooltipFontSize: "1rem",
+    tooltipFontSize: "12px",
     render: (value) => value || "-",
   },
   {
