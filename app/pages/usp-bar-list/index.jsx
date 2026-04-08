@@ -97,7 +97,7 @@ const UspBarList = (props) => {
     setBulkMenuAnchor(null);
   };
 
-  const planName = props?.subscription?.name || "Free";
+  const planName = props?.subscription ? props?.subscription.name || "Free" : "No Plan";
   const {
     data: UspBarViewSyncData,
     isLoading: UspBarViewSyncLoading,

@@ -20,7 +20,9 @@ const BillingPage = ({ shop, submit, actionData }) => {
     severity: "success",
   });
   const [cancelPlanDialogOpen, setCancelPlanDialogOpen] = React.useState(false);
-  const planName = shop?.subscription?.name || "Free";
+  const planName = shop?.subscription
+    ? shop.subscription.name || "Free"
+    : "No Plan";
 
   // store-metrics
   const {
@@ -71,8 +73,20 @@ const BillingPage = ({ shop, submit, actionData }) => {
       setSnackbar({
         open: true,
         message: actionData.message || "Operation completed",
-        severity: actionData.success ? "success" : "error",
+        severity: actionData?.success ? "success" : "error",
       });
+    }
+    // If plan was cancelled successfully, sync store metrics with empty plan
+    if (actionData?.success && actionData.message?.includes("cancelled")) {
+      console.log("Cancelling plan, syncing metrics...");
+      syncStoreMetrics("No Plan")
+        // .then(() => {
+        //   console.log("Metrics synced, reloading...");
+        //   window.location.reload();
+        // })
+        .catch((err) => {
+          console.error("Error syncing metrics:", err);
+        });
     }
   }, [actionData]);
 
@@ -106,57 +120,66 @@ const BillingPage = ({ shop, submit, actionData }) => {
           </Typography>
         </Stack>
       </Box>
-      <Box>
-        {true === uspBarStoreMetricsData?.success &&
-          shop?.subscription !== undefined && (
-            <Box
-              sx={{
-                mb: 3,
-                p: 2,
-                border: "1px solid #e0e0e0",
-                borderRadius: "8px",
-                backgroundColor: "#fff",
-              }}
-            >
-              <Typography
-                variant="body2"
+      <Box
+        sx={{
+          width: "100%",
+          maxWidth: { xs: "100%" },
+          mx: "auto",
+        }}
+      >
+        <Box>
+          {true === uspBarStoreMetricsData?.success &&
+            shop?.subscription !== undefined && (
+              <Box
                 sx={{
-                  mb: 1,
-                  color: "#202223",
-                  wordBreak: "break-word",
+                  mb: 3,
+                  p: 2,
+                  border: "1px solid #e0e0e0",
+                  borderRadius: "8px",
+                  backgroundColor: "#fff",
                 }}
               >
-                You're currently on{" "}
-                <strong>{uspBarStoreMetricsData?.data.planName}</strong> (
-                {uspBarStoreMetricsData?.data.viewsCount} /{" "}
-                {uspBarStoreMetricsData?.data.limit === -1
-                  ? "Unlimited"
-                  : uspBarStoreMetricsData?.data.limit}{" "}
-                monthly views). One visitor can have multiple views per session.
-              </Typography>
-              <LinearProgress
-                variant="determinate"
-                value={
-                  uspBarStoreMetricsData?.data.limit === -1
-                    ? 0
-                    : Math.min(
-                        (uspBarStoreMetricsData?.data.viewsCount /
-                          uspBarStoreMetricsData?.data.limit) *
+                <Typography
+                  variant="body2"
+                  sx={{
+                    mb: 1,
+                    color: "#202223",
+                    wordBreak: "break-word",
+                  }}
+                >
+                  You're currently on{" "}
+                  <strong>{uspBarStoreMetricsData?.data.planName}</strong> (
+                  {uspBarStoreMetricsData?.data.viewsCount} /{" "}
+                  {uspBarStoreMetricsData?.data.limit === -1
+                    ? "Unlimited"
+                    : uspBarStoreMetricsData?.data.limit}{" "}
+                  monthly views). One visitor can have multiple views per
+                  session.
+                </Typography>
+                <LinearProgress
+                  variant="determinate"
+                  value={
+                    uspBarStoreMetricsData?.data.limit === -1
+                      ? 0
+                      : Math.min(
+                          (uspBarStoreMetricsData?.data.viewsCount /
+                            uspBarStoreMetricsData?.data.limit) *
+                            100,
                           100,
-                        100,
-                      )
-                }
-                sx={{
-                  height: 8,
-                  borderRadius: 4,
-                  backgroundColor: "#e0e0e0",
-                  "& .MuiLinearProgress-bar": {
-                    backgroundColor: "#202223",
-                  },
-                }}
-              />
-            </Box>
-          )}
+                        )
+                  }
+                  sx={{
+                    height: 8,
+                    borderRadius: 4,
+                    backgroundColor: "#e0e0e0",
+                    "& .MuiLinearProgress-bar": {
+                      backgroundColor: "#202223",
+                    },
+                  }}
+                />
+              </Box>
+            )}
+        </Box>
       </Box>
 
       <Box
@@ -278,19 +301,13 @@ const BillingPage = ({ shop, submit, actionData }) => {
                   variant="contained"
                   sx={{
                     backgroundColor: "#202223",
-                    color: "white",
                     textTransform: "none",
                     borderRadius: "6px",
                     fontWeight: 600,
                     padding: { xs: "12px 18px", sm: "5px 10px" },
-                    textDecoration: "none",
-                    // width: "100%",
-                    maxWidth: 500,
-                    // mx: "auto",
-                    display: "block",
-                    "&:hover": {
-                      backgroundColor: "#303030",
-                    },
+                    fontSize: "14px",
+                    width: { xs: "100%", sm: "auto" },
+                    "&:hover": { backgroundColor: "#303030" },
                   }}
                   onClick={handleViewPlan}
                 >
