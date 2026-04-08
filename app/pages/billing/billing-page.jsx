@@ -56,7 +56,7 @@ const BillingPage = ({ shop, submit, actionData }) => {
   };
 
   React.useEffect(() => {
-    if (isLimitExceeded) {
+    if (isLimitExceeded && shop?.subscription !== undefined) {
       setSnackbar({
         open: true,
         message: String(uspBarStoreMetricsError),
