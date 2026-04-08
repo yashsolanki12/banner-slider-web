@@ -45,6 +45,7 @@ const ConfirmationDialog = (props) => {
             backgroundColor: "#e0e0e0",
             borderRadius: "6px",
             textTransform: "none",
+            p: "5px 10px",
           }}
           disabled={loading}
         >
@@ -56,7 +57,7 @@ const ConfirmationDialog = (props) => {
           variant="contained"
           autoFocus
           disabled={loading}
-          sx={{ borderRadius: "6px", textTransform: "none" }}
+          sx={{ borderRadius: "6px", textTransform: "none", p: "5px 10px" }}
         >
           {loading ? (
             <CircularProgress size={24} color="success" />

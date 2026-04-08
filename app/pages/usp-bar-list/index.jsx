@@ -223,7 +223,7 @@ const UspBarList = (props) => {
       );
     }
   };
-  
+
   useEffect(() => {
     if (isLimitExceeded) {
       setSnackbar({
@@ -431,48 +431,49 @@ const UspBarList = (props) => {
         </Stack>
         {/* View Limit Progress */}
         {/* && props?.subscription !== undefined */}
-        {true === UspBarViewSyncData?.success && (
-          <Box
-            sx={{
-              mb: 3,
-              p: 2,
-              border: "1px solid #e0e0e0",
-              borderRadius: "8px",
-              backgroundColor: "#fff",
-            }}
-          >
-            <Typography variant="body2" sx={{ mb: 1, color: "#202223" }}>
-              You're currently on{" "}
-              <strong>{UspBarViewSyncData.data.planName}</strong> (
-              {UspBarViewSyncData.data.viewsCount} /{" "}
-              {UspBarViewSyncData.data.limit === -1
-                ? "Unlimited"
-                : UspBarViewSyncData.data.limit}{" "}
-              monthly views). One visitor can have multiple views per session.
-            </Typography>
-            <LinearProgress
-              variant="determinate"
-              value={
-                UspBarViewSyncData.data.limit === -1
-                  ? 0
-                  : Math.min(
-                      (UspBarViewSyncData.data.viewsCount /
-                        UspBarViewSyncData.data.limit) *
-                        100,
-                      100,
-                    )
-              }
+        {true === UspBarViewSyncData?.success &&
+          props.subscription !== undefined && (
+            <Box
               sx={{
-                height: 8,
-                borderRadius: 4,
-                backgroundColor: "#e0e0e0",
-                "& .MuiLinearProgress-bar": {
-                  backgroundColor: "#202223",
-                },
+                mb: 3,
+                p: 2,
+                border: "1px solid #e0e0e0",
+                borderRadius: "8px",
+                backgroundColor: "#fff",
               }}
-            />
-          </Box>
-        )}
+            >
+              <Typography variant="body2" sx={{ mb: 1, color: "#202223" }}>
+                You're currently on{" "}
+                <strong>{UspBarViewSyncData.data.planName}</strong> (
+                {UspBarViewSyncData.data.viewsCount} /{" "}
+                {UspBarViewSyncData.data.limit === -1
+                  ? "Unlimited"
+                  : UspBarViewSyncData.data.limit}{" "}
+                monthly views). One visitor can have multiple views per session.
+              </Typography>
+              <LinearProgress
+                variant="determinate"
+                value={
+                  UspBarViewSyncData.data.limit === -1
+                    ? 0
+                    : Math.min(
+                        (UspBarViewSyncData.data.viewsCount /
+                          UspBarViewSyncData.data.limit) *
+                          100,
+                        100,
+                      )
+                }
+                sx={{
+                  height: 8,
+                  borderRadius: 4,
+                  backgroundColor: "#e0e0e0",
+                  "& .MuiLinearProgress-bar": {
+                    backgroundColor: "#202223",
+                  },
+                }}
+              />
+            </Box>
+          )}
         {/* Filter Tabs */}
         <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 2 }}>
           <Tabs

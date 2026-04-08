@@ -534,7 +534,7 @@ const UspBarForm = ({ id, heading }) => {
                     Title *
                   </Typography>
                   <TextField
-                    sx={{ width: "100%", maxWidth: 500 }}
+                    sx={{ width: "100%", maxWidth: 500, mb: "0.30rem" }}
                     name="title"
                     value={formData.title || ""}
                     onChange={handleChange}
@@ -572,7 +572,7 @@ const UspBarForm = ({ id, heading }) => {
                     Description
                   </Typography>
                   <TextField
-                    sx={{ width: "100%", maxWidth: 500 }}
+                    sx={{ width: "100%", maxWidth: 500, mb: "0.30rem" }}
                     multiline
                     rows={2}
                     name="description"
@@ -612,7 +612,7 @@ const UspBarForm = ({ id, heading }) => {
                   </Typography>
                   <FormControl
                     size="small"
-                    sx={{ mt: 1, width: "100%", maxWidth: 500 }}
+                    sx={{ mt: 1, width: "100%", maxWidth: 500, mb: "0.30rem" }}
                   >
                     <InputLabel id="page-display-label">Display on</InputLabel>
                     <Select
@@ -729,6 +729,7 @@ const UspBarForm = ({ id, heading }) => {
                       flexDirection: "column",
                       gap: 1,
                       width: "fit-content",
+                      mb: "0.30rem",
                     }}
                   >
                     {/* Icon Preview */}
