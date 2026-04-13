@@ -260,7 +260,7 @@ const ReusableTable = ({
           backgroundColor: "white",
           borderRadius: "8px",
           boxShadow: 1,
-          maxHeight: 450,
+          maxHeight: 290,
           overflowY: "auto",
           "&::-webkit-scrollbar": { width: "8px" },
           "&::-webkit-scrollbar-thumb": {
