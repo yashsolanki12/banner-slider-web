@@ -502,8 +502,14 @@
              /* Use only the visible items */
              allItems = visibleItems;
              
-             /* Get design settings from the first visible item */
-             designSettings = allItems[0].designSettings || defaultDesignSettings;
+/* Get design settings from the first visible item */
+              designSettings = allItems[0].designSettings || defaultDesignSettings;
+              
+              /* Use backgroundColor only from items where useCustomColorSettings is false */
+              const nonCustomItem = allItems.find(item => item.useCustomColorSettings === false);
+              if (nonCustomItem && nonCustomItem.designSettings && nonCustomItem.designSettings.backgroundColor) {
+                designSettings.backgroundColor = nonCustomItem.designSettings.backgroundColor;
+              }
              
              /* Get page_display setting from the first visible item - for reference */
              pageDisplay = allItems[0].page_display || ['all'];
