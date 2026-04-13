@@ -247,7 +247,7 @@ const UspBarList = (props) => {
     <>
       {/* Fallback dialog for enable theme */}
       {!appEmbedEnabled && (
-        <Box sx={{ p: 4 }}>
+        <Box sx={{ p: 2 }}>
           <Card sx={{ borderRadius: "10px", boxShadow: 2 }}>
             <CardContent sx={{ p: { xs: 2, sm: 2 } }}>
               {/* Header/Warning Bar */}
@@ -391,13 +391,13 @@ const UspBarList = (props) => {
       )} */}
 
       {/* USP Bar List */}
-      <Box sx={{ p: 4 }}>
+      <Box sx={{ p: 2 }}>
         <Stack
           direction={{ xs: "column", sm: "row" }}
           justifyContent="space-between"
           alignItems={{ xs: "stretch", sm: "center" }}
           spacing={2}
-          sx={{ mb: 4 }}
+          sx={{ mb: 2 }}
         >
           {(!appEmbedEnabled || appEmbedEnabled) && (
             <Typography
@@ -440,7 +440,7 @@ const UspBarList = (props) => {
           props.subscription !== undefined && (
             <Box
               sx={{
-                mb: 3,
+                mb: 2,
                 p: 2,
                 border: "1px solid #e0e0e0",
                 borderRadius: "8px",

@@ -278,6 +278,7 @@ const ReusableTable = ({
                     color: "#6b7280",
                     fontWeight: 600,
                     fontSize: 13,
+                    p: 0,
                     backgroundColor: "#f7f7f7",
                   }}
                 >
@@ -343,7 +344,7 @@ const ReusableTable = ({
                     }}
                   >
                     {showCheckbox && (
-                      <TableCell>
+                      <TableCell sx={{ p: 0 }}>
                         <Checkbox
                           checked={isSelected}
                           onChange={() => onSelectOne(rowId)}

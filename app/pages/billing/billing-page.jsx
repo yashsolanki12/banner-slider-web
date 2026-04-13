@@ -96,8 +96,8 @@ const BillingPage = ({ shop, submit, actionData }) => {
         maxWidth: { xs: "100%", sm: 600, md: 800 },
         mx: "auto",
         width: "100%",
-        px: { xs: 4, sm: 4 },
-        py: { xs: 4, sm: 4 },
+        px: { xs: 4, sm: 2 },
+        py: { xs: 4, sm: 2 },
         boxSizing: "border-box",
       }}
     >

@@ -7,7 +7,7 @@ export default function EditUspBar() {
   const { id } = useParams();
 
   return (
-    <Box sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
+    <Box sx={{ p: { xs: 2, sm: 3, md: 2 } }}>
       <UspBarForm id={id} heading="Edit Usp Bar" />
     </Box>
   );

@@ -82,13 +82,13 @@
       align-items: center;
       {% comment %} gap: 15px; {% endcomment %}
       box-sizing: border-box; 
-      padding: 10px;
+      {% comment %} padding: 10px; {% endcomment %}
       border-radius: 5px;
       position: relative;
       width: 300px;           
       min-width: 0;           
       {% comment %} max-width: 300px; {% endcomment %}
-      height: 75px !important;   
+      height: 64px !important;   
     }
 
     /* Separator: positioned on inner div so it stays inside item's padding area */
@@ -108,7 +108,8 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      padding: 10px 15px; 
+      padding: 5px 0px;
+      {% comment %} padding: 10px 15px;  {% endcomment %}
       {% comment %} width: 160px; /* to create the gap between icon and content */ {% endcomment %}
       {% comment %} max-width: 190px; {% endcomment %}
       {% comment %} width: 100%;
