@@ -516,7 +516,7 @@ const UspBarList = (props) => {
               gap: 1,
               mb: 2,
               p: 1.5,
-              bgcolor: "#f5f5f5",
+              bgcolor: "#ffffff",
               borderRadius: 1,
               justifyContent: "space-between",
             }}
