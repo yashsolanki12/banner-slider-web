@@ -260,7 +260,7 @@ const ReusableTable = ({
           backgroundColor: "white",
           borderRadius: "8px",
           boxShadow: 1,
-          maxHeight: 450,
+          maxHeight: 290,
           overflowY: "auto",
           "&::-webkit-scrollbar": { width: "8px" },
           "&::-webkit-scrollbar-thumb": {
@@ -278,6 +278,7 @@ const ReusableTable = ({
                     color: "#6b7280",
                     fontWeight: 600,
                     fontSize: 13,
+                    p: 0,
                     backgroundColor: "#f7f7f7",
                   }}
                 >
@@ -343,7 +344,7 @@ const ReusableTable = ({
                     }}
                   >
                     {showCheckbox && (
-                      <TableCell>
+                      <TableCell sx={{ p: 0 }}>
                         <Checkbox
                           checked={isSelected}
                           onChange={() => onSelectOne(rowId)}

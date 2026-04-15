@@ -25,7 +25,7 @@ const LivePreview = ({ formData }) => {
       itemBackgroundColor: "#ffffff",
       titleColor: "#333333",
       descriptionColor: "#666666",
-      iconColor: "#0e0e0e",
+      iconColor: "#cc6b6b",
       itemBorderRightColor: "#000000",
     };
   };
@@ -50,7 +50,7 @@ const LivePreview = ({ formData }) => {
       {/* Preview Header */}
       <Box
         sx={{
-          p: 2,
+          p: 1.3,
           backgroundColor: "#202223",
           borderBottom: "1px solid #e1e1e1",
         }}
@@ -68,8 +68,8 @@ const LivePreview = ({ formData }) => {
         >
           <Box
             sx={{
-              width: 8,
-              height: 8,
+              width: 5,
+              height: 5,
               borderRadius: "50%",
               backgroundColor: "#4CAF50",
               animation: "pulse 2s infinite",
@@ -87,7 +87,7 @@ const LivePreview = ({ formData }) => {
       {/* Preview Container */}
       <Box
         sx={{
-          p: { xs: 1, sm: 2 },
+          p: { xs: 1, sm: 1 },
           minHeight: 150,
           display: "flex",
           flexDirection: "column",
@@ -271,7 +271,7 @@ const LivePreview = ({ formData }) => {
         </Box>
 
         {/* Preview Info */}
-        <Box sx={{ mt: 1 }}>
+        <Box>
           <Divider sx={{ mb: 1.5 }} />
           <Typography
             variant="caption"

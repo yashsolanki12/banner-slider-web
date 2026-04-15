@@ -96,8 +96,8 @@ const BillingPage = ({ shop, submit, actionData }) => {
         maxWidth: { xs: "100%", sm: 600, md: 800 },
         mx: "auto",
         width: "100%",
-        px: { xs: 4, sm: 4 },
-        py: { xs: 4, sm: 4 },
+        px: { xs: 4, sm: 2 },
+        py: { xs: 4, sm: 2 },
         boxSizing: "border-box",
       }}
     >
@@ -257,27 +257,29 @@ const BillingPage = ({ shop, submit, actionData }) => {
                   >
                     Change plan
                   </Button>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      backgroundColor: "#ffffff",
-                      color: "black",
-                      textTransform: "none",
-                      borderRadius: "6px",
-                      fontWeight: 600,
-                      fontSize: "13px",
-                      padding: { xs: "10px 18px", sm: "5px 10px" },
-                      textDecoration: "none",
-                      width: { xs: "100%", sm: "auto" },
-                      border: "1px solid #ddd",
-                      "&:hover": {
-                        backgroundColor: "#f5f5f5",
-                      },
-                    }}
-                    onClick={() => setCancelPlanDialogOpen(true)}
-                  >
-                    Cancel plan
-                  </Button>
+                  {shop.subscription.name !== "Free" && (
+                    <Button
+                      variant="contained"
+                      sx={{
+                        backgroundColor: "#ffffff",
+                        color: "black",
+                        textTransform: "none",
+                        borderRadius: "6px",
+                        fontWeight: 600,
+                        fontSize: "13px",
+                        padding: { xs: "10px 18px", sm: "5px 10px" },
+                        textDecoration: "none",
+                        width: { xs: "100%", sm: "auto" },
+                        border: "1px solid #ddd",
+                        "&:hover": {
+                          backgroundColor: "#f5f5f5",
+                        },
+                      }}
+                      onClick={() => setCancelPlanDialogOpen(true)}
+                    >
+                      Cancel plan
+                    </Button>
+                  )}
                 </Box>
               </CardContent>
             </Card>
@@ -325,7 +327,12 @@ const BillingPage = ({ shop, submit, actionData }) => {
           message={`This action cannot be undone. This will cancel your "${shop.subscription?.name}" plan.`}
           onClose={() => setCancelPlanDialogOpen(false)}
           onConfirm={() =>
-            submit({}, { method: "POST" }, setCancelPlanDialogOpen(false))
+            submit(
+              {},
+              { method: "POST" },
+              setCancelPlanDialogOpen(false),
+              handleViewPlan,
+            )
           }
         />
 

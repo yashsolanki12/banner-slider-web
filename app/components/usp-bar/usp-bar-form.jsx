@@ -77,14 +77,14 @@ const UspBarForm = ({ id, heading }) => {
     description: "",
     icon: null,
     designSettings: {
-      backgroundColor: "#f8f9fa",
+      backgroundColor: "#F5F5F5",
       itemBackgroundColor: "#ffffff",
-      titleColor: "#333333",
+      titleColor: "#1C1C1C",
       descriptionColor: "#666666",
-      iconBackgroundColor: "#4CAF50",
-      iconColor: "#0e0e0e",
+      iconBackgroundColor: "#E8F5E9",
+      iconColor: "#4CAF50",
       slideSpeed: 4,
-      itemBorderRightColor: "#000000", // Default vertical border color (black)
+      itemBorderRightColor: "#c1bebe", // Default vertical border color (black)
     },
     useCustomColorSettings: false,
     page_display: ["all"],
@@ -416,7 +416,7 @@ const UspBarForm = ({ id, heading }) => {
           alignItems: "center",
           flexWrap: "wrap",
           gap: 1,
-          mb: 3,
+          mb: 1,
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -455,12 +455,12 @@ const UspBarForm = ({ id, heading }) => {
       {/* Live Preview - Sticky at top, below header */}
       <Box
         sx={{
-          mb: 3,
+          mb: 1,
           position: "sticky",
           top: 0,
           zIndex: 100,
           backgroundColor: "#f5f5f5",
-          pt: 1,
+          mt: 1.8,
         }}
       >
         <LivePreview formData={formData} />
@@ -513,318 +513,338 @@ const UspBarForm = ({ id, heading }) => {
           <Stack spacing={4}>
             <Box
               sx={{
-                p: { xs: 2, sm: 3 },
+                p: { xs: 2, sm: 2 },
                 border: "1px solid #e1e1e1",
                 borderRadius: "8px",
                 backgroundColor: "white",
               }}
             >
               <Stack spacing={2}>
-                {/* Title */}
-                <Box>
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      color: "#6b7280",
-                      mb: 0.5,
-                      display: "block",
-                      fontSize: "14px",
-                    }}
-                  >
-                    Title *
-                  </Typography>
-                  <TextField
-                    sx={{ width: "100%", maxWidth: 500, mb: "0.30rem" }}
-                    name="title"
-                    value={formData.title || ""}
-                    onChange={handleChange}
-                    size="small"
-                    placeholder="Enter title"
-                    error={Boolean(errors?.title)}
-                    helperText={errors?.title || ""}
-                    inputProps={{ maxLength: 30 }}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <Typography variant="caption" color="textSecondary">
-                            {formData.title?.length || 0}/30
-                          </Typography>
-                        </InputAdornment>
-                      ),
-                    }}
-                    FormHelperTextProps={{
-                      sx: { color: "#d32f2f", marginLeft: 0 },
-                    }}
-                  />
-                </Box>
-
-                {/* Description */}
-                <Box>
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      color: "#6b7280",
-                      mb: 0.5,
-                      display: "block",
-                      fontSize: "14px",
-                    }}
-                  >
-                    Description
-                  </Typography>
-                  <TextField
-                    sx={{ width: "100%", maxWidth: 500, mb: "0.30rem" }}
-                    multiline
-                    rows={2}
-                    name="description"
-                    value={formData.description || ""}
-                    onChange={handleChange}
-                    size="medium"
-                    placeholder="Enter description"
-                    // error={Boolean(errors?.description)}
-                    // helperText={errors?.description || ""}
-                    inputProps={{ maxLength: 50 }}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <Typography variant="caption" color="textSecondary">
-                            {formData.description?.length || 0}/50
-                          </Typography>
-                        </InputAdornment>
-                      ),
-                    }}
-                    // FormHelperTextProps={{
-                    //   sx: { color: "#d32f2f", marginLeft: 0 },
-                    // }}
-                  />
-                </Box>
-
-                {/* Display on page */}
-                <Box>
-                  <Typography
-                    sx={{
-                      color: "#6b7280",
-                      mb: 0.5,
-                      display: "block",
-                      fontSize: "14px",
-                    }}
-                  >
-                    Display on pages (optional)
-                  </Typography>
-                  <FormControl
-                    size="small"
-                    sx={{ mt: 1, width: "100%", maxWidth: 500, mb: "0.30rem" }}
-                  >
-                    <InputLabel id="page-display-label">Display on</InputLabel>
-                    <Select
-                      labelId="page-display-label"
-                      id="page-display-label"
-                      multiple
-                      value={formData.page_display}
-                      label="Display On"
-                      onChange={(e) => {
-                        const value = e.target.value;
-
-                        const newValue =
-                          typeof value === "string" ? value.split(",") : value;
-
-                        const wasAllSelected =
-                          formData.page_display.includes("all");
-                        const isAllSelected = newValue.includes("all");
-
-                        if (isAllSelected) {
-                          setFormData({
-                            ...formData,
-                            page_display: [
-                              "all",
-                              "home",
-                              "products",
-                              "catalog",
-                              "contact",
-                            ],
-                          });
-                        } else if (wasAllSelected && !isAllSelected) {
-                          setFormData({ ...formData, page_display: [] });
-                        } else {
-                          setFormData({
-                            ...formData,
-                            page_display: newValue,
-                          });
-                        }
-                      }}
-                      input={<OutlinedInput label="Display On" />}
-                      renderValue={(selected) => {
-                        if (selected.length === 0) {
-                          return "Select pages";
-                        }
-                        const allPages = [
-                          "all",
-                          "home",
-                          "products",
-                          "catalog",
-                          "contact",
-                        ];
-                        const allSelected = allPages.every((p) =>
-                          selected.includes(p),
-                        );
-                        if (allSelected) {
-                          return "All Pages";
-                        }
-                        const displayPages = selected
-                          .filter((i) => i !== "all")
-                          .map((i) => i.charAt(0).toUpperCase() + i.slice(1))
-                          .join(", ");
-                        return displayPages || "Select pages";
+                <Box
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                    gap: { xs: 1.5, sm: 1 },
+                    borderRadius: "8px",
+                    backgroundColor: "#ffffff",
+                  }}
+                >
+                  {/* Title */}
+                  <Box>
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        color: "#6b7280",
+                        mb: 0.5,
+                        display: "block",
+                        fontSize: "14px",
                       }}
                     >
-                      <MenuItem value="all">
-                        <Checkbox
-                          checked={formData.page_display.includes("all")}
-                        />
-                        <ListItemText primary="All pages" />
-                      </MenuItem>
-                      <MenuItem value="home">
-                        <Checkbox
-                          checked={formData.page_display.includes("home")}
-                        />
-                        <ListItemText primary="Home Page" />
-                      </MenuItem>
-                      <MenuItem value="products">
-                        <Checkbox
-                          checked={formData.page_display.includes("products")}
-                        />
-                        <ListItemText primary="Product Page" />
-                      </MenuItem>
-                      <MenuItem value="catalog">
-                        <Checkbox
-                          checked={formData.page_display.includes("catalog")}
-                        />
-                        <ListItemText primary="Collection Page" />
-                      </MenuItem>
-                      <MenuItem value="contact">
-                        <Checkbox
-                          checked={formData.page_display.includes("contact")}
-                        />
-                        <ListItemText primary="Contact Page" />
-                      </MenuItem>
-                    </Select>
-                  </FormControl>
-                </Box>
-
-                {/* Icon Upload */}
-                <Box>
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      color: "#6b7280",
-                      mb: 0.5,
-                      display: "block",
-                      fontSize: "14px",
-                    }}
-                  >
-                    Icon (optional)
-                  </Typography>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 1,
-                      width: "fit-content",
-                      mb: "0.30rem",
-                    }}
-                  >
-                    {/* Icon Preview */}
-                    {formData.icon && (
-                      <Box
-                        sx={{
-                          position: "relative",
-                          marginTop: "0.20rem",
-                          width: "100%",
-                          height: "100%",
-                          border: "1px solid #e1e1e1",
-                          borderRadius: "8px",
-                          padding: "8px",
-                          backgroundColor: "white",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <img
-                          src={formData.icon}
-                          alt="Icon Preview"
-                          style={{
-                            width: "32px",
-                            height: "32px",
-                            objectFit: "contain",
-                            // border: "1px solid #e1e1e1",
-                            // borderRadius: "8px",
-                            // padding: "8px",
-                            // backgroundColor: "white",
-                          }}
-                        />
-                        <IconButton
-                          size="small"
-                          onClick={handleRemoveIcon}
-                          sx={{
-                            position: "absolute",
-                            top: -8,
-                            // left: "64px",
-                            right: -3,
-                            backgroundColor: "white",
-                            "&:hover": {
-                              backgroundColor: "#f0f0f0",
-                            },
-                            borderRadius: "50%",
-                            width: 24,
-                            height: 24,
-                            minWidth: 24,
-                            boxShadow: 1,
-                          }}
-                        >
-                          ✕
-                        </IconButton>
-                      </Box>
-                    )}
-
-                    {/* File Input */}
-                    <input
-                      type="file"
-                      accept="image/jpeg,image/png,image/svg+xml"
-                      onChange={handleIconUpload}
-                      style={{
-                        display: "none",
+                      Title *
+                    </Typography>
+                    <TextField
+                      sx={{ width: "100%", maxWidth: 500, mb: "0.30rem" }}
+                      name="title"
+                      value={formData.title || ""}
+                      onChange={handleChange}
+                      size="small"
+                      placeholder="Enter title"
+                      error={Boolean(errors?.title)}
+                      helperText={errors?.title || ""}
+                      inputProps={{ maxLength: 30 }}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Typography variant="caption" color="textSecondary">
+                              {formData.title?.length || 0}/30
+                            </Typography>
+                          </InputAdornment>
+                        ),
                       }}
-                      id="icon-upload"
+                      FormHelperTextProps={{
+                        sx: { color: "#d32f2f", marginLeft: 0 },
+                      }}
                     />
-                    <label htmlFor="icon-upload">
-                      <Button
-                        variant="outlined"
-                        component="span"
-                        sx={{
-                          textTransform: "none",
-                          borderRadius: "6px",
-                          fontWeight: 500,
-                          width: "fit-content",
-                        }}
-                      >
-                        {formData.icon ? "Change Icon" : "Upload Icon"}
-                      </Button>
-                    </label>
-
-                    {!formData.icon && (
-                      <Typography
-                        variant="caption"
-                        sx={{
-                          color: "#6b7280",
-                          fontSize: 13,
-                          width: "fit-content",
-                        }}
-                      >
-                        Supported formats: JPG, PNG, SVG (max: 2MB)
-                      </Typography>
-                    )}
                   </Box>
 
+                  {/* Display on page */}
+                  <Box>
+                    <Typography
+                      sx={{
+                        color: "#6b7280",
+                        mb: 0.5,
+                        display: "block",
+                        fontSize: "14px",
+                      }}
+                    >
+                      Display on pages (optional)
+                    </Typography>
+                    <FormControl
+                      size="small"
+                      sx={{
+                        mt: 1,
+                        width: "100%",
+                        maxWidth: 500,
+                        mb: "0.30rem",
+                      }}
+                    >
+                      <InputLabel id="page-display-label">
+                        Display on
+                      </InputLabel>
+                      <Select
+                        labelId="page-display-label"
+                        id="page-display-label"
+                        multiple
+                        value={formData.page_display}
+                        label="Display On"
+                        onChange={(e) => {
+                          const value = e.target.value;
+
+                          const newValue =
+                            typeof value === "string"
+                              ? value.split(",")
+                              : value;
+
+                          const wasAllSelected =
+                            formData.page_display.includes("all");
+                          const isAllSelected = newValue.includes("all");
+
+                          if (isAllSelected) {
+                            setFormData({
+                              ...formData,
+                              page_display: [
+                                "all",
+                                "home",
+                                "products",
+                                "catalog",
+                                "contact",
+                              ],
+                            });
+                          } else if (wasAllSelected && !isAllSelected) {
+                            setFormData({ ...formData, page_display: [] });
+                          } else {
+                            setFormData({
+                              ...formData,
+                              page_display: newValue,
+                            });
+                          }
+                        }}
+                        input={<OutlinedInput label="Display On" />}
+                        renderValue={(selected) => {
+                          if (selected.length === 0) {
+                            return "Select pages";
+                          }
+                          const allPages = [
+                            "all",
+                            "home",
+                            "products",
+                            "catalog",
+                            "contact",
+                          ];
+                          const allSelected = allPages.every((p) =>
+                            selected.includes(p),
+                          );
+                          if (allSelected) {
+                            return "All Pages";
+                          }
+                          const displayPages = selected
+                            .filter((i) => i !== "all")
+                            .map((i) => i.charAt(0).toUpperCase() + i.slice(1))
+                            .join(", ");
+                          return displayPages || "Select pages";
+                        }}
+                      >
+                        <MenuItem value="all">
+                          <Checkbox
+                            checked={formData.page_display.includes("all")}
+                          />
+                          <ListItemText primary="All pages" />
+                        </MenuItem>
+                        <MenuItem value="home">
+                          <Checkbox
+                            checked={formData.page_display.includes("home")}
+                          />
+                          <ListItemText primary="Home Page" />
+                        </MenuItem>
+                        <MenuItem value="products">
+                          <Checkbox
+                            checked={formData.page_display.includes("products")}
+                          />
+                          <ListItemText primary="Product Page" />
+                        </MenuItem>
+                        <MenuItem value="catalog">
+                          <Checkbox
+                            checked={formData.page_display.includes("catalog")}
+                          />
+                          <ListItemText primary="Collection Page" />
+                        </MenuItem>
+                        <MenuItem value="contact">
+                          <Checkbox
+                            checked={formData.page_display.includes("contact")}
+                          />
+                          <ListItemText primary="Contact Page" />
+                        </MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Box>
+                  {/* Description */}
+                  <Box>
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        color: "#6b7280",
+                        mb: 0.5,
+                        display: "block",
+                        fontSize: "14px",
+                      }}
+                    >
+                      Description
+                    </Typography>
+                    <TextField
+                      sx={{ width: "100%", maxWidth: 500, mb: "0.30rem" }}
+                      multiline
+                      rows={2}
+                      name="description"
+                      value={formData.description || ""}
+                      onChange={handleChange}
+                      size="medium"
+                      placeholder="Enter description"
+                      // error={Boolean(errors?.description)}
+                      // helperText={errors?.description || ""}
+                      inputProps={{ maxLength: 50 }}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Typography variant="caption" color="textSecondary">
+                              {formData.description?.length || 0}/50
+                            </Typography>
+                          </InputAdornment>
+                        ),
+                      }}
+                      // FormHelperTextProps={{
+                      //   sx: { color: "#d32f2f", marginLeft: 0 },
+                      // }}
+                    />
+                  </Box>
+
+                  {/* Icon Upload */}
+                  <Box>
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        color: "#6b7280",
+                        mb: 0.5,
+                        display: "block",
+                        fontSize: "14px",
+                      }}
+                    >
+                      Icon (optional)
+                    </Typography>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 1,
+                        width: "fit-content",
+                        mb: "0.30rem",
+                      }}
+                    >
+                      {/* Icon Preview */}
+                      {formData.icon && (
+                        <Box
+                          sx={{
+                            position: "relative",
+                            marginTop: "0.20rem",
+                            width: "100%",
+                            height: "100%",
+                            border: "1px solid #e1e1e1",
+                            borderRadius: "8px",
+                            padding: "8px",
+                            backgroundColor: "white",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <img
+                            src={formData.icon}
+                            alt="Icon Preview"
+                            style={{
+                              width: "32px",
+                              height: "32px",
+                              objectFit: "contain",
+                              // border: "1px solid #e1e1e1",
+                              // borderRadius: "8px",
+                              // padding: "8px",
+                              // backgroundColor: "white",
+                            }}
+                          />
+                          <IconButton
+                            size="small"
+                            onClick={handleRemoveIcon}
+                            sx={{
+                              position: "absolute",
+                              top: -8,
+                              // left: "64px",
+                              right: -3,
+                              backgroundColor: "white",
+                              "&:hover": {
+                                backgroundColor: "#f0f0f0",
+                              },
+                              borderRadius: "50%",
+                              width: 24,
+                              height: 24,
+                              minWidth: 24,
+                              boxShadow: 1,
+                            }}
+                          >
+                            ✕
+                          </IconButton>
+                        </Box>
+                      )}
+
+                      {/* File Input */}
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/svg+xml"
+                        onChange={handleIconUpload}
+                        style={{
+                          display: "none",
+                        }}
+                        id="icon-upload"
+                      />
+                      <label htmlFor="icon-upload">
+                        <Button
+                          variant="outlined"
+                          component="span"
+                          sx={{
+                            textTransform: "none",
+                            borderRadius: "6px",
+                            fontWeight: 500,
+                            width: "fit-content",
+                          }}
+                        >
+                          {formData.icon ? "Change Icon" : "Upload Icon"}
+                        </Button>
+                      </label>
+
+                      {!formData.icon && (
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            color: "#6b7280",
+                            fontSize: "12px",
+                            width: "fit-content",
+                          }}
+                        >
+                          Supported formats: JPG, PNG, SVG (max: 2MB)
+                        </Typography>
+                      )}
+                    </Box>
+                  </Box>
+                </Box>
+                {/* Checkbox color selection */}
+                <Box>
                   {/* Color Settings Checkbox */}
                   <FormControlLabel
                     control={
@@ -852,7 +872,6 @@ const UspBarForm = ({ id, heading }) => {
                         Color Settings
                       </Typography>
                     }
-                    sx={{ mt: 1 }}
                   />
 
                   {/* Color Settings Grid - Show when checkbox is checked */}
@@ -860,9 +879,8 @@ const UspBarForm = ({ id, heading }) => {
                     <Box
                       sx={{
                         display: "grid",
-                        gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                        gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr 1fr" },
                         gap: { xs: 1.5, sm: 2 },
-                        mt: 2,
                         p: { xs: 1.5, sm: 2 },
                         border: "1px solid #e1e1e1",
                         borderRadius: "8px",
@@ -887,17 +905,6 @@ const UspBarForm = ({ id, heading }) => {
                         onChange={handleChange}
                       />
 
-                      {/* Item Background Color */}
-                      <ColorPicker
-                        label="Item background color"
-                        name="designSettings.itemBackgroundColor"
-                        value={
-                          formData.designSettings?.itemBackgroundColor ||
-                          "#ffffff"
-                        }
-                        onChange={handleChange}
-                      />
-
                       {/* Title Color */}
                       <ColorPicker
                         label="Title color"
@@ -912,6 +919,17 @@ const UspBarForm = ({ id, heading }) => {
                         name="designSettings.descriptionColor"
                         value={
                           formData.designSettings?.descriptionColor || "#666666"
+                        }
+                        onChange={handleChange}
+                      />
+
+                      {/* Item Background Color */}
+                      <ColorPicker
+                        label="Item background color"
+                        name="designSettings.itemBackgroundColor"
+                        value={
+                          formData.designSettings?.itemBackgroundColor ||
+                          "#ffffff"
                         }
                         onChange={handleChange}
                       />
@@ -977,6 +995,7 @@ const UspBarForm = ({ id, heading }) => {
                 </Box>
               </Stack>
             </Box>
+
             {/* Action Buttons - Content Tab */}
             <Box
               sx={{

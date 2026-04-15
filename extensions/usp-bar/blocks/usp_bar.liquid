@@ -82,13 +82,13 @@
       align-items: center;
       {% comment %} gap: 15px; {% endcomment %}
       box-sizing: border-box; 
-      padding: 10px;
+      {% comment %} padding: 10px 0px; {% endcomment %}
       border-radius: 5px;
       position: relative;
       {% comment %} width: 300px;            {% endcomment %}
       min-width: 0;           
       {% comment %} max-width: 300px; {% endcomment %}
-      height: 75px !important;   
+      height: 64px !important;   
     }
     
     @media (max-width: 480px) {
@@ -131,7 +131,8 @@
         align-items: center;
         justify-content: center; {% endcomment %}
         gap: 8px;
-        padding: 10px 15px; /* this creates space before border */
+        padding: 5px 0px;
+        {% comment %} padding: 7px 15px; /* this creates space before border */ {% endcomment %}
         {% comment %} width: 155px; /* to create the gap between icon and content */ {% endcomment %}
         {% comment %} max-width: 190px; {% endcomment %}
       }
