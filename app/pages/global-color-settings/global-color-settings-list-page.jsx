@@ -122,7 +122,7 @@ const GlobalColorSettingsListPage = () => {
       </Box>
       <Box
         sx={{
-          p: { xs: 2, sm: 3 },
+          p: { xs: 2, sm: 2 },
           border: "1px solid #e1e1e1",
           borderRadius: "8px",
           backgroundColor: "#ffffff",
@@ -132,7 +132,7 @@ const GlobalColorSettingsListPage = () => {
         <Box
           sx={{
             display: "grid",
-            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr 1fr" },
             gap: { xs: 1.5, sm: 2 },
           }}
         >
@@ -152,14 +152,6 @@ const GlobalColorSettingsListPage = () => {
             onChange={handleChange}
           />
 
-          {/* Item Background Color */}
-          <ColorPicker
-            label="Item background color"
-            name="designSettings.itemBackgroundColor"
-            value={formData.itemBackgroundColor || "#ffffff"}
-            onChange={handleChange}
-          />
-
           {/* Title Color */}
           <ColorPicker
             label="Title color"
@@ -173,6 +165,14 @@ const GlobalColorSettingsListPage = () => {
             label="Description color"
             name="designSettings.descriptionColor"
             value={formData.descriptionColor || "#666666"}
+            onChange={handleChange}
+          />
+
+          {/* Item Background Color */}
+          <ColorPicker
+            label="Item background color"
+            name="designSettings.itemBackgroundColor"
+            value={formData.itemBackgroundColor || "#ffffff"}
             onChange={handleChange}
           />
 
@@ -254,7 +254,7 @@ const GlobalColorSettingsListPage = () => {
             textTransform: "none",
             borderRadius: "6px",
             fontWeight: 600,
-            padding: "5px 10px",
+            p: "6px 16px",
             width: { xs: "100%", sm: "auto" },
           }}
         >

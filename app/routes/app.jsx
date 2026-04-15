@@ -6,7 +6,23 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useMemo } from "react";
 
 export const loader = async ({ request }) => {
-  await authenticate.admin(request);
+  const {
+    session,
+    billing,
+    redirect: shopifyRedirect,
+  } = await authenticate.admin(request);
+  const { hasActivePayment } = await billing.check();
+
+  const appHandle = "usp-bar-test";
+  const shop = session.shop;
+  const storeHandle = shop.replace(".myshopify.com", "");
+
+  if (!hasActivePayment) {
+    const billingUrl = `https://admin.shopify.com/store/${storeHandle}/charges/${appHandle}/pricing_plans`;
+
+    // This tells the browser to perform a full document-level redirect
+    throw shopifyRedirect(billingUrl, { target: "_top" });
+  }
 
   // eslint-disable-next-line no-undef
   return { apiKey: process.env.SHOPIFY_API_KEY || "" };

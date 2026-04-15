@@ -4,6 +4,7 @@ import { MongoDBSessionStorage } from "@shopify/shopify-app-session-storage-mong
 import {
   ApiVersion,
   AppDistribution,
+  BillingInterval,
   shopifyApp,
 } from "@shopify/shopify-app-react-router/server";
 
@@ -26,6 +27,44 @@ const shopify = shopifyApp({
   ...(process.env.SHOP_CUSTOM_DOMAIN
     ? { customShopDomains: [process.env.SHOP_CUSTOM_DOMAIN] }
     : {}),
+  billing: {
+    "free": {
+      amount: 0.0,
+      currencyCode: "USD",
+      interval: BillingInterval.Every30Days,
+      // lineItems: [
+      //   {
+      //     amount: 0.0,
+      //     currencyCode: "USD",
+      //     interval: BillingInterval.Every30Days,
+      //   },
+      // ],
+    },
+    "paid-plan": {
+      amount: 1,
+      currencyCode: "USD",
+      interval: BillingInterval.Every30Days,
+      // lineItems: [
+      //   {
+      //     amount: 1,
+      //     currencyCode: "USD",
+      //     interval: BillingInterval.Every30Days,
+      //   },
+      // ],
+    },
+    "paid-plan-2": {
+      amount: 2,
+      currencyCode: "USD",
+      interval: BillingInterval.Every30Days,
+      // lineItems: [
+      //   {
+      //     amount: 2,
+      //     currencyCode: "USD",
+      //     interval: BillingInterval.Every30Days,
+      //   },
+      // ],
+    },
+  },
 });
 
 export async function registerAppUninstalledWebhook(session) {
