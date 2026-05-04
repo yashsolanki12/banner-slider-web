@@ -8,7 +8,7 @@ export default function EditUspBar() {
 
   return (
     <Box sx={{ p: { xs: 2, sm: 3, md: 2 } }}>
-      <UspBarForm id={id} heading="Edit Usp Bar" />
+      <UspBarForm id={id} heading="Edit USP Bar" />
     </Box>
   );
 }

@@ -97,7 +97,9 @@ const UspBarList = (props) => {
     setBulkMenuAnchor(null);
   };
 
-  const planName = props?.subscription ? props?.subscription.name || "Free" : "No Plan";
+  const planName = props?.subscription
+    ? props?.subscription.name || "Free"
+    : "No Plan";
   const {
     data: UspBarViewSyncData,
     isLoading: UspBarViewSyncLoading,
@@ -409,7 +411,7 @@ const UspBarList = (props) => {
                 textAlign: { xs: "center", sm: "left" },
               }}
             >
-              Usp Bar List
+              USP Bar List
             </Typography>
           )}
           {(UspBarListData?.data?.length || 0) < 10 && (
