@@ -3,6 +3,8 @@ node_modules
 # macOS
 .DS_Store
 
+.agents
+
 /.cache
 /build
 /app/build

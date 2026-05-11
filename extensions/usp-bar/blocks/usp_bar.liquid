@@ -83,6 +83,10 @@
       {% comment %} gap: 15px; {% endcomment %}
       box-sizing: border-box; 
       {% comment %} padding: 10px 0px; {% endcomment %}
+      padding-top: var(--item-padding-top);
+      padding-right: var(--item-padding-right);
+      padding-bottom: var(--item-padding-bottom); 
+      padding-left: var(--item-padding-left); 
       border-radius: 5px;
       position: relative;
       {% comment %} width: 300px;            {% endcomment %}
@@ -413,16 +417,20 @@
         let itemWidth = 0;
         let limitExceeded = false;
 
-       const defaultDesignSettings = {
-         backgroundColor: '#f8f9fa',
-         itemBackgroundColor: '#ffffff', 
-         titleColor: '#333333',
-         descriptionColor: '#666666',
-         iconBackgroundColor: '#4CAF50',
-         iconColor: '#0c0c0c',
-         slideSpeed: 4,
-         itemBorderRightColor: "#000000"
-       };
+        const defaultDesignSettings = {
+          backgroundColor: '#f8f9fa',
+          itemBackgroundColor: '#ffffff', 
+          titleColor: '#333333',
+          descriptionColor: '#666666',
+          iconBackgroundColor: '#4CAF50',
+          iconColor: '#0c0c0c',
+          slideSpeed: 4,
+          itemBorderRightColor: "#000000",
+          paddingTop: "0px",
+          paddingRight: "0px",
+          paddingBottom: "0px",
+          paddingLeft: "0px"
+        };
 
        function calculateItemsPerView() {
         const width = window.innerWidth;
@@ -481,6 +489,7 @@
          try {
            const response = await fetch(`${apiUrl}/api/usp-slider/public/${shopDomain}`);
            const result = await response.json();
+           console.log("REs",result)
 
              
            if (result.success && result.data && result.data.length > 0) {
@@ -503,7 +512,7 @@
              /* Use only the visible items */
              allItems = visibleItems;
              
-/* Get design settings from the first visible item */
+             /* Get design settings from the first visible item */
               designSettings = allItems[0].designSettings || defaultDesignSettings;
               
               /* Use backgroundColor only from items where useCustomColorSettings is false */
@@ -644,7 +653,7 @@
         allItems.forEach((item) => {
           const itemSettings = item.designSettings || defaultDesignSettings;
           /* EXTREME LOCKDOWN: Triple-enforce calculated dynamic width*/
-          const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
+             const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-padding-top: ${itemSettings.paddingTop}; --item-padding-right: ${itemSettings.paddingRight}; --item-padding-bottom: ${itemSettings.paddingBottom}; --item-padding-left: ${itemSettings.paddingLeft}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
           const iconStyle = `color: ${itemSettings.iconColor};`
           html += `
             <div class="usp-item" style="${strictStyle}">
@@ -683,7 +692,7 @@
         itemsWithClones.forEach((item) => {
             const itemSettings = item.designSettings || defaultDesignSettings;
             /* EXTREME LOCKDOWN: Triple-enforce width to prevent expansion */
-            const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
+            const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-padding-top: ${itemSettings.paddingTop}; --item-padding-right: ${itemSettings.paddingRight}; --item-padding-bottom: ${itemSettings.paddingBottom}; --item-padding-left: ${itemSettings.paddingLeft}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
             const iconStyle = `color: ${itemSettings.iconColor};`
             html += `
               <div class="usp-item" style="${strictStyle}">
@@ -804,22 +813,22 @@
        document.head.appendChild(styleEl);
      }
 
-      /* Helper to render icon correctly */
-     function renderIcon(icon, iconColor) {
-       if (!icon) return `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${iconColor}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="14.31" y1="8" x2="20.05" y2="17.94"></line><line x1="9.69" y1="8" x2="21.17" y2="8"></line><line x1="7.38" y1="12" x2="13.12" y2="2.06"></line><line x1="9.69" y1="16" x2="3.95" y2="6.06"></line><line x1="14.31" y1="16" x2="2.83" y2="16"></line><line x1="16.62" y1="12" x2="10.88" y2="21.94"></line></svg>`;
-         {% comment %} <img src="{{ 'chevron-left.svg' | asset_url }}" alt="left-arrow" width="20px" height="20px"> {% endcomment %}
-       if (icon.startsWith('data:image/svg+xml;base64,')) {
-         try {
-           const base64 = icon.split(',')[1];
-           const svg = atob(base64);
-           return `<div class="usp-icon-svg-wrapper" style="color: ${iconColor};">${svg}</div>`;
-         } catch (e) {
-           return "✓";
-         }
-       }
-       
-       return `<div class="usp-icon-img-wrapper" style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; background-color: ${iconColor}; mask-image: url('${icon}'); mask-size: contain; mask-repeat: no-repeat; mask-position: center; -webkit-mask-image: url('${icon}'); -webkit-mask-size: contain; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center;"></div>`;
-     }
+       /* Helper to render icon correctly */
+      function renderIcon(icon, iconColor) {
+        if (!icon) return `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${iconColor}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="14.31" y1="8" x2="20.05" y2="17.94"></line><line x1="9.69" y1="8" x2="21.17" y2="8"></line><line x1="7.38" y1="12" x2="13.12" y2="2.06"></line><line x1="9.69" y1="16" x2="3.95" y2="6.06"></line><line x1="14.31" y1="16" x2="2.83" y2="16"></line><line x1="16.62" y1="12" x2="10.88" y2="21.94"></line></svg>`;
+          {% comment %} <img src="{{ 'chevron-left.svg' | asset_url }}" alt="left-arrow" width="20px" height="20px"> {% endcomment %}
+        if (icon.startsWith('data:image/svg+xml;base64,')) {
+          try {
+            const base64 = icon.split(',')[1];
+            const svg = atob(base64);
+            return `<div class="usp-icon-svg-wrapper" style="color: ${iconColor};">${svg}</div>`;
+          } catch (e) {
+            return "✓";
+          }
+        }
+        
+        return `<div class="usp-icon-img-wrapper" style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;"><img src="${icon}" alt="Icon" style="width: 100%; height: 100%; object-fit: contain;"></div>`;
+      }
 
       /* Convert hex color to RGB */
       function hexToRgb(hex) {
@@ -923,6 +932,15 @@
       "default": true,
       "info": "Toggle to show or hide the USP Bar"
     }
-  ]
+  ],
+  "locales": {
+    "en": {
+      "name": "USP Bar App",
+      "settings": {
+        "enabled_label": "Enable USP Bar",
+        "enabled_info": "Toggle to show or hide the USP Bar"
+      }
+    }
+  }
 }
 {% endschema %}

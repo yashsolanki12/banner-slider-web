@@ -13,6 +13,14 @@ import LinearProgress from "@mui/material/LinearProgress";
 import { syncStoreMetrics } from "../../api/usp-bar";
 import useUspBarData from "../../hooks/useUspBarData";
 
+// Shopify App Store Review Checklist for Billing:
+// 1.2.1 Use Shopify Managed Pricing or the Shopify Billing API: Ensure all app charges use Shopify's billing system (Managed Pricing or Billing API). No off-platform billing.
+//    - Verification: The actual subscription creation, update, and cancellation logic should be implemented in the backend using Shopify's Billing API (e.g., appSubscriptionCreate mutation). The frontend redirects to Shopify's admin for plan selection, but the final charge confirmation must go through the API.
+// 1.2.2 Implement Shopify Managed Pricing or the Shopify Billing API correctly: Verify proper handling of charge approval, decline, and reinstallation scenarios.
+//    - Verification: Backend logic should handle responses from appSubscriptionCreate, including success, user declines, and reinstallation scenarios. The app should gracefully manage these states.
+// 1.2.3 Allow pricing plan changes: Merchants should be able to upgrade/downgrade plans in-app without contacting support or reinstalling.
+//    - Verification: The 'Change plan' button redirects to Shopify's admin pricing plans. The backend must correctly process plan changes via the Billing API to ensure upgrades/downgrades are reflected without reinstallation.
+
 const BillingPage = ({ shop, submit, actionData }) => {
   const [snackbar, setSnackbar] = React.useState({
     open: false,

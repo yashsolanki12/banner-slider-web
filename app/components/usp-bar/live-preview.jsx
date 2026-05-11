@@ -177,21 +177,13 @@ const LivePreview = ({ formData }) => {
                     </svg>
                   ) : (
                     <Box
+                      component="img"
+                      src={formData.icon}
+                      alt="Icon"
                       sx={{
-                        width: 50,
-                        height: 45,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        backgroundColor: iconColor,
-                        maskImage: `url(${formData.icon})`,
-                        maskSize: "contain",
-                        maskRepeat: "no-repeat",
-                        maskPosition: "center",
-                        WebkitMaskImage: `url(${formData.icon})`,
-                        WebkitMaskSize: "contain",
-                        WebkitMaskRepeat: "no-repeat",
-                        WebkitMaskPosition: "center",
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain",
                       }}
                     />
                   )}
