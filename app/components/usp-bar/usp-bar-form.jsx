@@ -263,10 +263,10 @@ const UspBarForm = ({ id, heading }) => {
       }
 
       // Validate file size (max 2MB)
-      if (file.size > 2 * 1024 * 1024) {
+      if (file.size > 1 * 1024 * 1024) {
         setSnackbar({
           open: true,
-          message: "Image size must be less than 2MB.",
+          message: "Image size must be less than 1MB.",
           severity: "error",
         });
         event.target.value = "";
@@ -728,7 +728,14 @@ const UspBarForm = ({ id, heading }) => {
                   </Box>
 
                   {/* Icon Upload */}
-                  <Box>
+                  <Box
+                    // sx={{
+                    //   display: "flex",
+                    //   flexDirection: "column",
+                    //   justifyContent: "center",
+                    //   alignItems: "flex-start",
+                    // }}
+                  >
                     <Typography
                       variant="caption"
                       sx={{
@@ -744,6 +751,8 @@ const UspBarForm = ({ id, heading }) => {
                       sx={{
                         display: "flex",
                         flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "flex-start",
                         gap: 1,
                         width: "fit-content",
                         mb: "0.30rem",
@@ -837,7 +846,7 @@ const UspBarForm = ({ id, heading }) => {
                             width: "fit-content",
                           }}
                         >
-                          Supported formats: JPG, PNG, SVG (max: 2MB)
+                          Supported formats: JPG, PNG, SVG (max: 1MB)
                         </Typography>
                       )}
                     </Box>
@@ -869,7 +878,7 @@ const UspBarForm = ({ id, heading }) => {
                           fontSize: "14px",
                         }}
                       >
-                        Color Settings
+                        Settings
                       </Typography>
                     }
                   />
@@ -907,7 +916,7 @@ const UspBarForm = ({ id, heading }) => {
 
                       {/* Title Color */}
                       <ColorPicker
-                        label="Title color"
+                        label="Title text color"
                         name="designSettings.titleColor"
                         value={formData.designSettings?.titleColor || "#333333"}
                         onChange={handleChange}
@@ -915,7 +924,7 @@ const UspBarForm = ({ id, heading }) => {
 
                       {/* Description Color */}
                       <ColorPicker
-                        label="Description color"
+                        label="Description text color"
                         name="designSettings.descriptionColor"
                         value={
                           formData.designSettings?.descriptionColor || "#666666"

@@ -17,6 +17,9 @@ import { useNavigate } from "react-router";
 import CircularProgress from "@mui/material/CircularProgress";
 import ColorPicker from "../../components/color-settings.jsx/color-picker";
 import Stack from "@mui/material/Stack";
+import Grid from "@mui/material/Grid";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 
 const GlobalColorSettingsListPage = () => {
   const navigate = useNavigate();
@@ -29,6 +32,10 @@ const GlobalColorSettingsListPage = () => {
     iconColor: "#ffffff",
     slideSpeed: 4,
     itemBorderRightColor: "#000000", // Default vertical border color (black)
+    paddingLeft: 1,
+    paddingRight: 1,
+    paddingTop: 1,
+    paddingBottom: 1,
   });
   const [snackbar, setSnackbar] = React.useState({
     open: false,
@@ -92,6 +99,10 @@ const GlobalColorSettingsListPage = () => {
         iconColor: colors.iconColor || "#ffffff",
         slideSpeed: colors.slideSpeed || 4,
         itemBorderRightColor: colors.itemBorderRightColor || "#000000",
+        paddingTop: parseInt(colors.paddingTop) || "0px",
+        paddingRight: parseInt(colors.paddingRight) || "0px",
+        paddingBottom: parseInt(colors.paddingBottom) || "0px",
+        paddingLeft: parseInt(colors.paddingLeft) || "0px",
       });
     }
   }, [GetGlobalColorsData]);
@@ -116,7 +127,7 @@ const GlobalColorSettingsListPage = () => {
               fontSize: { xs: 18, sm: 20 },
             }}
           >
-            Color Settings
+            Settings
           </Typography>
         </Stack>
       </Box>
@@ -154,7 +165,7 @@ const GlobalColorSettingsListPage = () => {
 
           {/* Title Color */}
           <ColorPicker
-            label="Title color"
+            label="Title text color"
             name="designSettings.titleColor"
             value={formData.titleColor || "#333333"}
             onChange={handleChange}
@@ -162,7 +173,7 @@ const GlobalColorSettingsListPage = () => {
 
           {/* Description Color */}
           <ColorPicker
-            label="Description color"
+            label="Description text color"
             name="designSettings.descriptionColor"
             value={formData.descriptionColor || "#666666"}
             onChange={handleChange}
@@ -191,6 +202,134 @@ const GlobalColorSettingsListPage = () => {
             value={formData.itemBorderRightColor || "#000000"}
             onChange={handleChange}
           />
+
+          {/* Padding Top */}
+          <Grid item xs={12} sm={6}>
+            <Typography
+              variant="body2"
+              sx={{ mb: 1, fontWeight: 500, color: "#6b7280" }}
+            >
+              Padding top
+            </Typography>
+            <Select
+              fullWidth
+              name="designSettings.paddingTop"
+              value={formData.paddingTop}
+              onChange={handleChange}
+              size="small"
+              sx={{ width: "fit-content" }}
+              MenuProps={{
+                PaperProps: {
+                  sx: {
+                    maxHeight: 200,
+                    width: 250,
+                  },
+                },
+              }}
+            >
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((size) => (
+                <MenuItem key={size} value={size}>
+                  {size}px
+                </MenuItem>
+              ))}
+            </Select>
+          </Grid>
+
+          {/* Padding Right */}
+          <Grid item xs={12} sm={6}>
+            <Typography
+              variant="body2"
+              sx={{ mb: 1, fontWeight: 500, color: "#6b7280" }}
+            >
+              Padding right
+            </Typography>
+            <Select
+              fullWidth
+              name="designSettings.paddingRight"
+              value={formData.paddingRight}
+              onChange={handleChange}
+              size="small"
+              sx={{ width: "fit-content" }}
+              MenuProps={{
+                PaperProps: {
+                  sx: {
+                    maxHeight: 200,
+                    width: 250,
+                  },
+                },
+              }}
+            >
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((size) => (
+                <MenuItem key={size} value={size}>
+                  {size}px
+                </MenuItem>
+              ))}
+            </Select>
+          </Grid>
+
+          {/* Padding Bottom */}
+          <Grid item xs={12} sm={6}>
+            <Typography
+              variant="body2"
+              sx={{ mb: 1, fontWeight: 500, color: "#6b7280" }}
+            >
+              Padding bottom
+            </Typography>
+            <Select
+              fullWidth
+              name="designSettings.paddingBottom"
+              value={formData.paddingBottom}
+              onChange={handleChange}
+              size="small"
+              sx={{ width: "fit-content" }}
+              MenuProps={{
+                PaperProps: {
+                  sx: {
+                    maxHeight: 200,
+                    width: 250,
+                  },
+                },
+              }}
+            >
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((size) => (
+                <MenuItem key={size} value={size}>
+                  {size}px
+                </MenuItem>
+              ))}
+            </Select>
+          </Grid>
+
+          {/* Padding Left */}
+          <Grid item xs={12} sm={6}>
+            <Typography
+              variant="body2"
+              sx={{ mb: 1, fontWeight: 500, color: "#6b7280" }}
+            >
+              Padding left
+            </Typography>
+            <Select
+              fullWidth
+              name="designSettings.paddingLeft"
+              value={formData.paddingLeft}
+              onChange={handleChange}
+              size="small"
+              sx={{ width: "fit-content" }}
+              MenuProps={{
+                PaperProps: {
+                  sx: {
+                    maxHeight: 200,
+                    width: 250,
+                  },
+                },
+              }}
+            >
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((size) => (
+                <MenuItem key={size} value={size}>
+                  {size}px
+                </MenuItem>
+              ))}
+            </Select>
+          </Grid>
           {/* Slider Speed */}
           <Box>
             <Typography
