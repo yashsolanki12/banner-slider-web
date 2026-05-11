@@ -83,6 +83,10 @@
       {% comment %} gap: 15px; {% endcomment %}
       box-sizing: border-box; 
       {% comment %} padding: 10px; {% endcomment %}
+      padding-top: var(--item-padding-top);
+      padding-right: var(--item-padding-right);
+      padding-bottom: var(--item-padding-bottom);
+      padding-left: var(--item-padding-left); 
       border-radius: 5px;
       position: relative;
       width: 300px;           
@@ -341,16 +345,20 @@
        let designSettings = null;
        let isTransitioning = false;
 
-       const defaultDesignSettings = {
-         backgroundColor: '#f8f9fa',
-         itemBackgroundColor: '#ffffff', 
-         titleColor: '#333333',
-         descriptionColor: '#666666',
-         iconBackgroundColor: '#4CAF50',
-         iconColor: '#ffffff',
-         slideSpeed: 4,
-         itemBorderRightColor: "#000000"
-       };
+        const defaultDesignSettings = {
+          backgroundColor: '#f8f9fa',
+          itemBackgroundColor: '#ffffff', 
+          titleColor: '#333333',
+          descriptionColor: '#666666',
+          iconBackgroundColor: '#4CAF50',
+          iconColor: '#ffffff',
+          slideSpeed: 4,
+          itemBorderRightColor: "#000000",
+          paddingTop: "0px",
+          paddingRight: "0px",
+          paddingBottom: "0px",
+          paddingLeft: "0px"
+        };
 
        function calculateItemsPerView() {
         const width = window.innerWidth;
@@ -479,7 +487,7 @@
         
         allItems.forEach((item) => {
           const itemSettings = item.designSettings || defaultDesignSettings;
-          const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
+          const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-padding-top: ${itemSettings.paddingTop}; --item-padding-right: ${itemSettings.paddingRight}; --item-padding-bottom: ${itemSettings.paddingBottom}; --item-padding-left: ${itemSettings.paddingLeft}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
           html += `
             <div class="usp-item" style="${strictStyle}">
              <div class="usp-item-icon" style="color: ${itemSettings.iconColor};">
@@ -530,7 +538,7 @@
         
         itemsWithClones.forEach((item) => {
           const itemSettings = item.designSettings || defaultDesignSettings;
-          const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
+          const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-padding-top: ${itemSettings.paddingTop}; --item-padding-right: ${itemSettings.paddingRight}; --item-padding-bottom: ${itemSettings.paddingBottom}; --item-padding-left: ${itemSettings.paddingLeft}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
           html += `
             <div class="usp-item" style="${strictStyle}">
              <div class="usp-item-icon" style="color: ${itemSettings.iconColor};">

@@ -83,6 +83,10 @@
       {% comment %} gap: 15px; {% endcomment %}
       box-sizing: border-box; 
       {% comment %} padding: 10px 0px; {% endcomment %}
+      padding-top: var(--item-padding-top);
+      padding-right: var(--item-padding-right);
+      padding-bottom: var(--item-padding-bottom); 
+      padding-left: var(--item-padding-left); 
       border-radius: 5px;
       position: relative;
       {% comment %} width: 300px;            {% endcomment %}
@@ -413,16 +417,20 @@
         let itemWidth = 0;
         let limitExceeded = false;
 
-       const defaultDesignSettings = {
-         backgroundColor: '#f8f9fa',
-         itemBackgroundColor: '#ffffff', 
-         titleColor: '#333333',
-         descriptionColor: '#666666',
-         iconBackgroundColor: '#4CAF50',
-         iconColor: '#0c0c0c',
-         slideSpeed: 4,
-         itemBorderRightColor: "#000000"
-       };
+        const defaultDesignSettings = {
+          backgroundColor: '#f8f9fa',
+          itemBackgroundColor: '#ffffff', 
+          titleColor: '#333333',
+          descriptionColor: '#666666',
+          iconBackgroundColor: '#4CAF50',
+          iconColor: '#0c0c0c',
+          slideSpeed: 4,
+          itemBorderRightColor: "#000000",
+          paddingTop: "0px",
+          paddingRight: "0px",
+          paddingBottom: "0px",
+          paddingLeft: "0px"
+        };
 
        function calculateItemsPerView() {
         const width = window.innerWidth;
@@ -481,6 +489,7 @@
          try {
            const response = await fetch(`${apiUrl}/api/usp-slider/public/${shopDomain}`);
            const result = await response.json();
+           console.log("REs",result)
 
              
            if (result.success && result.data && result.data.length > 0) {
@@ -503,7 +512,7 @@
              /* Use only the visible items */
              allItems = visibleItems;
              
-/* Get design settings from the first visible item */
+             /* Get design settings from the first visible item */
               designSettings = allItems[0].designSettings || defaultDesignSettings;
               
               /* Use backgroundColor only from items where useCustomColorSettings is false */
@@ -644,7 +653,7 @@
         allItems.forEach((item) => {
           const itemSettings = item.designSettings || defaultDesignSettings;
           /* EXTREME LOCKDOWN: Triple-enforce calculated dynamic width*/
-          const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
+             const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-padding-top: ${itemSettings.paddingTop}; --item-padding-right: ${itemSettings.paddingRight}; --item-padding-bottom: ${itemSettings.paddingBottom}; --item-padding-left: ${itemSettings.paddingLeft}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
           const iconStyle = `color: ${itemSettings.iconColor};`
           html += `
             <div class="usp-item" style="${strictStyle}">
@@ -683,7 +692,7 @@
         itemsWithClones.forEach((item) => {
             const itemSettings = item.designSettings || defaultDesignSettings;
             /* EXTREME LOCKDOWN: Triple-enforce width to prevent expansion */
-            const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
+            const strictStyle = `background: ${itemSettings.itemBackgroundColor}; --item-padding-top: ${itemSettings.paddingTop}; --item-padding-right: ${itemSettings.paddingRight}; --item-padding-bottom: ${itemSettings.paddingBottom}; --item-padding-left: ${itemSettings.paddingLeft}; --item-border-color: ${itemSettings.itemBorderRightColor}; width: ${itemWidth}px; max-width: ${itemWidth}px; min-width: ${itemWidth}px; flex: 0 0 ${itemWidth}px;`;
             const iconStyle = `color: ${itemSettings.iconColor};`
             html += `
               <div class="usp-item" style="${strictStyle}">

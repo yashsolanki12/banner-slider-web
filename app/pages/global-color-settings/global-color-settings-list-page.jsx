@@ -99,10 +99,10 @@ const GlobalColorSettingsListPage = () => {
         iconColor: colors.iconColor || "#ffffff",
         slideSpeed: colors.slideSpeed || 4,
         itemBorderRightColor: colors.itemBorderRightColor || "#000000",
-        paddingTop: colors.paddingTop || 1,
-        paddingRight: colors.paddingRight || 1,
-        paddingBottom: colors.paddingBottom || 1,
-        paddingLeft: colors.paddingLeft || 1,
+        paddingTop: parseInt(colors.paddingTop) || "0px",
+        paddingRight: parseInt(colors.paddingRight) || "0px",
+        paddingBottom: parseInt(colors.paddingBottom) || "0px",
+        paddingLeft: parseInt(colors.paddingLeft) || "0px",
       });
     }
   }, [GetGlobalColorsData]);
