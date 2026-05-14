@@ -46,7 +46,7 @@
     }
 
     #usp-bar-container-{{ block.id }} .usp-bar-slider {
-      padding: 0 45px;
+      padding: 0;
       box-sizing: border-box;
       display: flex;
       justify-content: center;
@@ -78,6 +78,7 @@
 
     #usp-bar-container-{{ block.id }} .usp-item {
       display: flex;
+      gap: 10px;
       justify-content: center;
       align-items: center;
       {% comment %} gap: 15px; {% endcomment %}
@@ -121,8 +122,8 @@
     }
 
     #usp-bar-container-{{ block.id }} .usp-item-icon {
-      width: 50px;
-      height: 45px;
+      width: 35px;
+      height: 35px;
       {% comment %} min-width: 35px; {% endcomment %}
       {% comment %} min-height: 35px; {% endcomment %}
       display: flex;
@@ -155,8 +156,8 @@
     }
     
     #usp-bar-container-{{ block.id }} .usp-icon-svg-wrapper svg {
-      fill: none !important;
-      stroke: currentColor !important;
+      fill: currentColor !important;
+      {% comment %} stroke: currentColor !important; {% endcomment %}
       stroke-width: 2;
     }
     }
@@ -182,7 +183,7 @@
     
     #usp-bar-container-{{ block.id }} .usp-item-title, 
     #usp-bar-container-{{ block.id }} .usp-item-description {
-      text-align: center !important;
+      {% comment %} text-align: center !important; {% endcomment %}
       width: 100%;
     }
 
@@ -191,28 +192,29 @@
       font-size: 18px;
       color: #333333;
       margin: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      {% comment %} white-space: nowrap; {% endcomment %}
+      {% comment %} overflow: hidden; {% endcomment %}
+      {% comment %} text-overflow: ellipsis; {% endcomment %}
       width: 100%;         
       {% comment %} max-width: 158px !important;  {% endcomment %}
       display: block;
-      text-align: center; 
+      {% comment %} text-align: center;  {% endcomment %}
       font-family: fangsong;
+      line-height: 100%;
     }
 
     #usp-bar-container-{{ block.id }} .usp-item-description {
       font-size: 14px;
       color: #666666;
       margin: 4px 0 0 0;
-      line-height: 1.4;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      line-height: 1.2;
+      {% comment %} white-space: nowrap; {% endcomment %}
+      {% comment %} overflow: hidden; {% endcomment %}
+      {% comment %} text-overflow: ellipsis; {% endcomment %}
       width: 100%;         
       {% comment %} max-width: 2017px !important;  {% endcomment %}
       display: block;
-      text-align: center !important; /* MOD: Force centering */
+      {% comment %} text-align: center !important; /* MOD: Force centering */ {% endcomment %}
       font-family: fangsong;
     }
 
@@ -272,8 +274,18 @@
     /* Responsive */
     /* Removed media query overrides for item width to keep 300px locked */
     @media (max-width: 480px) {
+      {% comment %} #usp-bar-container-{{ block.id }} .usp-item {
+         flex: 0 0 100% !important;
+         width: 100% !important;
+      } {% endcomment %}
       #usp-bar-container-{{ block.id }} .usp-bar-slider {
         padding: 0 10px;
+      }
+      #usp-bar-container-{{ block.id }} .usp-item-title {
+        font-size: 12px;
+      }
+      #usp-bar-container-{{ block.id }} .usp-item-description {
+        font-size: 12px
       }
       /* Item width is handled by JS - no CSS override needed */
     }
@@ -285,9 +297,7 @@
         {% comment %} #usp-bar-container-{{ block.id }} .usp-bar-slider {
         overflow: visible;
       }  {% endcomment %}
-      #usp-bar-container-{{ block.id }} .usp-item-inner {
-        width: 100%;
-      }
+      
     }  
   </style>
 
@@ -363,7 +373,8 @@
        function calculateItemsPerView() {
         const width = window.innerWidth;
         if (width <= 650) return 1;  // Mobile (320, 375, 425)
-        if (width <= 1250) return 2; // Tablet/Laptop (768, 1024)
+        if (width <= 991) return 1; // Tablet/Laptop (768, 1024)
+         if(width <= 1120) return 2;
         return 3;                    // Large Laptop (1440)
       }
 
