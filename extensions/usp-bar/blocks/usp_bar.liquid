@@ -46,7 +46,7 @@
        } 
     */
     .usp-bar-slider {
-      padding: 0 45px;
+      padding: 0px;
       box-sizing: border-box;
       display: flex;
       justify-content: center; /* Static view centering */
@@ -78,6 +78,7 @@
 
     .usp-item {
       display: flex;
+      gap: 10px;
       justify-content: center;
       align-items: center;
       {% comment %} gap: 15px; {% endcomment %}
@@ -92,13 +93,17 @@
       {% comment %} width: 300px;            {% endcomment %}
       min-width: 0;           
       {% comment %} max-width: 300px; {% endcomment %}
-      height: 64px !important;   
+      height: 100% !important;   
     }
     
     @media (max-width: 480px) {
       .usp-item {
-        width: 100% !important; /* Force items to fill mobile container */
-        max-width: 100% !important;
+        display: flex;
+        gap: 10px;
+        flex: 0 0 100% !important;
+        {% comment %} max-width: 100% !important; {% endcomment %}
+        width: 100% !important;
+        {% comment %} width: 100% !important; /* Force items to fill mobile container */ {% endcomment %}
       }
     }
     
@@ -106,7 +111,7 @@
       display: flex;
       flex-direction: column;
       align-items: center; 
-      text-align: center;  
+      {% comment %} text-align: center;   {% endcomment %}
       overflow: hidden;    
       min-width: 0;        
       flex: 0 1 auto; /* MOD: Remove flex: 1 to prevent pushing icon away */
@@ -114,7 +119,7 @@
     }
     
     .usp-item-title, .usp-item-description {
-      text-align: center !important; /* Force centering */
+      {% comment %} text-align: center !important; /* Force centering */ {% endcomment %}
       width: 100%;
     }
 
@@ -134,7 +139,7 @@
         {% comment %} display: flex;
         align-items: center;
         justify-content: center; {% endcomment %}
-        gap: 8px;
+        {% comment %} gap: 8px; {% endcomment %}
         padding: 5px 0px;
         {% comment %} padding: 7px 15px; /* this creates space before border */ {% endcomment %}
         {% comment %} width: 155px; /* to create the gap between icon and content */ {% endcomment %}
@@ -142,8 +147,8 @@
       }
       
      .usp-item-icon {
-      width: 50px;
-      height: 45px;
+      width: 35px;
+      height: 35px;
       {% comment %} min-width: 38px; {% endcomment %}
       display: flex;
       align-items: center;
@@ -174,9 +179,9 @@
       max-height: 100%;
       width: auto;
       height: auto;
-      fill: none !important;
-      stroke: currentColor !important;
-      stroke-width: 2;
+      {% comment %} fill: currentColor !important; {% endcomment %}
+      {% comment %} stroke: currentColor !important; {% endcomment %}
+      {% comment %} stroke-width: 2; {% endcomment %}
     }
       border-radius: 50%;
       font-size: 12px;
@@ -195,8 +200,8 @@
     }
 
     .usp-icon-svg-wrapper svg {
-      fill: none !important;
-      stroke: currentColor !important;
+      fill: currentColor !important;
+      {% comment %} stroke: currentColor !important; {% endcomment %}
       stroke-width: 2;
     }
 
@@ -215,28 +220,29 @@
       font-size: 18px;
       color: #333333;
       margin: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      {% comment %} white-space: nowrap; {% endcomment %}
+      {% comment %} overflow: hidden; {% endcomment %}
+      {% comment %} text-overflow: ellipsis; {% endcomment %}
       width: 100%;         
       {% comment %} max-width: 256px;  {% endcomment %}
       display: block;
-      text-align: center; 
+      {% comment %} text-align: center;  {% endcomment %}
       font-family: fangsong;
+      line-height: 100%;
     }
 
     .usp-item-description {
       font-size: 13px;
       color: #666666;
       margin: 4px 0 0 0;
-      line-height: 1.4;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      line-height: 1.2;
+      {% comment %} white-space: nowrap; {% endcomment %}
+      {% comment %} overflow: hidden; {% endcomment %}
+      {% comment %} text-overflow: ellipsis; {% endcomment %}
       width: 100%;         
       {% comment %} max-width: 360px;  {% endcomment %}
       display: block;
-      text-align: center !important; /* Force centering */
+      {% comment %} text-align: center !important; /* Force centering */ {% endcomment %}
       font-family: fangsong;
     }
 
@@ -315,44 +321,68 @@
     }
      /* Removed media query overrides for item width to keep 300px locked on desktop/tablet */
      @media (max-width: 480px)  {
+      .usp-item-title {
+        font-size: 14px;
+      }
+      .usp-item-description {
+        font-size: 12px
+      }
        .usp-bar-slider {
          padding: 0 10px;
        }
        .usp-item-description {
-          max-width: 200px;
+          {% comment %} max-width: 200px; {% endcomment %}
        } 
       }
 
       @media (max-width: 380px) {
         .usp-item-description {
-          max-width: 130px;
+          {% comment %} max-width: 130px; {% endcomment %}
         } 
         .usp-item-title {
-            max-width: 130px
+            {% comment %} max-width: 130px {% endcomment %}
         }
       }
 
       @media (max-width: 330px) {
         .usp-item-inner {
-          width: 100%;
+          {% comment %} width: 100%; {% endcomment %}
+          display: flex;
+           gap: 10px
         }
         .usp-item-description {
-           max-width: 90px;
+           {% comment %} max-width: 90px; {% endcomment %}
         } 
        .usp-item-title {
-          max-width: 90px
+          {% comment %} max-width: 90px {% endcomment %}
        }
       }
 
-       @media (max-width: 780px) {
+        @media (max-width: 650px) {
         .usp-item-inner {
-          width: 100%;
+          {% comment %} width: 100%; {% endcomment %}
+           display: flex;
+           gap: 10px
         }
         .usp-item-description {
-          max-width: 150px;
+          {% comment %} max-width: 150px; {% endcomment %}
         } 
        .usp-item-title {
-          max-width: 150px
+          {% comment %} max-width: 150px {% endcomment %}
+       }
+      }
+    
+       @media (max-width: 900px) {
+        .usp-item-inner {
+          {% comment %} width: 100%; {% endcomment %}
+           display: flex;
+           gap: 10px
+        }
+        .usp-item-description {
+          {% comment %} max-width: 150px; {% endcomment %}
+        } 
+       .usp-item-title {
+          {% comment %} max-width: 150px {% endcomment %}
        }
       }
       
@@ -435,7 +465,9 @@
        function calculateItemsPerView() {
         const width = window.innerWidth;
         if (width <= 650) return 1;  /* Mobile (320, 375, 425) */
-        if (width <= 1250) return 2; /* Tablet/Laptop (768, 1024) */
+        if (width <= 991) return 1; /* Tablet/Laptop (768, 1024) */
+        if(width <= 1120) return 2;
+
         return 3;                    /* Large Laptop (1440) */
       }
 
