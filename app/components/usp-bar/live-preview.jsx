@@ -37,6 +37,15 @@ const LivePreview = ({ formData }) => {
 
   const hasContent = formData.title || formData.description || formData.icon;
 
+  // Helper function to detect uploaded file types safely
+  const isSvgFile = (url) => {
+    if (!url) return false;
+    // Check for base64 SVG string data or standard URL patterns
+    return (
+      url.startsWith("data:image/svg+xml") ||
+      url.toLowerCase().split(/[?#]/)[0].endsWith(".svg")
+    );
+  };
   return (
     <Paper
       elevation={0}
@@ -175,14 +184,32 @@ const LivePreview = ({ formData }) => {
                       <line x1="14.31" y1="16" x2="2.83" y2="16"></line>
                       <line x1="16.62" y1="12" x2="10.88" y2="21.94"></line>
                     </svg>
+                  ) : isSvgFile(formData.icon) ? (
+                    /* 2. Custom Uploaded SVG (Applies Masking to allow dynamic color shifts) */
+                    <Box
+                      sx={{
+                        width: "24px",
+                        height: "24px",
+                        backgroundColor: iconColor,
+                        maskImage: `url("${formData.icon}")`,
+                        maskSize: "contain",
+                        maskRepeat: "no-repeat",
+                        maskPosition: "center",
+                        WebkitMaskImage: `url("${formData.icon}")`,
+                        WebkitMaskSize: "contain",
+                        WebkitMaskRepeat: "no-repeat",
+                        WebkitMaskPosition: "center",
+                      }}
+                    />
                   ) : (
+                    /* 3. Custom Uploaded Image (PNG, JPG, WEBP renders accurately) */
                     <Box
                       component="img"
                       src={formData.icon}
-                      alt="Icon"
+                      alt="Uploaded Icon"
                       sx={{
-                        width: "100%",
-                        height: "100%",
+                        maxWidth: "100%",
+                        maxHeight: "100%",
                         objectFit: "contain",
                       }}
                     />
